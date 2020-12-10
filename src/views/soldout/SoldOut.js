@@ -7,17 +7,20 @@ import {
   CCard,
   CCardBody,
   CCol,
-  CRow,
   CInput,
   CInputGroup,
   CSelect,
+  CFormGroup,
 } from "@coreui/react";
 
 const SoldOut = () => {
   const [products, setProducts] = useState([]);
-  const [dateStatus, setDateStatus] = useState("");
+  const [dateType, setDateType] = useState("");
+  const [searchType, setSearchType] = useState("");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
+  const [selectOpt, setSelectOpt] = useState("상품명");
+  const [searchValue, setSearchValue] = useState("");
 
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -34,7 +37,11 @@ const SoldOut = () => {
     const res = await axios.get(
       `https://sadmin.piclick.kr/soldout/?au_id=2605${args}`
     );
-    setProducts(res.data.results);
+    if (res.data.results === undefined) {
+      setProducts([]);
+    } else {
+      setProducts(res.data.results);
+    }
   };
 
   useEffect(() => {
@@ -43,47 +50,184 @@ const SoldOut = () => {
     return () => getSoldOut();
   }, []);
 
-  const changeDateStatus = (event) => {
+  const changedateType = (event) => {
     event.persist();
-    setDateStatus(event.target.innerText);
+    setDateType(event.target.innerText);
     switch (event.target.innerText) {
       case "오늘":
         setFromDate(moment().format("YYYY-MM-DD"));
         setToDate(moment().format("YYYY-MM-DD"));
-        getSoldOut(
-          `&from_date=${moment().format("YYYYMMDD")}&to_date=${moment().format(
-            "YYYYMMDD"
-          )}`
-        );
         break;
       case "어제":
         setFromDate(moment().subtract(1, "days").format("YYYY-MM-DD"));
         setToDate(moment().subtract(1, "days").format("YYYY-MM-DD"));
-        getSoldOut(
-          `&from_date=${moment()
-            .subtract(1, "days")
-            .format("YYYYMMDD")}&to_date=${moment()
-            .subtract(1, "days")
-            .format("YYYYMMDD")}`
-        );
         break;
       case "1주":
         setFromDate(moment().subtract(1, "weeks").format("YYYY-MM-DD"));
         setToDate(moment().format("YYYY-MM-DD"));
-        getSoldOut(
-          `&from_date=${moment()
-            .subtract(1, "weeks")
-            .format("YYYYMMDD")}&to_date=${moment().format("YYYYMMDD")}`
-        );
         break;
       case "1개월":
         setFromDate(moment().subtract(1, "months").format("YYYY-MM-DD"));
         setToDate(moment().format("YYYY-MM-DD"));
-        getSoldOut(
-          `&from_date=${moment()
-            .subtract(1, "months")
-            .format("YYYYMMDD")}&to_date=${moment().format("YYYYMMDD")}`
-        );
+        break;
+      default:
+        break;
+    }
+  };
+
+  const changeSearchType = (event) => {
+    const {
+      target: { name, value },
+    } = event;
+    switch (name) {
+      case "주문일자":
+        setSearchType(value);
+        break;
+      case "품절일자":
+        setSearchType(value);
+        break;
+      default:
+        break;
+    }
+  };
+
+  const onSearchClick = (event) => {
+    const {
+      target: { name },
+    } = event;
+
+    switch (name) {
+      case "search":
+        if (fromDate === "" || toDate === "") {
+          if (searchType === "") {
+            if (searchValue === "") {
+              getSoldOut();
+            } else {
+              //검색어만
+              if (selectOpt === "상품명") {
+                getSoldOut(`&pname=${searchValue}`);
+              } else if (selectOpt === "상품ID") {
+                getSoldOut(`&pid=${searchValue}`);
+              } else if (selectOpt === "주문자") {
+                getSoldOut(`&uname=${searchValue}`);
+              } else {
+                getSoldOut(`&oid=${searchValue}`);
+              }
+            }
+          } else {
+            if (searchValue === "") {
+              getSoldOut();
+            } else {
+              //검색어만
+              if (selectOpt === "상품명") {
+                getSoldOut(`&pname=${searchValue}`);
+              } else if (selectOpt === "상품ID") {
+                getSoldOut(`&pid=${searchValue}`);
+              } else if (selectOpt === "주문자") {
+                getSoldOut(`&uname=${searchValue}`);
+              } else {
+                getSoldOut(`&oid=${searchValue}`);
+              }
+            }
+          }
+        } else {
+          if (searchType === "") {
+            if (searchValue === "") {
+              getSoldOut();
+            } else {
+              //검색어만
+              if (selectOpt === "상품명") {
+                getSoldOut(`&pname=${searchValue}`);
+              } else if (selectOpt === "상품ID") {
+                getSoldOut(`&pid=${searchValue}`);
+              } else if (selectOpt === "주문자") {
+                getSoldOut(`&uname=${searchValue}`);
+              } else {
+                getSoldOut(`&oid=${searchValue}`);
+              }
+            }
+          } else {
+            if (searchValue === "") {
+              //날짜만
+              getSoldOut(
+                `&from_date=${moment(fromDate).format(
+                  "YYYYMMDD"
+                )}&to_date=${moment(toDate).format(
+                  "YYYYMMDD"
+                )}&date_type=${searchType}`
+              );
+            } else {
+              //검색어, 날짜 둘다
+              if (selectOpt === "상품명") {
+                getSoldOut(
+                  `&from_date=${moment(fromDate).format(
+                    "YYYYMMDD"
+                  )}&to_date=${moment(toDate).format(
+                    "YYYYMMDD"
+                  )}&date_type=${searchType}&pname=${searchValue}`
+                );
+              } else if (selectOpt === "주문자") {
+                getSoldOut(
+                  `&from_date=${moment(fromDate).format(
+                    "YYYYMMDD"
+                  )}&to_date=${moment(toDate).format(
+                    "YYYYMMDD"
+                  )}&date_type=${searchType}&uname=${searchValue}`
+                );
+              } else if (selectOpt === "상품ID") {
+                getSoldOut(
+                  `&from_date=${moment(fromDate).format(
+                    "YYYYMMDD"
+                  )}&to_date=${moment(toDate).format(
+                    "YYYYMMDD"
+                  )}&date_type=${searchType}&pid=${searchValue}`
+                );
+              } else {
+                getSoldOut(
+                  `&from_date=${moment(fromDate).format(
+                    "YYYYMMDD"
+                  )}&to_date=${moment(toDate).format(
+                    "YYYYMMDD"
+                  )}&date_type=${searchType}&oid=${searchValue}`
+                );
+              }
+            }
+          }
+        }
+        break;
+      case "clear":
+        setFromDate("");
+        setToDate("");
+        setDateType("");
+        setSelectOpt("상품명");
+        setSearchType("");
+        setSearchValue("");
+        getSoldOut();
+        break;
+      default:
+        break;
+    }
+  };
+
+  const onSelectChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+
+    setSelectOpt(value);
+  };
+
+  const onChangeDate = (event) => {
+    const {
+      target: { name, value },
+    } = event;
+
+    switch (name) {
+      case "fromDate":
+        setFromDate(value);
+        break;
+      case "toDate":
+        setToDate(value);
         break;
       default:
         break;
@@ -99,6 +243,14 @@ const SoldOut = () => {
     );
   };
 
+  const searchValueChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+
+    setSearchValue(value);
+  };
+
   const sendMessage = async (event) => {
     const eventIdx = event.target.value;
 
@@ -112,8 +264,9 @@ const SoldOut = () => {
 
         action.innerText = "메세지전송";
         button.setAttribute("disabled", "");
+        return alert("메시지가 전송되었습니다.");
       } else {
-        return console.log("failed");
+        return alert("메시지 전송에 실패하였습니다.");
       }
     });
   };
@@ -122,39 +275,97 @@ const SoldOut = () => {
     <>
       <CCard>
         <CCardBody>
-          <CRow>
-            <CCol className="d-none d-md-block">
-              <CButtonGroup className="float-left mr-3">
+          <CFormGroup row>
+            <CCol xs="3">
+              <CInputGroup>
+                <CInput
+                  type="date"
+                  id="fromDate"
+                  name="fromDate"
+                  placeholder="시작일"
+                  value={fromDate}
+                  onChange={onChangeDate}
+                />
+                <CInput
+                  type="date"
+                  id="toDate"
+                  name="toDate"
+                  placeholder="종료일"
+                  value={toDate}
+                  onChange={onChangeDate}
+                />
+              </CInputGroup>
+            </CCol>
+            <CCol xs="2">
+              <CButtonGroup>
+                {[
+                  ["주문일자", "order"],
+                  ["품절일자", "soldout"],
+                ].map((value) => (
+                  <CButton
+                    color="outline-secondary"
+                    key={value[1]}
+                    name={value[0]}
+                    className="mx-0"
+                    active={value[1] === searchType}
+                    value={value[1]}
+                    onClick={changeSearchType}
+                  >
+                    {value[0]}
+                  </CButton>
+                ))}
+              </CButtonGroup>
+            </CCol>
+            <CCol xs="3">
+              <CButtonGroup>
                 {["오늘", "어제", "1주", "1개월"].map((value) => (
                   <CButton
                     color="outline-secondary"
                     key={value}
                     className="mx-0"
-                    active={value === dateStatus}
-                    onClick={changeDateStatus}
+                    active={value === dateType}
+                    onClick={changedateType}
                   >
                     {value}
                   </CButton>
                 ))}
               </CButtonGroup>
             </CCol>
-            <CCol className="d-none d-md-block" sm={4}>
+          </CFormGroup>
+          <CFormGroup row>
+            <CCol xs="3">
               <CInputGroup>
-                <CSelect custom name="search-filter" id="search-filter">
-                  <option value="1">상품명</option>
-                  <option value="2">주문자</option>
-                  <option value="3">주문번호</option>
+                <CSelect
+                  custom
+                  name="search-filter"
+                  id="search-filter"
+                  onChange={onSelectChange}
+                  value={selectOpt}
+                >
+                  <option value="상품명">상품명</option>
+                  <option value="상품ID">상품ID</option>
+                  <option value="주문자">주문자</option>
+                  <option value="주문번호">주문번호</option>
                 </CSelect>
                 <CInput
                   type="text"
                   id="nf-email"
                   name="nf-email"
                   placeholder="검색"
+                  value={searchValue}
+                  onChange={searchValueChange}
                 />
-                <CButton color="primary">검색</CButton>
               </CInputGroup>
             </CCol>
-          </CRow>
+            <CCol>
+              <CButton color="primary" name="search" onClick={onSearchClick}>
+                검색
+              </CButton>
+              <CButton name="clear" onClick={onSearchClick}>
+                초기화
+              </CButton>
+            </CCol>
+          </CFormGroup>
         </CCardBody>
       </CCard>
       <CCard>
@@ -206,14 +417,16 @@ const SoldOut = () => {
                   qty,
                   user_name,
                   product_id,
+                  soldout_date,
                 } = product;
-                const easyDate = moment(new Date(order_date)).format(
-                  "YYYY-MM-DD HH:MM:SS"
-                );
 
                 return (
                   <tr key={idx}>
-                    <td className="text-center">{easyDate}</td>
+                    <td className="text-center">
+                      {order_date}
+                      <br />
+                      {soldout_date}
+                    </td>
                     <td className="text-center">{bizName}</td>
                     <td className="text-center">{order_id}</td>
                     <td className="text-center">{product_name}</td>
