@@ -43,6 +43,11 @@ const SoldOut = () => {
     setDateStatus(event.target.innerText);
   };
 
+  const sendMessage = (event) => {
+    event.persist();
+    console.log(event.target.id);
+  };
+
   return (
     <>
       <CCard>
@@ -74,8 +79,6 @@ const SoldOut = () => {
               <tr>
                 <th className="text-center">
                   <input type="checkbox" name="selectAll" />
-                  <br />
-                  No
                 </th>
                 <th className="text-center">주문일자</th>
                 <th className="text-center">판매처</th>
@@ -125,15 +128,17 @@ const SoldOut = () => {
                   <tr key={idx}>
                     <td className="text-center">
                       <input type="checkbox" name={idx}></input>
-                      <br />
-                      {idx}
                     </td>
                     <td className="text-center">{easyDate}</td>
                     <td className="text-center">{bizName}</td>
                     <td className="text-center">{order_id}</td>
                     <td className="text-center">{product_name}</td>
-                    <td className="text-center">{option1}</td>
-                    <td className="text-center">{option2}</td>
+                    <td className="text-center">
+                      {option1 === "" ? "없음" : option1}
+                    </td>
+                    <td className="text-center">
+                      {option2 === "" ? "없음" : option2}
+                    </td>
                     <td className="text-center">
                       <img
                         src={list_image}
@@ -142,12 +147,17 @@ const SoldOut = () => {
                       />
                     </td>
                     <td className="text-center">{qty}</td>
-                    <td className="text-center">{numberWithCommas(price)}</td>
+                    <td className="text-center">{numberWithCommas(price)}원</td>
                     <td className="text-center">{user_name}</td>
                     <td className="text-center">{numberWithPhone(phone)}</td>
                     <td className="text-center">{action}</td>
                     <td className="text-center">
-                      <CButton color="primary" disabled={action !== "품절대상"}>
+                      <CButton
+                        color="primary"
+                        disabled={action !== "품절대상"}
+                        onClick={sendMessage}
+                        id={idx}
+                      >
                         전송
                       </CButton>
                     </td>
