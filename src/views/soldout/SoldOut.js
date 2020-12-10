@@ -8,7 +8,6 @@ import {
   CCol,
   CRow,
 } from "@coreui/react";
-import CIcon from "@coreui/icons-react";
 
 const SoldOut = () => {
   const [products, setProducts] = useState([]);
@@ -109,20 +108,24 @@ const SoldOut = () => {
                       <br />
                       {idx}
                     </td>
-                    <td>{order_date}</td>
-                    <td>{bizName}</td>
-                    <td>{order_id}</td>
-                    <td>{product_name}</td>
-                    <td>{option1}</td>
-                    <td>{option2}</td>
-                    <td>
-                      <img src={list_image} alt={product_name} />
+                    <td className="text-center">{order_date}</td>
+                    <td className="text-center">{bizName}</td>
+                    <td className="text-center">{order_id}</td>
+                    <td className="text-center">{product_name}</td>
+                    <td className="text-center">{option1}</td>
+                    <td className="text-center">{option2}</td>
+                    <td className="text-center">
+                      <img
+                        src={list_image}
+                        alt={product_name}
+                        style={{ width: "65px" }}
+                      />
                     </td>
-                    <td>{qty}</td>
-                    <td>{price}</td>
-                    <td>{user_name}</td>
-                    <td>{phone}</td>
-                    <td>{action}</td>
+                    <td className="text-center">{qty}</td>
+                    <td className="text-center">{price}</td>
+                    <td className="text-center">{user_name}</td>
+                    <td className="text-center">{phone}</td>
+                    <td className="text-center">{action}</td>
                   </tr>
                 );
               })}
