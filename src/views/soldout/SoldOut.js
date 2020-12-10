@@ -8,11 +8,16 @@ import {
   CCardBody,
   CCol,
   CRow,
+  CInput,
+  CInputGroup,
+  CSelect,
 } from "@coreui/react";
 
 const SoldOut = () => {
   const [products, setProducts] = useState([]);
   const [dateStatus, setDateStatus] = useState("전체");
+  const [fromDate, setFromDate] = useState("");
+  const [toDate, setToDate] = useState("");
 
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -41,11 +46,74 @@ const SoldOut = () => {
   const changeDateStatus = (event) => {
     event.persist();
     setDateStatus(event.target.innerText);
+    switch (event.target.innerText) {
+      case "전체":
+        setFromDate("");
+        setToDate("");
+        getSoldOut();
+        break;
+      case "오늘":
+        setFromDate(moment().format("YYYY-MM-DD"));
+        setToDate(moment().format("YYYY-MM-DD"));
+        getSoldOut(
+          `&from_date=${moment().format("YYYYMMDD")}&to_date=${moment().format(
+            "YYYYMMDD"
+          )}`
+        );
+        break;
+      case "어제":
+        setFromDate(moment().subtract(1, "days").format("YYYY-MM-DD"));
+        setToDate(moment().subtract(1, "days").format("YYYY-MM-DD"));
+        getSoldOut(
+          `&from_date=${moment()
+            .subtract(1, "days")
+            .format("YYYYMMDD")}&to_date=${moment()
+            .subtract(1, "days")
+            .format("YYYYMMDD")}`
+        );
+        break;
+      case "1주":
+        setFromDate(moment().subtract(1, "weeks").format("YYYY-MM-DD"));
+        setToDate(moment().format("YYYY-MM-DD"));
+        getSoldOut(
+          `&from_date=${moment()
+            .subtract(1, "weeks")
+            .format("YYYYMMDD")}&to_date=${moment().format("YYYYMMDD")}`
+        );
+        break;
+      case "1개월":
+        setFromDate(moment().subtract(1, "months").format("YYYY-MM-DD"));
+        setToDate(moment().format("YYYY-MM-DD"));
+        getSoldOut(
+          `&from_date=${moment()
+            .subtract(1, "months")
+            .format("YYYYMMDD")}&to_date=${moment().format("YYYYMMDD")}`
+        );
+        break;
+      default:
+        break;
+    }
   };
 
-  const sendMessage = (event) => {
-    event.persist();
-    console.log(event.target.id);
+  const onSearchSubmit = () => {};
+
+  const sendMessage = async (event) => {
+    const eventIdx = event.target.value;
+
+    const res = await axios.get(
+      `https://sadmin.piclick.kr/soldout/sms?idx=${eventIdx}`
+    );
+    res.data.results.map((result) => {
+      if (result.result_code === "1") {
+        const action = document.querySelector(`#action-${eventIdx}`);
+        const button = document.querySelector(`#button-${eventIdx}`);
+
+        action.innerText = "메세지전송";
+        button.setAttribute("disabled", "");
+      } else {
+        return console.log("failed");
+      }
+    });
   };
 
   return (
@@ -68,19 +136,35 @@ const SoldOut = () => {
                 ))}
               </CButtonGroup>
             </CCol>
+            <CCol className="d-none d-md-block" sm={4}>
+              <CInputGroup>
+                <CSelect custom name="search-filter" id="search-filter">
+                  <option value="1">상품명</option>
+                  <option value="2">주문자</option>
+                  <option value="3">주문번호</option>
+                </CSelect>
+                <CInput
+                  type="text"
+                  id="nf-email"
+                  name="nf-email"
+                  placeholder="검색"
+                />
+                <CButton color="primary">검색</CButton>
+              </CInputGroup>
+            </CCol>
           </CRow>
         </CCardBody>
       </CCard>
-
       <CCard>
         <CCardBody>
           <table className="table table-hover table-outline mb-0 d-none d-sm-table">
             <thead className="thead-light">
               <tr>
                 <th className="text-center">
-                  <input type="checkbox" name="selectAll" />
+                  주문일자
+                  <br />
+                  품절일자
                 </th>
-                <th className="text-center">주문일자</th>
                 <th className="text-center">판매처</th>
                 <th className="text-center">주문번호</th>
                 <th className="text-center">상품명</th>
@@ -126,9 +210,6 @@ const SoldOut = () => {
 
                 return (
                   <tr key={idx}>
-                    <td className="text-center">
-                      <input type="checkbox" name={idx}></input>
-                    </td>
                     <td className="text-center">{easyDate}</td>
                     <td className="text-center">{bizName}</td>
                     <td className="text-center">{order_id}</td>
@@ -150,13 +231,16 @@ const SoldOut = () => {
                     <td className="text-center">{numberWithCommas(price)}원</td>
                     <td className="text-center">{user_name}</td>
                     <td className="text-center">{numberWithPhone(phone)}</td>
-                    <td className="text-center">{action}</td>
+                    <td className="text-center action" id={`action-${idx}`}>
+                      {action}
+                    </td>
                     <td className="text-center">
                       <CButton
                         color="primary"
                         disabled={action !== "품절대상"}
                         onClick={sendMessage}
-                        id={idx}
+                        value={`${idx}`}
+                        id={`button-${idx}`}
                       >
                         전송
                       </CButton>
