@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
+import moment from "moment";
 import {
   CButton,
   CButtonGroup,
@@ -11,6 +12,15 @@ import {
 
 const SoldOut = () => {
   const [products, setProducts] = useState([]);
+  const [dateStatus, setDateStatus] = useState("전체");
+
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
+  function numberWithPhone(x) {
+    return x.toString().replace(/(\d{2,3})(\d{3,4})(\d{3,4})/, "$1-$2-$3");
+  }
 
   const getSoldOut = async (args) => {
     if (args === undefined) {
@@ -28,6 +38,11 @@ const SoldOut = () => {
     return () => getSoldOut();
   }, []);
 
+  const changeDateStatus = (event) => {
+    event.persist();
+    setDateStatus(event.target.innerText);
+  };
+
   return (
     <>
       <CCard>
@@ -35,12 +50,13 @@ const SoldOut = () => {
           <CRow>
             <CCol className="d-none d-md-block">
               <CButtonGroup className="float-right mr-3">
-                {["Day", "Month", "Year"].map((value) => (
+                {["전체", "오늘", "어제", "1주", "1개월"].map((value) => (
                   <CButton
                     color="outline-secondary"
                     key={value}
                     className="mx-0"
-                    active={value === "Month"}
+                    active={value === dateStatus}
+                    onClick={changeDateStatus}
                   >
                     {value}
                   </CButton>
@@ -81,6 +97,7 @@ const SoldOut = () => {
                   주문자 전화번호
                 </th>
                 <th className="text-center">CS 상태</th>
+                <th className="text-center">메시지 전송</th>
               </tr>
             </thead>
             <tbody>
@@ -100,6 +117,9 @@ const SoldOut = () => {
                   qty,
                   user_name,
                 } = product;
+                const easyDate = moment(new Date(order_date)).format(
+                  "YYYY-MM-DD HH:MM:SS"
+                );
 
                 return (
                   <tr key={idx}>
@@ -108,7 +128,7 @@ const SoldOut = () => {
                       <br />
                       {idx}
                     </td>
-                    <td className="text-center">{order_date}</td>
+                    <td className="text-center">{easyDate}</td>
                     <td className="text-center">{bizName}</td>
                     <td className="text-center">{order_id}</td>
                     <td className="text-center">{product_name}</td>
@@ -122,10 +142,15 @@ const SoldOut = () => {
                       />
                     </td>
                     <td className="text-center">{qty}</td>
-                    <td className="text-center">{price}</td>
+                    <td className="text-center">{numberWithCommas(price)}</td>
                     <td className="text-center">{user_name}</td>
-                    <td className="text-center">{phone}</td>
+                    <td className="text-center">{numberWithPhone(phone)}</td>
                     <td className="text-center">{action}</td>
+                    <td className="text-center">
+                      <CButton color="primary" disabled={action !== "품절대상"}>
+                        전송
+                      </CButton>
+                    </td>
                   </tr>
                 );
               })}
