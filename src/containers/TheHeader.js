@@ -1,7 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { CHeader, CToggler, CHeaderBrand } from "@coreui/react";
-import CIcon from "@coreui/icons-react";
+import { CHeader, CToggler } from "@coreui/react";
 
 const TheHeader = () => {
   const dispatch = useDispatch();
