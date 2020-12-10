@@ -15,7 +15,7 @@ import {
 
 const SoldOut = () => {
   const [products, setProducts] = useState([]);
-  const [dateStatus, setDateStatus] = useState("전체");
+  const [dateStatus, setDateStatus] = useState("");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
 
@@ -47,11 +47,6 @@ const SoldOut = () => {
     event.persist();
     setDateStatus(event.target.innerText);
     switch (event.target.innerText) {
-      case "전체":
-        setFromDate("");
-        setToDate("");
-        getSoldOut();
-        break;
       case "오늘":
         setFromDate(moment().format("YYYY-MM-DD"));
         setToDate(moment().format("YYYY-MM-DD"));
@@ -95,7 +90,14 @@ const SoldOut = () => {
     }
   };
 
-  const onSearchSubmit = () => {};
+  const onPreviewClick = (product_no, order_id) => {
+    var url = `https://sol.piclick.kr/soldOut/?mallID=rlackdals1&product_no=${product_no}&order_id=${order_id}`;
+    window.open(
+      url,
+      "_blank",
+      "menubar=no, resizable=no, width=360, height=640"
+    );
+  };
 
   const sendMessage = async (event) => {
     const eventIdx = event.target.value;
@@ -122,8 +124,8 @@ const SoldOut = () => {
         <CCardBody>
           <CRow>
             <CCol className="d-none d-md-block">
-              <CButtonGroup className="float-right mr-3">
-                {["전체", "오늘", "어제", "1주", "1개월"].map((value) => (
+              <CButtonGroup className="float-left mr-3">
+                {["오늘", "어제", "1주", "1개월"].map((value) => (
                   <CButton
                     color="outline-secondary"
                     key={value}
@@ -203,6 +205,7 @@ const SoldOut = () => {
                   product_name,
                   qty,
                   user_name,
+                  product_id,
                 } = product;
                 const easyDate = moment(new Date(order_date)).format(
                   "YYYY-MM-DD HH:MM:SS"
@@ -235,6 +238,14 @@ const SoldOut = () => {
                       {action}
                     </td>
                     <td className="text-center">
+                      <CButton
+                        onClick={() => {
+                          onPreviewClick(product_id, order_id);
+                        }}
+                        color="warning"
+                      >
+                        미리보기
+                      </CButton>
                       <CButton
                         color="primary"
                         disabled={action !== "품절대상"}
