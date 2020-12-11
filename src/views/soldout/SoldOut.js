@@ -11,8 +11,14 @@ import {
   CInputGroup,
   CSelect,
   CFormGroup,
+  CModal,
+  CModalHeader,
+  CModalBody,
+  CModalFooter,
 } from "@coreui/react";
 import { Redirect } from "react-router-dom";
+
+const token = sessionStorage.getItem("userToken");
 
 const SoldOut = () => {
   const [products, setProducts] = useState([]);
@@ -23,6 +29,9 @@ const SoldOut = () => {
   const [selectOpt, setSelectOpt] = useState("상품명");
   const [searchValue, setSearchValue] = useState("");
   const [redirect, setRedirect] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+  const [editOrderID, setEditOrderID] = useState("");
+  const [csStatus, setCsStatus] = useState("환불");
 
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -32,8 +41,12 @@ const SoldOut = () => {
     return x.toString().replace(/(\d{2,3})(\d{3,4})(\d{3,4})/, "$1-$2-$3");
   }
 
+  const toggleEdit = (order_id) => {
+    setEditModal(!editModal);
+    setEditOrderID(order_id);
+  };
+
   const getSoldOut = async (args) => {
-    const token = sessionStorage.getItem("userToken");
     if (args === undefined) {
       args = "";
     }
@@ -107,6 +120,34 @@ const SoldOut = () => {
         break;
       default:
         break;
+    }
+  };
+
+  const changeCSStatus = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setCsStatus(value);
+  };
+
+  const postCsStatus = async () => {
+    const res = await axios({
+      method: "post",
+      url: "https://sadmin.piclick.kr/soldout/action",
+      headers: {
+        Authorization: `JWT ${token}`,
+      },
+      data: {
+        order_id: editOrderID,
+        action_code: csStatus,
+      },
+    });
+    if (res.data.results === undefined) {
+      getSoldOut();
+      toggleEdit("");
+    } else {
+      getSoldOut();
+      toggleEdit("");
     }
   };
 
@@ -420,7 +461,7 @@ const SoldOut = () => {
                   주문자 전화번호
                 </th>
                 <th className="text-center">CS 상태</th>
-                <th className="text-center">메시지 전송</th>
+                <th className="text-center"></th>
               </tr>
             </thead>
             <tbody>
@@ -472,13 +513,21 @@ const SoldOut = () => {
                     <td className="text-center">{numberWithPhone(phone)}</td>
                     <td className="text-center action" id={`action-${idx}`}>
                       {action}
+                      <br />
+                      <CButton
+                        onClick={() => {
+                          toggleEdit(order_id);
+                        }}
+                        color="secondary"
+                      >
+                        상태수정
+                      </CButton>
                     </td>
                     <td className="text-center">
                       <CButton
                         onClick={() => {
                           onPreviewClick(product_id, order_id);
                         }}
-                        color="warning"
                       >
                         미리보기
                       </CButton>
@@ -499,6 +548,30 @@ const SoldOut = () => {
           </table>
         </CCardBody>
       </CCard>
+      <CModal show={editModal} name="edit">
+        <CModalHeader closeButton>CS상태 수정</CModalHeader>
+        <CModalBody>
+          <CSelect onChange={changeCSStatus} value={csStatus}>
+            <option value="R">환불</option>
+            <option value="S">적립</option>
+            <option value="E">교환</option>
+            <option value="X">처리완료</option>
+          </CSelect>
+        </CModalBody>
+        <CModalFooter>
+          <CButton
+            color="secondary"
+            onClick={() => {
+              toggleEdit("");
+            }}
+          >
+            닫기
+          </CButton>
+          <CButton color="primary" onClick={postCsStatus}>
+            상태수정
+          </CButton>
+        </CModalFooter>
+      </CModal>
     </>
   );
 };
