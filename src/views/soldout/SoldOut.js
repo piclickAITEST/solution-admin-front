@@ -513,7 +513,7 @@ const SoldOut = () => {
                         }}
                         color="secondary"
                       >
-                        상태확인
+                        상태수정
                       </CButton>
                     </td>
                     <td className="text-center">
@@ -542,7 +542,7 @@ const SoldOut = () => {
         </CCardBody>
       </CCard>
       <CModal show={editModal} name="edit">
-        <CModalHeader closeButton>CS 상태확인</CModalHeader>
+        <CModalHeader closeButton>CS 상태수정</CModalHeader>
         <CModalBody>
           <CSelect onChange={changeCSStatus} value={csStatus}>
             <option value="R">환불</option>
