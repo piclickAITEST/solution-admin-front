@@ -65,23 +65,13 @@ const SoldOut = () => {
     }
   };
 
-  const cleanUp = () => {
-    setProducts([]);
-    setDateType("");
-    setSearchType("");
-    setFromDate("");
-    setToDate("");
-    setSelectOpt("상품명");
-    setSearchValue("");
-    setEditModal(false);
-    setEditOrderID("");
-    setCsStatus("환불");
-  };
-
   useEffect(() => {
     getSoldOut();
+    const getEveryTimes = setInterval(() => {
+      getSoldOut();
+    }, 60000 * 10);
 
-    return () => cleanUp;
+    return () => clearInterval(getEveryTimes);
   }, []);
 
   const changedateType = (event) => {
