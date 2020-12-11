@@ -72,7 +72,9 @@ const TheHeader = () => {
         </CButton>
         <CNavbarNav className="ml-auto">
           <CDropdown>
-            <CDropdownToggle>{username}</CDropdownToggle>
+            <CDropdownToggle>
+              <strong>{username}</strong>
+            </CDropdownToggle>
             <CDropdownMenu>
               <CDropdownItem className="my-2 my-sm-0" onClick={logoutClick}>
                 로그아웃
