@@ -18,8 +18,6 @@ import {
 } from "@coreui/react";
 import { Redirect } from "react-router-dom";
 
-const token = sessionStorage.getItem("userToken");
-
 const SoldOut = () => {
   const [products, setProducts] = useState([]);
   const [dateType, setDateType] = useState("");
@@ -47,6 +45,7 @@ const SoldOut = () => {
   };
 
   const getSoldOut = async (args) => {
+    const token = sessionStorage.getItem("userToken");
     if (args === undefined) {
       args = "";
     }
@@ -74,6 +73,9 @@ const SoldOut = () => {
     setToDate("");
     setSelectOpt("상품명");
     setSearchValue("");
+    setEditModal(false);
+    setEditOrderID("");
+    setCsStatus("환불");
   };
 
   useEffect(() => {
@@ -131,6 +133,7 @@ const SoldOut = () => {
   };
 
   const postCsStatus = async () => {
+    const token = sessionStorage.getItem("userToken");
     const res = await axios({
       method: "post",
       url: "https://sadmin.piclick.kr/soldout/action",
@@ -334,7 +337,7 @@ const SoldOut = () => {
   };
 
   if (redirect) {
-    return <Redirect to="/login" />;
+    return <Redirect from="*" to="/login" />;
   }
 
   return (
