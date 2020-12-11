@@ -144,9 +144,11 @@ const SoldOut = () => {
     });
     if (res.data.results === undefined) {
       getSoldOut();
+      setCsStatus("환불");
       toggleEdit("");
     } else {
       getSoldOut();
+      setCsStatus("환불");
       toggleEdit("");
     }
   };
