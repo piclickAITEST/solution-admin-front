@@ -50,14 +50,14 @@ const Login = () => {
         setIsInvalid(false);
         setIsLogin(true);
       })
-      .catch((error) => {
+      .catch(() => {
         setIsInvalid(true);
         setIsLogin(false);
       });
   };
 
-  if (isLogin === true) {
-    return <Redirect to="/" />;
+  if (sessionStorage.getItem("userToken")) {
+    return <Redirect from="*" to="/soldout" />;
   }
 
   return (
