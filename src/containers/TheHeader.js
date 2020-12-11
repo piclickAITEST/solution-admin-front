@@ -1,6 +1,15 @@
 import React, { useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
-import { CNavbar, CCollapse, CNavbarNav, CButton } from "@coreui/react";
+import {
+  CNavbar,
+  CCollapse,
+  CNavbarNav,
+  CButton,
+  CDropdown,
+  CDropdownToggle,
+  CDropdownMenu,
+  CDropdownItem,
+} from "@coreui/react";
 import { CIcon } from "@coreui/icons-react";
 import { Redirect } from "react-router-dom";
 
@@ -42,9 +51,14 @@ const TheHeader = () => {
           <CIcon name="cil-menu" size="xl" />
         </CButton>
         <CNavbarNav className="ml-auto">
-          <CButton className="my-2 my-sm-0" onClick={logoutClick}>
-            로그아웃
-          </CButton>
+          <CDropdown>
+            <CDropdownToggle>테스트</CDropdownToggle>
+            <CDropdownMenu>
+              <CDropdownItem className="my-2 my-sm-0" onClick={logoutClick}>
+                로그아웃
+              </CDropdownItem>
+            </CDropdownMenu>
+          </CDropdown>
         </CNavbarNav>
       </CCollapse>
     </CNavbar>

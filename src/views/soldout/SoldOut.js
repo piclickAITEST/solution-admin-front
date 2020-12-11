@@ -447,7 +447,6 @@ const SoldOut = () => {
                   <br />
                   품절일자
                 </th>
-                <th className="text-center">판매처</th>
                 <th className="text-center">주문번호</th>
                 <th className="text-center">상품명</th>
                 <th className="text-center">컬러</th>
@@ -473,7 +472,6 @@ const SoldOut = () => {
               {products.map((product) => {
                 const {
                   action,
-                  bizName,
                   idx,
                   list_image,
                   option1,
@@ -496,7 +494,7 @@ const SoldOut = () => {
                       <br />
                       {soldout_date}
                     </td>
-                    <td className="text-center">{bizName}</td>
+
                     <td className="text-center">{order_id}</td>
                     <td className="text-center">{product_name}</td>
                     <td className="text-center">
@@ -525,7 +523,7 @@ const SoldOut = () => {
                         }}
                         color="secondary"
                       >
-                        상태수정
+                        상태확인
                       </CButton>
                     </td>
                     <td className="text-center">
@@ -554,7 +552,7 @@ const SoldOut = () => {
         </CCardBody>
       </CCard>
       <CModal show={editModal} name="edit">
-        <CModalHeader closeButton>CS상태 수정</CModalHeader>
+        <CModalHeader closeButton>CS 상태확인</CModalHeader>
         <CModalBody>
           <CSelect onChange={changeCSStatus} value={csStatus}>
             <option value="R">환불</option>
