@@ -42,4 +42,4 @@ const TheContent = () => {
   );
 };
 
-export default React.memo(TheContent);
+export default TheContent;

@@ -12,6 +12,7 @@ import {
   CSelect,
   CFormGroup,
 } from "@coreui/react";
+import { Redirect } from "react-router-dom";
 
 const SoldOut = () => {
   const [products, setProducts] = useState([]);
@@ -21,6 +22,7 @@ const SoldOut = () => {
   const [toDate, setToDate] = useState("");
   const [selectOpt, setSelectOpt] = useState("상품명");
   const [searchValue, setSearchValue] = useState("");
+  const [redirect, setRedirect] = useState(false);
 
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -31,12 +33,19 @@ const SoldOut = () => {
   }
 
   const getSoldOut = async (args) => {
+    const token = sessionStorage.getItem("userToken");
     if (args === undefined) {
       args = "";
     }
-    const res = await axios.get(
-      `https://sadmin.piclick.kr/soldout/?au_id=2605${args}`
-    );
+    if (token === null || undefined) {
+      setRedirect(true);
+      return;
+    }
+    const res = await axios.get(`https://sadmin.piclick.kr/soldout/${args}`, {
+      headers: {
+        Authorization: `JWT ${token}`,
+      },
+    });
     if (res.data.results === undefined) {
       setProducts([]);
     } else {
@@ -44,10 +53,20 @@ const SoldOut = () => {
     }
   };
 
+  const cleanUp = () => {
+    setProducts([]);
+    setDateType("");
+    setSearchType("");
+    setFromDate("");
+    setToDate("");
+    setSelectOpt("상품명");
+    setSearchValue("");
+  };
+
   useEffect(() => {
     getSoldOut();
 
-    return () => getSoldOut();
+    return () => cleanUp;
   }, []);
 
   const changedateType = (event) => {
@@ -270,6 +289,10 @@ const SoldOut = () => {
       }
     });
   };
+
+  if (redirect) {
+    return <Redirect to="/login" />;
+  }
 
   return (
     <>

@@ -1,5 +1,6 @@
-import React from "react";
-import { Link } from "react-router-dom";
+import React, { useState } from "react";
+import { Redirect } from "react-router-dom";
+import axios from "axios";
 import {
   CButton,
   CCard,
@@ -17,6 +18,46 @@ import {
 import CIcon from "@coreui/icons-react";
 
 const Login = () => {
+  const [id, setId] = useState("");
+  const [password, setPassword] = useState("");
+  const [isLogin, setIsLogin] = useState(false);
+
+  const inputChange = (event) => {
+    const {
+      target: { name, value },
+    } = event;
+    if (name === "id") {
+      setId(value);
+    } else {
+      setPassword(value);
+    }
+  };
+
+  const loginSubmit = (event) => {
+    event.preventDefault();
+
+    axios({
+      method: "post",
+      url: "https://sadmin.piclick.kr/auth",
+      data: {
+        username: id,
+        password: password,
+      },
+    })
+      .then((res) => {
+        sessionStorage.setItem("userToken", res.data.access_token);
+        setIsLogin(true);
+      })
+      .catch((error) => {
+        console.log(error);
+        setIsLogin(false);
+      });
+  };
+
+  if (isLogin === true) {
+    return <Redirect to="/" />;
+  }
+
   return (
     <div className="c-app c-default-layout flex-row align-items-center">
       <CContainer>
@@ -45,7 +86,14 @@ const Login = () => {
                         <CIcon name="cil-user" />
                       </CInputGroupText>
                     </CInputGroupPrepend>
-                    <CInput type="text" placeholder="ID" />
+                    <CInput
+                      type="text"
+                      name="id"
+                      placeholder="ID"
+                      autoComplete="username"
+                      value={id}
+                      onChange={inputChange}
+                    />
                   </CInputGroup>
                   <CInputGroup className="mb-4">
                     <CInputGroupPrepend>
@@ -53,11 +101,20 @@ const Login = () => {
                         <CIcon name="cil-lock-locked" />
                       </CInputGroupText>
                     </CInputGroupPrepend>
-                    <CInput type="password" placeholder="비밀번호" />
+                    <CInput
+                      type="password"
+                      name="password"
+                      placeholder="비밀번호"
+                      autoComplete="current-password"
+                      value={password}
+                      onChange={inputChange}
+                    />
                   </CInputGroup>
                   <CRow>
                     <CCol>
-                      <CButton color="primary">로그인</CButton>
+                      <CButton color="primary" onClick={loginSubmit}>
+                        로그인
+                      </CButton>
                     </CCol>
                   </CRow>
                 </CForm>
