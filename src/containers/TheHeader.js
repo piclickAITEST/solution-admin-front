@@ -1,5 +1,6 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
+import axios from "axios";
 import {
   CNavbar,
   CCollapse,
@@ -15,6 +16,7 @@ import { Redirect } from "react-router-dom";
 
 const TheHeader = () => {
   const [redirect, setRedirect] = useState(false);
+  const [username, setUserName] = useState("");
   const dispatch = useDispatch();
   const sidebarShow = useSelector((state) => state.sidebarShow);
 
@@ -37,6 +39,24 @@ const TheHeader = () => {
     setRedirect(true);
   };
 
+  const getUsername = async () => {
+    const res = await axios.get("https://sadmin.piclick.kr/users/", {
+      headers: {
+        Authorization: `JWT ${sessionStorage.getItem("userToken")}`,
+      },
+    });
+    if (res.data.brand_name === undefined) {
+      setUserName("");
+    } else {
+      setUserName(res.data.brand_name);
+    }
+  };
+
+  useEffect(() => {
+    getUsername();
+    return () => getUsername;
+  }, []);
+
   if (redirect) {
     return <Redirect to="/" />;
   }
@@ -52,7 +72,7 @@ const TheHeader = () => {
         </CButton>
         <CNavbarNav className="ml-auto">
           <CDropdown>
-            <CDropdownToggle>테스트</CDropdownToggle>
+            <CDropdownToggle>{username}</CDropdownToggle>
             <CDropdownMenu>
               <CDropdownItem className="my-2 my-sm-0" onClick={logoutClick}>
                 로그아웃
