@@ -33,7 +33,7 @@ const TheHeader = () => {
   }
 
   return (
-    <CNavbar expandable="sm" sticky="top" color="white">
+    <CNavbar expandable="sm" sticky={true} color="white">
       <CCollapse navbar>
         <CButton className="ml-md-3 d-lg-none" onClick={toggleSidebarMobile}>
           <CIcon name="cil-menu" size="xl" />

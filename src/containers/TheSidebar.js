@@ -40,7 +40,6 @@ const TheSidebar = () => {
           }}
         />
       </CSidebarNav>
-      <CSidebarMinimizer className="c-d-md-down-none" />
     </CSidebar>
   );
 };
