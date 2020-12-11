@@ -20,8 +20,8 @@ import CIcon from "@coreui/icons-react";
 const Login = () => {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
-  const [isLogin, setIsLogin] = useState(false);
   const [isInvalid, setIsInvalid] = useState(false);
+  const [isLogin, setIsLogin] = useState(false);
 
   const inputChange = (event) => {
     const {
@@ -56,8 +56,8 @@ const Login = () => {
       });
   };
 
-  if (sessionStorage.getItem("userToken")) {
-    return <Redirect from="*" to="/soldout" />;
+  if (isLogin === true) {
+    return <Redirect to="/" />;
   }
 
   return (
