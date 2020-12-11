@@ -29,8 +29,10 @@ const Login = () => {
     } = event;
     if (name === "id") {
       setId(value);
+      setIsInvalid(false);
     } else {
       setPassword(value);
+      setIsInvalid(false);
     }
   };
 
@@ -115,7 +117,11 @@ const Login = () => {
                     />
                   </CInputGroup>
                   {isInvalid ? (
-                    <CLabel>ID나 비밀번호가 일치하지 않습니다.</CLabel>
+                    <CLabel>
+                      계정 정보가 존재하지 않습니다.
+                      <br />
+                      ID와 비밀번호를 다시 확인하세요.
+                    </CLabel>
                   ) : (
                     ""
                   )}
