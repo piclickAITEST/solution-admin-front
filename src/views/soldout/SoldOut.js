@@ -124,13 +124,13 @@ const SoldOut = () => {
             } else {
               //검색어만
               if (selectOpt === "상품명") {
-                getSoldOut(`&pname=${searchValue}`);
+                getSoldOut(`?pname=${searchValue}`);
               } else if (selectOpt === "상품ID") {
-                getSoldOut(`&pid=${searchValue}`);
+                getSoldOut(`?pid=${searchValue}`);
               } else if (selectOpt === "주문자") {
-                getSoldOut(`&uname=${searchValue}`);
+                getSoldOut(`?uname=${searchValue}`);
               } else {
-                getSoldOut(`&oid=${searchValue}`);
+                getSoldOut(`?oid=${searchValue}`);
               }
             }
           } else {
@@ -139,13 +139,13 @@ const SoldOut = () => {
             } else {
               //검색어만
               if (selectOpt === "상품명") {
-                getSoldOut(`&pname=${searchValue}`);
+                getSoldOut(`?pname=${searchValue}`);
               } else if (selectOpt === "상품ID") {
-                getSoldOut(`&pid=${searchValue}`);
+                getSoldOut(`?pid=${searchValue}`);
               } else if (selectOpt === "주문자") {
-                getSoldOut(`&uname=${searchValue}`);
+                getSoldOut(`?uname=${searchValue}`);
               } else {
-                getSoldOut(`&oid=${searchValue}`);
+                getSoldOut(`?oid=${searchValue}`);
               }
             }
           }
@@ -156,20 +156,20 @@ const SoldOut = () => {
             } else {
               //검색어만
               if (selectOpt === "상품명") {
-                getSoldOut(`&pname=${searchValue}`);
+                getSoldOut(`?pname=${searchValue}`);
               } else if (selectOpt === "상품ID") {
-                getSoldOut(`&pid=${searchValue}`);
+                getSoldOut(`?pid=${searchValue}`);
               } else if (selectOpt === "주문자") {
-                getSoldOut(`&uname=${searchValue}`);
+                getSoldOut(`?uname=${searchValue}`);
               } else {
-                getSoldOut(`&oid=${searchValue}`);
+                getSoldOut(`?oid=${searchValue}`);
               }
             }
           } else {
             if (searchValue === "") {
               //날짜만
               getSoldOut(
-                `&from_date=${moment(fromDate).format(
+                `?from_date=${moment(fromDate).format(
                   "YYYYMMDD"
                 )}&to_date=${moment(toDate).format(
                   "YYYYMMDD"
@@ -179,7 +179,7 @@ const SoldOut = () => {
               //검색어, 날짜 둘다
               if (selectOpt === "상품명") {
                 getSoldOut(
-                  `&from_date=${moment(fromDate).format(
+                  `?from_date=${moment(fromDate).format(
                     "YYYYMMDD"
                   )}&to_date=${moment(toDate).format(
                     "YYYYMMDD"
@@ -187,7 +187,7 @@ const SoldOut = () => {
                 );
               } else if (selectOpt === "주문자") {
                 getSoldOut(
-                  `&from_date=${moment(fromDate).format(
+                  `?from_date=${moment(fromDate).format(
                     "YYYYMMDD"
                   )}&to_date=${moment(toDate).format(
                     "YYYYMMDD"
@@ -195,7 +195,7 @@ const SoldOut = () => {
                 );
               } else if (selectOpt === "상품ID") {
                 getSoldOut(
-                  `&from_date=${moment(fromDate).format(
+                  `?from_date=${moment(fromDate).format(
                     "YYYYMMDD"
                   )}&to_date=${moment(toDate).format(
                     "YYYYMMDD"
@@ -203,7 +203,7 @@ const SoldOut = () => {
                 );
               } else {
                 getSoldOut(
-                  `&from_date=${moment(fromDate).format(
+                  `?from_date=${moment(fromDate).format(
                     "YYYYMMDD"
                   )}&to_date=${moment(toDate).format(
                     "YYYYMMDD"
