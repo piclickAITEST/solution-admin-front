@@ -33,24 +33,16 @@ const TheHeader = () => {
   }
 
   return (
-    <CNavbar expandable="sm">
+    <CNavbar expandable="sm" sticky="top" color="white">
       <CCollapse navbar>
-        <CButton
-          inHeader
-          className="ml-md-3 d-lg-none"
-          onClick={toggleSidebarMobile}
-        >
+        <CButton className="ml-md-3 d-lg-none" onClick={toggleSidebarMobile}>
           <CIcon name="cil-menu" size="xl" />
         </CButton>
-        <CButton
-          inHeader
-          className="ml-3 d-md-down-none"
-          onClick={toggleSidebar}
-        >
+        <CButton className="ml-3 d-md-down-none" onClick={toggleSidebar}>
           <CIcon name="cil-menu" size="xl" />
         </CButton>
         <CNavbarNav className="ml-auto">
-          <CButton color="light" className="my-2 my-sm-0" onClick={logoutClick}>
+          <CButton className="my-2 my-sm-0" onClick={logoutClick}>
             로그아웃
           </CButton>
         </CNavbarNav>
