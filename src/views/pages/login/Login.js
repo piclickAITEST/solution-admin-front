@@ -21,6 +21,7 @@ const Login = () => {
   const [id, setId] = useState("");
   const [password, setPassword] = useState("");
   const [isLogin, setIsLogin] = useState(false);
+  const [isInvalid, setIsInvalid] = useState(false);
 
   const inputChange = (event) => {
     const {
@@ -46,10 +47,11 @@ const Login = () => {
     })
       .then((res) => {
         sessionStorage.setItem("userToken", res.data.access_token);
+        setIsInvalid(false);
         setIsLogin(true);
       })
       .catch((error) => {
-        console.log(error);
+        setIsInvalid(true);
         setIsLogin(false);
       });
   };
@@ -93,6 +95,7 @@ const Login = () => {
                       autoComplete="username"
                       value={id}
                       onChange={inputChange}
+                      className={isInvalid ? "is-invalid" : ""}
                     />
                   </CInputGroup>
                   <CInputGroup className="mb-4">
@@ -108,8 +111,14 @@ const Login = () => {
                       autoComplete="current-password"
                       value={password}
                       onChange={inputChange}
+                      className={isInvalid ? "is-invalid" : ""}
                     />
                   </CInputGroup>
+                  {isInvalid ? (
+                    <CLabel>ID나 비밀번호가 일치하지 않습니다.</CLabel>
+                  ) : (
+                    ""
+                  )}
                   <CRow>
                     <CCol>
                       <CButton color="primary" onClick={loginSubmit}>
