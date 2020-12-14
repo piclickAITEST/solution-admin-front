@@ -11,8 +11,12 @@ import {
   CInputGroup,
   CSelect,
   CFormGroup,
+  CModal,
+  CModalHeader,
+  CModalBody,
+  CModalFooter,
 } from "@coreui/react";
-import { Redirect, Link } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
 const SoldOut = () => {
   const [products, setProducts] = useState([]);
@@ -23,18 +27,22 @@ const SoldOut = () => {
   const [selectOpt, setSelectOpt] = useState("상품명");
   const [searchValue, setSearchValue] = useState("");
   const [redirect, setRedirect] = useState(false);
+  const [editModal, setEditModal] = useState(false);
+  const [editOrderID, setEditOrderID] = useState("");
+  const [csStatus, setCsStatus] = useState("환불");
 
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
   function numberWithPhone(x) {
-    if (x.length < 10) {
-      return x.toString().replace(/(\d{2})(\d{3})(\d{3,4})/, "$1-$2-$3");
-    } else {
-      return x.toString().replace(/(\d{2,3})(\d{4})(\d{4})/, "$1-$2-$3");
-    }
+    return x.toString().replace(/(\d{2,3})(\d{3,4})(\d{3,4})/, "$1-$2-$3");
   }
+
+  const toggleEdit = (order_id) => {
+    setEditModal(!editModal);
+    setEditOrderID(order_id);
+  };
 
   const getSoldOut = async (args) => {
     const token = sessionStorage.getItem("userToken");
@@ -57,13 +65,23 @@ const SoldOut = () => {
     }
   };
 
+  const cleanUp = () => {
+    setProducts([]);
+    setDateType("");
+    setSearchType("");
+    setFromDate("");
+    setToDate("");
+    setSelectOpt("상품명");
+    setSearchValue("");
+    setEditModal(false);
+    setEditOrderID("");
+    setCsStatus("환불");
+  };
+
   useEffect(() => {
     getSoldOut();
-    const getEveryTimes = setInterval(() => {
-      getSoldOut();
-    }, 60000 * 10);
 
-    return () => clearInterval(getEveryTimes);
+    return () => cleanUp;
   }, []);
 
   const changedateType = (event) => {
@@ -104,6 +122,37 @@ const SoldOut = () => {
         break;
       default:
         break;
+    }
+  };
+
+  const changeCSStatus = (event) => {
+    const {
+      target: { value },
+    } = event;
+    setCsStatus(value);
+  };
+
+  const postCsStatus = async () => {
+    const token = sessionStorage.getItem("userToken");
+    const res = await axios({
+      method: "post",
+      url: "https://sadmin.piclick.kr/soldout/action",
+      headers: {
+        Authorization: `JWT ${token}`,
+      },
+      data: {
+        order_id: editOrderID,
+        action_code: csStatus,
+      },
+    });
+    if (res.data.results === undefined) {
+      getSoldOut();
+      setCsStatus("환불");
+      toggleEdit("");
+    } else {
+      getSoldOut();
+      setCsStatus("환불");
+      toggleEdit("");
     }
   };
 
@@ -445,6 +494,7 @@ const SoldOut = () => {
                       <br />
                       {soldout_date}
                     </td>
+
                     <td className="text-center">{order_id}</td>
                     <td className="text-center">{product_name}</td>
                     <td className="text-center">
@@ -467,9 +517,14 @@ const SoldOut = () => {
                     <td className="text-center action" id={`action-${idx}`}>
                       {action}
                       <br />
-                      <Link to={`/detail/${idx}`}>
-                        <CButton color="secondary">상세정보</CButton>
-                      </Link>
+                      <CButton
+                        onClick={() => {
+                          toggleEdit(order_id);
+                        }}
+                        color="secondary"
+                      >
+                        상태확인
+                      </CButton>
                     </td>
                     <td className="text-center">
                       <CButton
@@ -496,6 +551,30 @@ const SoldOut = () => {
           </table>
         </CCardBody>
       </CCard>
+      <CModal show={editModal} name="edit">
+        <CModalHeader closeButton>CS 상태확인</CModalHeader>
+        <CModalBody>
+          <CSelect onChange={changeCSStatus} value={csStatus}>
+            <option value="R">환불</option>
+            <option value="S">적립</option>
+            <option value="E">교환</option>
+            <option value="X">처리완료</option>
+          </CSelect>
+        </CModalBody>
+        <CModalFooter>
+          <CButton
+            color="secondary"
+            onClick={() => {
+              toggleEdit("");
+            }}
+          >
+            닫기
+          </CButton>
+          <CButton color="primary" onClick={postCsStatus}>
+            상태수정
+          </CButton>
+        </CModalFooter>
+      </CModal>
     </>
   );
 };
