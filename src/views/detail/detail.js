@@ -12,7 +12,6 @@ import {
   CSelect,
   CLabel,
   CInput,
-  CButtonGroup,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 
@@ -29,6 +28,8 @@ function SoldOutDetail({ match, location }) {
   // const [detail, setDetail] = useState([]);
   const [redirect, setRedirect] = useState(false);
   const [csStatus, setCsStatus] = useState("R");
+  const [bankAccount, setBankAccount] = useState("");
+  const [countryCode, setCountryCode] = useState("");
 
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -123,6 +124,18 @@ function SoldOutDetail({ match, location }) {
     }
   };
 
+  const onInputChange = (event) => {
+    const {
+      target: { value, name },
+    } = event;
+
+    if (name === "bankAccount") {
+      setBankAccount(value);
+    } else {
+      setCountryCode(value);
+    }
+  };
+
   return (
     <div>
       <CCard>
@@ -153,12 +166,24 @@ function SoldOutDetail({ match, location }) {
               <>
                 <CCol xs="2">
                   <CLabel>계좌 번호</CLabel>
-                  <CInput placeholder="계좌번호" />
+                  <CInput
+                    name="bankAccount"
+                    value={bankAccount}
+                    onChange={onInputChange}
+                    placeholder="계좌번호"
+                    type="number"
+                  />
                 </CCol>
                 <CCol xs="2">
                   <CLabel>주민번호 앞자리</CLabel>
                   <CInputGroup>
-                    <CInput placeholder="주민번호 앞자리" />
+                    <CInput
+                      name="countryCode"
+                      value={countryCode}
+                      onChange={onInputChange}
+                      placeholder="주민번호 앞자리"
+                      type="number"
+                    />
                     <CButton color="primary">추가</CButton>
                   </CInputGroup>
                 </CCol>

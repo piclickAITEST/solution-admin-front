@@ -467,6 +467,7 @@ const SoldOut = () => {
                   mall_id,
                   payment_method,
                 } = product;
+
                 const color =
                   option1 !== "XS" &&
                   option1 !== "S" &&
