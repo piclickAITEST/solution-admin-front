@@ -37,8 +37,6 @@ const Login = () => {
   };
 
   const loginSubmit = (event) => {
-    event.preventDefault();
-
     axios({
       method: "post",
       url: "https://sadmin.piclick.kr/auth",
@@ -75,6 +73,13 @@ const Login = () => {
       });
   };
 
+  const onInputPress = (event) => {
+    const { keyCode } = event;
+    if (keyCode === 13) {
+      loginSubmit();
+    }
+  };
+
   if (isLogin === true) {
     return <Redirect to="/" />;
   }
@@ -108,6 +113,7 @@ const Login = () => {
                       </CInputGroupText>
                     </CInputGroupPrepend>
                     <CInput
+                      onKeyDown={onInputPress}
                       type="text"
                       name="id"
                       placeholder="ID"
@@ -124,6 +130,7 @@ const Login = () => {
                       </CInputGroupText>
                     </CInputGroupPrepend>
                     <CInput
+                      onKeyDown={onInputPress}
                       type="password"
                       name="password"
                       placeholder="비밀번호"
