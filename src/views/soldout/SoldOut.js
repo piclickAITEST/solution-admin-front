@@ -490,7 +490,6 @@ const SoldOut = () => {
                     ? option2
                     : option1;
 
-                console.log(payment_method);
                 return (
                   <tr key={idx}>
                     <td className="text-center">
