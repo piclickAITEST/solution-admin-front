@@ -257,7 +257,7 @@ const SoldOut = () => {
     }
   };
 
-  const sendToggle = (idx, user_name) => {
+  const sendToggle = (idx) => {
     setSendModal(!sendModal);
     setIndex(idx);
   };
@@ -418,7 +418,7 @@ const SoldOut = () => {
       </CCard>
       <CCard>
         <CCardBody>
-          <table className="table table-hover table-outline mb-0 d-none d-sm-table">
+          <table className="table table-outline mb-0 d-none d-sm-table">
             <thead className="thead-light">
               <tr>
                 <th className="text-center">
@@ -541,7 +541,7 @@ const SoldOut = () => {
                       <CButton
                         color="primary"
                         disabled={action !== "품절대상"}
-                        onClick={() => sendToggle(idx, user_name)}
+                        onClick={() => sendToggle(idx)}
                         id={`button-${idx}`}
                       >
                         전송

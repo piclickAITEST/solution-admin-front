@@ -149,7 +149,7 @@ function SoldOutDetail({ match, location }) {
                 </CButton>
               </CInputGroup>
             </CCol>
-            {paymentMethod === "cash" ? (
+            {paymentMethod === "cash" && csStatus === "R" ? (
               <>
                 <CCol xs="2">
                   <CLabel>계좌 번호</CLabel>
@@ -169,7 +169,7 @@ function SoldOutDetail({ match, location }) {
       </CCard>
       <CCard>
         <CCardBody>
-          <table className="table table-hover table-outline mb-0 d-none d-sm-table">
+          <table className="table table-outline mb-0 d-none d-sm-table">
             <thead className="thead-light">
               <tr>
                 <th className="text-center">
