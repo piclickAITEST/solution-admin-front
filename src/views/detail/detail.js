@@ -28,6 +28,8 @@ function SoldOutDetail({ match, location }) {
   // const [detail, setDetail] = useState([]);
   const [redirect, setRedirect] = useState(false);
   const [csStatus, setCsStatus] = useState("R");
+  const [bankList, setBankList] = useState([]);
+  const [bankCode, setBankCode] = useState("002");
   const [bankAccount, setBankAccount] = useState("");
   const [countryCode, setCountryCode] = useState("");
 
@@ -43,12 +45,26 @@ function SoldOutDetail({ match, location }) {
     }
   }
 
-  useEffect(() => {
+  const getbankList = async () => {
     const token = sessionStorage.getItem("userToken");
     if (token === null || undefined) {
       setRedirect(true);
       return;
     }
+    await axios({
+      method: "get",
+      url: "https://sadmin.piclick.kr/soldout/banks",
+      headers: {
+        Authorization: `JWT ${token}`,
+      },
+    }).then((res) => {
+      setBankList(res.data);
+    });
+  };
+
+  useEffect(() => {
+    getbankList();
+    return () => getbankList();
   }, []);
 
   if (redirect) {
@@ -136,6 +152,28 @@ function SoldOutDetail({ match, location }) {
     }
   };
 
+  const bankCodeOnChange = (event) => {
+    const {
+      target: { value },
+    } = event;
+
+    setBankCode(value);
+  };
+
+  const onBankSubmit = (event) => {
+    const bankObject = {
+      bank_account: bankAccount,
+      bank_code: bankCode,
+      country_code: countryCode,
+    };
+
+    if (bankAccount === "" || bankCode === "" || countryCode === "") {
+      return;
+    } else {
+      console.log(bankObject);
+    }
+  };
+
   return (
     <div>
       <CCard>
@@ -165,6 +203,21 @@ function SoldOutDetail({ match, location }) {
             {paymentMethod === "cash" && csStatus === "R" ? (
               <>
                 <CCol xs="2">
+                  <CLabel>은행명</CLabel>
+                  <CInputGroup>
+                    <CSelect value={bankCode} onChange={bankCodeOnChange}>
+                      {bankList &&
+                        bankList.map((bank) => {
+                          return (
+                            <option value={bank.code} key={bank.code}>
+                              {bank.name}
+                            </option>
+                          );
+                        })}
+                    </CSelect>
+                  </CInputGroup>
+                </CCol>
+                <CCol xs="2">
                   <CLabel>계좌 번호</CLabel>
                   <CInput
                     name="bankAccount"
@@ -184,7 +237,9 @@ function SoldOutDetail({ match, location }) {
                       placeholder="주민번호 앞자리"
                       type="number"
                     />
-                    <CButton color="primary">추가</CButton>
+                    <CButton color="primary" onClick={onBankSubmit}>
+                      추가
+                    </CButton>
                   </CInputGroup>
                 </CCol>
               </>
