@@ -45,6 +45,15 @@ function SoldOutDetail({ match, location }) {
     }
   }
 
+  const clearState = () => {
+    setRedirect(false);
+    setCsStatus("R");
+    setBankList([]);
+    setBankCode("002");
+    setBankAccount("");
+    setCountryCode("");
+  };
+
   const getbankList = async () => {
     const token = sessionStorage.getItem("userToken");
     if (token === null || undefined) {
@@ -64,7 +73,7 @@ function SoldOutDetail({ match, location }) {
 
   useEffect(() => {
     getbankList();
-    return () => getbankList();
+    return () => clearState();
   }, []);
 
   if (redirect) {
