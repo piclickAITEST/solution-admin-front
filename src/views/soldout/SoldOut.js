@@ -308,9 +308,15 @@ const SoldOut = () => {
 
   const sendMessage = async (event) => {
     const eventIdx = event.target.value;
+    const token = sessionStorage.getItem("userToken");
 
     const res = await axios.get(
-      `https://sadmin.piclick.kr/soldout/sms?idx=${eventIdx}`
+      `https://sadmin.piclick.kr/soldout/sms?idx=${eventIdx}`,
+	    {
+		    headers: {
+			    Authorization: `JWT ${token}`
+		    }
+	    }
     );
     res.data.results.map((result) => {
       if (result.result_code === "1") {
@@ -439,8 +445,8 @@ const SoldOut = () => {
                 </th>
                 <th className="text-center">주문번호</th>
                 <th className="text-center">상품명</th>
-                <th className="text-center">컬러</th>
-                <th className="text-center">사이즈</th>
+                <th className="text-center">옵션1</th>
+                <th className="text-center">옵션2</th>
                 <th className="text-center">이미지</th>
                 <th className="text-center">수량</th>
                 <th className="text-center">금액</th>
@@ -488,10 +494,10 @@ const SoldOut = () => {
                     <td className="text-center">{order_id}</td>
                     <td className="text-center">{product_name}</td>
                     <td className="text-center">
-                      {option1 === "" ? "없음" : option1}
+                      {option1}
                     </td>
                     <td className="text-center">
-                      {option2 === "" ? "없음" : option2}
+                     {option2}
                     </td>
                     <td className="text-center">
                       <img
