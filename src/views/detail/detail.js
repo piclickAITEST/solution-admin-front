@@ -268,8 +268,8 @@ function SoldOutDetail({ match, location }) {
                 </th>
                 <th className="text-center">주문번호</th>
                 <th className="text-center">상품명</th>
-                <th className="text-center">컬러</th>
-                <th className="text-center">사이즈</th>
+                <th className="text-center">옵션 1</th>
+                <th className="text-center">옵션 2</th>
                 <th className="text-center">이미지</th>
                 <th className="text-center">수량</th>
                 <th className="text-center">금액</th>

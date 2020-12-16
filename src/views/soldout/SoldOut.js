@@ -468,7 +468,6 @@ const SoldOut = () => {
                   payment_method,
                 } = product;
       
-
                 return (
                   <tr key={idx}>
                     <td className="text-center">
