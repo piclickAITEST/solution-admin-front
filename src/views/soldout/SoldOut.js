@@ -11,6 +11,11 @@ import {
   CInputGroup,
   CSelect,
   CFormGroup,
+  CModal,
+  CModalHeader,
+  CModalBody,
+  CModalFooter,
+  CLabel,
 } from "@coreui/react";
 import { Redirect, Link } from "react-router-dom";
 
@@ -23,6 +28,9 @@ const SoldOut = () => {
   const [selectOpt, setSelectOpt] = useState("상품명");
   const [searchValue, setSearchValue] = useState("");
   const [redirect, setRedirect] = useState(false);
+  const [sendModal, setSendModal] = useState(false);
+  const [index, setIndex] = useState("");
+  const [receiver, setReceiver] = useState("");
 
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -250,7 +258,13 @@ const SoldOut = () => {
     }
   };
 
-  const onPreviewClick = (product_no, order_id) => {
+  const sendToggle = (idx, user_name) => {
+    setSendModal(!sendModal);
+    setIndex(idx);
+    setReceiver(user_name);
+  };
+
+  const previewToggle = (product_no, order_id) => {
     var url = `https://sol.piclick.kr/soldOut/?mallID=rlackdals1&product_no=${product_no}&order_id=${order_id}`;
     window.open(
       url,
@@ -267,24 +281,35 @@ const SoldOut = () => {
     setSearchValue(value);
   };
 
-  const sendMessage = async (event) => {
-    const eventIdx = event.target.value;
-
+  const sendMessage = async () => {
+    const token = sessionStorage.getItem("userToken");
     const res = await axios.get(
-      `https://sadmin.piclick.kr/soldout/sms?idx=${eventIdx}`
+      `https://sadmin.piclick.kr/soldout/sms?idx=${index}`,
+      {
+        headers: {
+          Authorization: `JWT ${token}`,
+        },
+      }
     );
-    res.data.results.map((result) => {
-      if (result.result_code === "1") {
-        const action = document.querySelector(`#action-${eventIdx}`);
-        const button = document.querySelector(`#button-${eventIdx}`);
-
+    if (res.data !== undefined) {
+      if (res.data.results.result_code === "1") {
+        setSendModal(false);
+        setIndex("");
+        setReceiver("");
+        const action = document.querySelector(`#action-${index}`);
+        const button = document.querySelector(`#button-${index}`);
         action.innerText = "메세지전송";
         button.setAttribute("disabled", "");
-        return alert("메시지가 전송되었습니다.");
       } else {
-        return alert("메시지 전송에 실패하였습니다.");
+        setSendModal(false);
+        setIndex("");
+        setReceiver("");
       }
-    });
+    } else {
+      setSendModal(false);
+      setIndex("");
+      setReceiver("");
+    }
   };
 
   if (redirect) {
@@ -436,8 +461,31 @@ const SoldOut = () => {
                   user_name,
                   product_id,
                   soldout_date,
+                  mall_id,
                 } = product;
 
+                const color =
+                  option1 !== "XS" &&
+                  option1 !== "S" &&
+                  option1 !== "M" &&
+                  option1 !== "L" &&
+                  option1 !== "XL" &&
+                  option1 !== "XXL" &&
+                  option1 !== "XXXL" &&
+                  option1 !== "FREE"
+                    ? option1
+                    : "";
+                const size =
+                  option1 !== "XS" &&
+                  option1 !== "S" &&
+                  option1 !== "M" &&
+                  option1 !== "L" &&
+                  option1 !== "XL" &&
+                  option1 !== "XXL" &&
+                  option1 !== "XXXL" &&
+                  option1 !== "FREE"
+                    ? option2
+                    : option1;
                 return (
                   <tr key={idx}>
                     <td className="text-center">
@@ -447,12 +495,8 @@ const SoldOut = () => {
                     </td>
                     <td className="text-center">{order_id}</td>
                     <td className="text-center">{product_name}</td>
-                    <td className="text-center">
-                      {option1 === "" ? "없음" : option1}
-                    </td>
-                    <td className="text-center">
-                      {option2 === "" ? "없음" : option2}
-                    </td>
+                    <td className="text-center">{color}</td>
+                    <td className="text-center">{size}</td>
                     <td className="text-center">
                       <img
                         src={list_image}
@@ -464,17 +508,28 @@ const SoldOut = () => {
                     <td className="text-center">{numberWithCommas(price)}원</td>
                     <td className="text-center">{user_name}</td>
                     <td className="text-center">{numberWithPhone(phone)}</td>
-                    <td className="text-center action" id={`action-${idx}`}>
-                      {action}
+                    <td className="text-center action">
+                      <CLabel id={`action-${idx}`}>{action}</CLabel>
                       <br />
-                      <Link to={`/detail/${idx}`}>
+                      <Link
+                        to={{
+                          pathname: `/detail/${idx}/${order_id}`,
+                          productInfo: {
+                            price: price,
+                            mall_id: mall_id,
+                            product_no: product_id,
+                            order_id: order_id,
+                            cs_status: action,
+                          },
+                        }}
+                      >
                         <CButton color="secondary">상세정보</CButton>
                       </Link>
                     </td>
                     <td className="text-center">
                       <CButton
                         onClick={() => {
-                          onPreviewClick(product_id, order_id);
+                          previewToggle(product_id, order_id);
                         }}
                       >
                         미리보기
@@ -482,8 +537,7 @@ const SoldOut = () => {
                       <CButton
                         color="primary"
                         disabled={action !== "품절대상"}
-                        onClick={sendMessage}
-                        value={`${idx}`}
+                        onClick={() => sendToggle(idx, user_name)}
                         id={`button-${idx}`}
                       >
                         전송
@@ -496,6 +550,18 @@ const SoldOut = () => {
           </table>
         </CCardBody>
       </CCard>
+      <CModal show={sendModal} onClose={sendToggle}>
+        <CModalHeader>메시지 전송</CModalHeader>
+        <CModalBody>메시지를 전송하시겠습니까?</CModalBody>
+        <CModalFooter>
+          <CButton onClick={sendToggle} color="secondary">
+            닫기
+          </CButton>
+          <CButton onClick={sendMessage} color="primary">
+            전송
+          </CButton>
+        </CModalFooter>
+      </CModal>
     </>
   );
 };

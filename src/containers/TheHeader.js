@@ -35,7 +35,16 @@ const TheHeader = () => {
   };
 
   const logoutClick = () => {
+    axios({
+      method: "POST",
+      url: "https://sadmin.piclick.kr/log/soldout/logout",
+      data: {
+        cs_id: sessionStorage.getItem("userName"),
+        action_code: "CS_LOGOUT",
+      },
+    });
     sessionStorage.removeItem("userToken");
+    sessionStorage.removeItem("userName");
     setRedirect(true);
   };
 
@@ -45,10 +54,10 @@ const TheHeader = () => {
         Authorization: `JWT ${sessionStorage.getItem("userToken")}`,
       },
     });
-    if (res.data.brand_name === undefined) {
+    if (res.data.name === undefined) {
       setUserName("");
     } else {
-      setUserName(res.data.brand_name);
+      setUserName(res.data.name);
     }
   };
 

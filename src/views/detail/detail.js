@@ -9,16 +9,21 @@ import {
   CFormGroup,
   CCol,
   CInputGroup,
-  CInput,
-  CButtonGroup,
   CSelect,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 
-function SoldOutDetail({ match }) {
-  // const id = match.params.id;
+function SoldOutDetail({ match, location }) {
+  // const index = match.params.idx;
+  const orderNo = match.params.order_no;
+  const productInfo = location.productInfo;
+  const mallID = productInfo.mall_id;
+  const productNo = productInfo.product_no;
+  const orderID = productInfo.order_id;
+  const productPrice = productInfo.price;
   // const [detail, setDetail] = useState([]);
-  // const [redirect, setRedirect] = useState(false);
+  const [redirect, setRedirect] = useState(false);
+  const [csStatus, setCsStatus] = useState("*");
 
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -32,33 +37,25 @@ function SoldOutDetail({ match }) {
     }
   }
 
-  // const getDetail = async () => {
-  //   const token = sessionStorage.getItem("userToken");
-  //   if (token === null || undefined) {
-  //     setRedirect(true);
-  //     return;
-  //   }
-  //   const res = await axios.get(`https://sadmin.piclick.kr/soldout/`, {
-  //     headers: {
-  //       Authorization: `JWT ${token}`,
-  //     },
-  //   });
-  //   if (res.data.results === undefined) {
-  //     console.log("");
-  //   } else {
-  //     console.log(res.data.results);
-  //   }
-  // };
+  useEffect(() => {
+    const token = sessionStorage.getItem("userToken");
+    if (token === null || undefined) {
+      setRedirect(true);
+      return;
+    }
+  }, []);
 
-  // useEffect(() => {
-  //   getDetail();
+  if (redirect) {
+    return <Redirect from="*" to="/login" />;
+  }
 
-  //   return () => getDetail();
-  // }, []);
+  const csSelectChange = (event) => {
+    const {
+      target: { value },
+    } = event;
 
-  // if (redirect) {
-  //   return <Redirect from="*" to="/login" />;
-  // }
+    setCsStatus(value);
+  };
 
   // const postCsStatus = async () => {
   //   const token = sessionStorage.getItem("userToken");
@@ -84,6 +81,56 @@ function SoldOutDetail({ match }) {
   //   }
   // };
 
+  const postCsStatus = async () => {
+    const token = sessionStorage.getItem("userToken");
+    const username = sessionStorage.getItem("userName");
+    if (csStatus === "*") {
+      console.log("선택 기본값은 업로드가 불가능합니다..");
+      return;
+    }
+    const res = axios({
+      // 상태 변화 API 전송
+      method: "post",
+      url: "https://sadmin.piclick.kr/soldout/action",
+      headers: {
+        Authorization: `JWT ${token}`,
+      },
+      data: {
+        order_id: orderNo,
+        action_code: csStatus,
+      },
+    });
+    if (res.data !== undefined || res.data !== null) {
+      // API 전송 결과가 undefined가 아닐 경우
+      if (csStatus === "S") {
+        // 적립로그
+        console.log("적립");
+      } else if (csStatus === "R") {
+        const requestParam = {
+          action_code: "CS_ADMIN_REFUND",
+          price: productPrice,
+          mall_id: mallID,
+          order_id: orderID,
+          product_id: productNo,
+        };
+
+        const res = axios({
+          method: "get",
+          url: `https://sol.piclick.kr/soldOut/saveOrder?mallID=${mallID}&product_no=${productNo}&order_id=${orderID}`,
+        });
+
+        // axios({
+        //   url: "https://sadmin.piclick.kr/log/soldout/refund",
+        //   type: "POST",
+        //   contentType: "application/json",
+        //   data: JSON.stringify(requestParam),
+        // });
+      }
+    } else {
+      // 변경 실패
+    }
+  };
+
   return (
     <div>
       <CCard>
@@ -95,91 +142,31 @@ function SoldOutDetail({ match }) {
           </Link>
         </CCardHeader>
         <CCardBody>
-          <CFormGroup row>
-            <CCol xs="3">
+          <CCol xs="2">
+            <CFormGroup row>
               <CInputGroup>
-                <CInput
-                  type="date"
-                  id="fromDate"
-                  name="fromDate"
-                  placeholder="시작일"
-                />
-                <CInput
-                  type="date"
-                  id="toDate"
-                  name="toDate"
-                  placeholder="종료일"
-                />
-              </CInputGroup>
-            </CCol>
-            <CCol xs="2">
-              <CButtonGroup>
-                {[
-                  ["주문일자", "order"],
-                  ["품절일자", "soldout"],
-                ].map((value) => (
-                  <CButton
-                    color="outline-secondary"
-                    key={value[1]}
-                    name={value[0]}
-                    className="mx-0"
-                    // active={value[1] === searchType}
-                    // value={value[1]}
-                    // onClick={changeSearchType}
-                  >
-                    {value[0]}
-                  </CButton>
-                ))}
-              </CButtonGroup>
-            </CCol>
-            <CCol xs="3">
-              <CButtonGroup>
-                {["오늘", "어제", "1주", "1개월"].map((value) => (
-                  <CButton
-                    color="outline-secondary"
-                    key={value}
-                    className="mx-0"
-                    // active={value === dateType}
-                    // onClick={changedateType}
-                  >
-                    {value}
-                  </CButton>
-                ))}
-              </CButtonGroup>
-            </CCol>
-          </CFormGroup>
-          <CFormGroup row>
-            <CCol xs="3">
-              <CInputGroup>
-                <CSelect
-                  custom
-                  name="search-filter"
-                  id="search-filter"
-                  // onChange={onSelectChange}
-                  // value={selectOpt}
-                >
-                  <option value="상품명">상품명</option>
-                  <option value="상품ID">상품ID</option>
-                  <option value="주문자">주문자</option>
-                  <option value="주문번호">주문번호</option>
+                <CSelect onChange={csSelectChange} value={csStatus}>
+                  <option value="*">CS 상태변경</option>
+                  <option value="R">환불</option>
+                  <option value="S">적립</option>
+                  <option value="E">교환</option>
+                  <option value="X">처리완료</option>
                 </CSelect>
-                <CInput
-                  type="text"
-                  id="nf-email"
-                  name="nf-email"
-                  placeholder="검색"
-                  // value={searchValue}
-                  // onChange={searchValueChange}
-                />
+                <CButton color="primary" onClick={postCsStatus}>
+                  변경
+                </CButton>
               </CInputGroup>
-            </CCol>
-            <CCol>
-              <CButton color="primary" name="search">
-                검색
-              </CButton>
-              <CButton name="clear">초기화</CButton>
-            </CCol>
-          </CFormGroup>
+            </CFormGroup>
+            <CFormGroup>
+              <iframe
+                src={`https://sol.piclick.kr/soldOut/?mallID=${mallID}&product_no=${productNo}&order_id=${orderID}`}
+                title="shescloset"
+                width="320px"
+                height="640px"
+                style={{ border: "none" }}
+              />
+            </CFormGroup>
+          </CCol>
         </CCardBody>
       </CCard>
       <CCard>

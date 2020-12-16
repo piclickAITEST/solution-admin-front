@@ -49,10 +49,27 @@ const Login = () => {
     })
       .then((res) => {
         sessionStorage.setItem("userToken", res.data.access_token);
+        sessionStorage.setItem("userName", id);
+        axios({
+          method: "post",
+          url: "https://sadmin.piclick.kr/log/soldout/login",
+          data: {
+            cs_id: id,
+            action_code: "CS_LOGIN_SUCCESS",
+          },
+        });
         setIsInvalid(false);
         setIsLogin(true);
       })
       .catch(() => {
+        axios({
+          method: "post",
+          url: "https://sadmin.piclick.kr/log/soldout/login",
+          data: {
+            cs_id: id,
+            action_code: "CS_LOGIN_FAIL",
+          },
+        });
         setIsInvalid(true);
         setIsLogin(false);
       });
