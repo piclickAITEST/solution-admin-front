@@ -10,20 +10,25 @@ import {
   CCol,
   CInputGroup,
   CSelect,
+  CLabel,
+  CInput,
+  CButtonGroup,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 
 function SoldOutDetail({ match, location }) {
   // const index = match.params.idx;
-  const orderNo = match.params.order_no;
+  // const orderNo = match.params.order_no;
+  const index = match.params.idx;
   const productInfo = location.productInfo;
   const mallID = productInfo.mall_id;
   const productNo = productInfo.product_no;
   const orderID = productInfo.order_id;
   const productPrice = productInfo.price;
+  const paymentMethod = productInfo.payment_method;
   // const [detail, setDetail] = useState([]);
   const [redirect, setRedirect] = useState(false);
-  const [csStatus, setCsStatus] = useState("*");
+  const [csStatus, setCsStatus] = useState("R");
 
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -57,77 +62,64 @@ function SoldOutDetail({ match, location }) {
     setCsStatus(value);
   };
 
-  // const postCsStatus = async () => {
-  //   const token = sessionStorage.getItem("userToken");
-  //   const res = await axios({
-  //     method: "post",
-  //     url: "https://sadmin.piclick.kr/soldout/action",
-  //     headers: {
-  //       Authorization: `JWT ${token}`,
-  //     },
-  //     data: {
-  //       order_id: editOrderID,
-  //       action_code: csStatus,
-  //     },
-  //   });
-  //   if (res.data.results === undefined) {
-  //     getSoldOut();
-  //     setCsStatus("환불");
-  //     // toggleInfo("");
-  //   } else {
-  //     getSoldOut();
-  //     setCsStatus("환불");
-  //     // toggleInfo("");
-  //   }
-  // };
-
   const postCsStatus = async () => {
     const token = sessionStorage.getItem("userToken");
-    const username = sessionStorage.getItem("userName");
-    if (csStatus === "*") {
-      console.log("선택 기본값은 업로드가 불가능합니다..");
-      return;
-    }
-    const res = axios({
-      // 상태 변화 API 전송
-      method: "post",
-      url: "https://sadmin.piclick.kr/soldout/action",
-      headers: {
-        Authorization: `JWT ${token}`,
-      },
-      data: {
-        order_id: orderNo,
-        action_code: csStatus,
-      },
-    });
-    if (res.data !== undefined || res.data !== null) {
-      // API 전송 결과가 undefined가 아닐 경우
-      if (csStatus === "S") {
-        // 적립로그
-        console.log("적립");
-      } else if (csStatus === "R") {
-        const requestParam = {
-          action_code: "CS_ADMIN_REFUND",
-          price: productPrice,
-          mall_id: mallID,
-          order_id: orderID,
-          product_id: productNo,
-        };
-
-        const res = axios({
-          method: "get",
-          url: `https://sol.piclick.kr/soldOut/saveOrder?mallID=${mallID}&product_no=${productNo}&order_id=${orderID}`,
-        });
-
-        // axios({
-        //   url: "https://sadmin.piclick.kr/log/soldout/refund",
-        //   type: "POST",
-        //   contentType: "application/json",
-        //   data: JSON.stringify(requestParam),
-        // });
-      }
-    } else {
-      // 변경 실패
+    if (csStatus === "S") {
+      // 적립(Save)
+      axios({
+        method: "get",
+        url: `https://sol.piclick.kr/soldOut/saveOrder?mallID=${mallID}&product_no=${productNo}&order_id=${orderID}`,
+      }).then((res) => {
+        if (res.data !== undefined || res.data !== null) {
+          const requestParam = {
+            action_code: csStatus,
+            price: productPrice,
+            idx: index,
+            // mall_id: mallID,
+            // order_id: orderID,
+            // product_id: productNo,
+            status_msg: res.data.res.message,
+            status_code: res.data.res.code,
+          };
+          //적립 상태변화, 로그 API 전송
+          axios({
+            method: "post",
+            url: `https://sadmin.piclick.kr/soldout/action`,
+            headers: {
+              Authorization: `JWT ${token}`,
+            },
+            data: requestParam,
+          });
+        }
+      });
+    } else if (csStatus === "R") {
+      // 환불 (Refund)
+      axios({
+        method: "get",
+        url: `https://sol.piclick.kr/soldOut/refundOrder?mallID=${mallID}&product_no=${productNo}&order_id=${orderID}`,
+      }).then((res) => {
+        if (res.data !== undefined || res.data !== null) {
+          const requestParam = {
+            action_code: csStatus,
+            price: productPrice,
+            idx: index,
+            // mall_id: mallID,
+            // order_id: orderID,
+            // product_id: productNo,
+            status_msg: res.data.res.message,
+            status_code: res.data.res.code,
+          };
+          //환불 상태변화, 로그 API 전송
+          axios({
+            method: "post",
+            url: `https://sadmin.piclick.kr/soldout/action`,
+            headers: {
+              Authorization: `JWT ${token}`,
+            },
+            data: requestParam,
+          });
+        }
+      });
     }
   };
 
@@ -137,16 +129,16 @@ function SoldOutDetail({ match, location }) {
         <CCardHeader>
           <Link to="/soldout">
             <CButton>
-              <CIcon name="cil-chevron-left" />
+              <CIcon name="cil-chevron-left" size="lg" />
             </CButton>
           </Link>
         </CCardHeader>
         <CCardBody>
-          <CCol xs="2">
-            <CFormGroup row>
+          <CFormGroup row>
+            <CCol xs="2">
+              <CLabel>CS 상태</CLabel>
               <CInputGroup>
                 <CSelect onChange={csSelectChange} value={csStatus}>
-                  <option value="*">CS 상태변경</option>
                   <option value="R">환불</option>
                   <option value="S">적립</option>
                   <option value="E">교환</option>
@@ -156,8 +148,23 @@ function SoldOutDetail({ match, location }) {
                   변경
                 </CButton>
               </CInputGroup>
-            </CFormGroup>
-          </CCol>
+            </CCol>
+            {paymentMethod === "cash" ? (
+              <>
+                <CCol xs="2">
+                  <CLabel>계좌 번호</CLabel>
+                  <CInput placeholder="계좌번호" />
+                </CCol>
+                <CCol xs="2">
+                  <CLabel>주민번호 앞자리</CLabel>
+                  <CInputGroup>
+                    <CInput placeholder="주민번호 앞자리" />
+                    <CButton color="primary">추가</CButton>
+                  </CInputGroup>
+                </CCol>
+              </>
+            ) : null}
+          </CFormGroup>
         </CCardBody>
       </CCard>
       <CCard>

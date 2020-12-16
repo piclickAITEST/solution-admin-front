@@ -30,7 +30,6 @@ const SoldOut = () => {
   const [redirect, setRedirect] = useState(false);
   const [sendModal, setSendModal] = useState(false);
   const [index, setIndex] = useState("");
-  const [receiver, setReceiver] = useState("");
 
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -261,7 +260,6 @@ const SoldOut = () => {
   const sendToggle = (idx, user_name) => {
     setSendModal(!sendModal);
     setIndex(idx);
-    setReceiver(user_name);
   };
 
   const previewToggle = (product_no, order_id) => {
@@ -295,7 +293,7 @@ const SoldOut = () => {
       if (res.data.results.result_code === "1") {
         setSendModal(false);
         setIndex("");
-        setReceiver("");
+
         const action = document.querySelector(`#action-${index}`);
         const button = document.querySelector(`#button-${index}`);
         action.innerText = "메세지전송";
@@ -303,12 +301,10 @@ const SoldOut = () => {
       } else {
         setSendModal(false);
         setIndex("");
-        setReceiver("");
       }
     } else {
       setSendModal(false);
       setIndex("");
-      setReceiver("");
     }
   };
 
@@ -322,12 +318,12 @@ const SoldOut = () => {
         <CCardBody>
           <CFormGroup row>
             <CCol xs="3">
+              <CLabel>시작일/종료일</CLabel>
               <CInputGroup>
                 <CInput
                   type="date"
                   id="fromDate"
                   name="fromDate"
-                  placeholder="시작일"
                   value={fromDate}
                   onChange={onChangeDate}
                 />
@@ -335,46 +331,51 @@ const SoldOut = () => {
                   type="date"
                   id="toDate"
                   name="toDate"
-                  placeholder="종료일"
                   value={toDate}
                   onChange={onChangeDate}
                 />
               </CInputGroup>
             </CCol>
-            <CCol xs="2">
-              <CButtonGroup>
-                {[
-                  ["주문일자", "order"],
-                  ["품절일자", "soldout"],
-                ].map((value) => (
-                  <CButton
-                    color="outline-secondary"
-                    key={value[1]}
-                    name={value[0]}
-                    className="mx-0"
-                    active={value[1] === searchType}
-                    value={value[1]}
-                    onClick={changeSearchType}
-                  >
-                    {value[0]}
-                  </CButton>
-                ))}
-              </CButtonGroup>
+            <CCol xs="0">
+              <CLabel>날짜 선택기준</CLabel>
+              <CInputGroup>
+                <CButtonGroup>
+                  {[
+                    ["주문일자", "order"],
+                    ["품절일자", "soldout"],
+                  ].map((value) => (
+                    <CButton
+                      color="outline-secondary"
+                      key={value[1]}
+                      name={value[0]}
+                      className="mx-0"
+                      active={value[1] === searchType}
+                      value={value[1]}
+                      onClick={changeSearchType}
+                    >
+                      {value[0]}
+                    </CButton>
+                  ))}
+                </CButtonGroup>
+              </CInputGroup>
             </CCol>
-            <CCol xs="3">
-              <CButtonGroup>
-                {["오늘", "어제", "1주", "1개월"].map((value) => (
-                  <CButton
-                    color="outline-secondary"
-                    key={value}
-                    className="mx-0"
-                    active={value === dateType}
-                    onClick={changedateType}
-                  >
-                    {value}
-                  </CButton>
-                ))}
-              </CButtonGroup>
+            <CCol>
+              <CLabel>날짜 선택범위</CLabel>
+              <CInputGroup>
+                <CButtonGroup>
+                  {["오늘", "어제", "1주", "1개월"].map((value) => (
+                    <CButton
+                      color="outline-secondary"
+                      key={value}
+                      className="mx-0"
+                      active={value === dateType}
+                      onClick={changedateType}
+                    >
+                      {value}
+                    </CButton>
+                  ))}
+                </CButtonGroup>
+              </CInputGroup>
             </CCol>
           </CFormGroup>
           <CFormGroup row>
@@ -403,12 +404,14 @@ const SoldOut = () => {
               </CInputGroup>
             </CCol>
             <CCol>
-              <CButton color="primary" name="search" onClick={onSearchClick}>
-                검색
-              </CButton>
-              <CButton name="clear" onClick={onSearchClick}>
-                초기화
-              </CButton>
+              <CInputGroup>
+                <CButton color="primary" name="search" onClick={onSearchClick}>
+                  검색
+                </CButton>
+                <CButton name="clear" onClick={onSearchClick}>
+                  초기화
+                </CButton>
+              </CInputGroup>
             </CCol>
           </CFormGroup>
         </CCardBody>
@@ -462,8 +465,8 @@ const SoldOut = () => {
                   product_id,
                   soldout_date,
                   mall_id,
+                  payment_method,
                 } = product;
-
                 const color =
                   option1 !== "XS" &&
                   option1 !== "S" &&
@@ -486,6 +489,8 @@ const SoldOut = () => {
                   option1 !== "FREE"
                     ? option2
                     : option1;
+
+                console.log(payment_method);
                 return (
                   <tr key={idx}>
                     <td className="text-center">
@@ -519,7 +524,7 @@ const SoldOut = () => {
                             mall_id: mall_id,
                             product_no: product_id,
                             order_id: order_id,
-                            cs_status: action,
+                            payment_method: payment_method,
                           },
                         }}
                       >
