@@ -182,6 +182,14 @@ function SoldOutDetail({ match, location }) {
       console.log(bankObject);
     }
   };
+  const previewToggle = () => {
+    var url = `https://sol.piclick.kr/soldOut/?mallID=rlackdals1&product_no=${productNo}&order_id=${orderID}`;
+    window.open(
+      url,
+      "_blank",
+      "menubar=no, resizable=no, width=360, height=640"
+    );
+  }
 
   return (
     <div>
@@ -253,6 +261,9 @@ function SoldOutDetail({ match, location }) {
                 </CCol>
               </>
             ) : null}
+            <CCol>
+              <CButton onClick={previewToggle}>현재 선택된 상품 탬플릿 보기</CButton>
+            </CCol>
           </CFormGroup>
         </CCardBody>
       </CCard>
