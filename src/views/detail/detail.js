@@ -157,15 +157,6 @@ function SoldOutDetail({ match, location }) {
                 </CButton>
               </CInputGroup>
             </CFormGroup>
-            <CFormGroup>
-              <iframe
-                src={`https://sol.piclick.kr/soldOut/?mallID=${mallID}&product_no=${productNo}&order_id=${orderID}`}
-                title="shescloset"
-                width="320px"
-                height="640px"
-                style={{ border: "none" }}
-              />
-            </CFormGroup>
           </CCol>
         </CCardBody>
       </CCard>
