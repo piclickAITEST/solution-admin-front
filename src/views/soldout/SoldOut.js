@@ -428,8 +428,8 @@ const SoldOut = () => {
                 </th>
                 <th className="text-center">주문번호</th>
                 <th className="text-center">상품명</th>
-                <th className="text-center">컬러</th>
-                <th className="text-center">사이즈</th>
+                <th className="text-center">옵션 1</th>
+                <th className="text-center">옵션 2</th>
                 <th className="text-center">이미지</th>
                 <th className="text-center">수량</th>
                 <th className="text-center">금액</th>
@@ -467,29 +467,7 @@ const SoldOut = () => {
                   mall_id,
                   payment_method,
                 } = product;
-
-                const color =
-                  option1 !== "XS" &&
-                  option1 !== "S" &&
-                  option1 !== "M" &&
-                  option1 !== "L" &&
-                  option1 !== "XL" &&
-                  option1 !== "XXL" &&
-                  option1 !== "XXXL" &&
-                  option1 !== "FREE"
-                    ? option1
-                    : "";
-                const size =
-                  option1 !== "XS" &&
-                  option1 !== "S" &&
-                  option1 !== "M" &&
-                  option1 !== "L" &&
-                  option1 !== "XL" &&
-                  option1 !== "XXL" &&
-                  option1 !== "XXXL" &&
-                  option1 !== "FREE"
-                    ? option2
-                    : option1;
+      
 
                 return (
                   <tr key={idx}>
@@ -500,8 +478,8 @@ const SoldOut = () => {
                     </td>
                     <td className="text-center">{order_id}</td>
                     <td className="text-center">{product_name}</td>
-                    <td className="text-center">{color}</td>
-                    <td className="text-center">{size}</td>
+                    <td className="text-center">{option1}</td>
+                    <td className="text-center">{option2}</td>
                     <td className="text-center">
                       <img
                         src={list_image}
