@@ -75,24 +75,6 @@ const SoldOutReport = () => {
         <table className="table table-outline mb-0 d-none d-sm-table">
           <thead className="thead-light">
             <tr>
-              {/*           
-                date,
-                exchange_conv_count,
-                exchange_conv_rate,
-                exchange_conv_sum,
-                message_sent_count,
-                order_count,
-                reco_view_count,
-                refund_count,
-                refund_rate,
-                refund_sum,
-                save_conv_count,
-                save_conv_rate,
-                save_conv_sum,
-                soldout_conv_count,
-                soldout_conv_rate,
-                unknown_user_count,
-                user_count, */}
               <th className="text-center">날짜</th>
               <th className="text-center">교환 전환수</th>
               <th className="text-center">교환 전환율</th>
