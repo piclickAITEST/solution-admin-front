@@ -147,7 +147,9 @@ function SoldOutDetail({ match, location }) {
     return () => clearState();
   }, [token, getDetail]);
 
-  if (redirect) {
+  if (redirect === true) {
+    sessionStorage.removeItem("userToken");
+    sessionStorage.removeItem("userName");
     return <Redirect from="*" to="/login" />;
   }
 

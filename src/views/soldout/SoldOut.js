@@ -349,7 +349,9 @@ const SoldOut = () => {
       });
   };
 
-  if (redirect) {
+  if (redirect === true) {
+    sessionStorage.removeItem("userToken");
+    sessionStorage.removeItem("userName");
     return <Redirect from="*" to="/login" />;
   }
 
