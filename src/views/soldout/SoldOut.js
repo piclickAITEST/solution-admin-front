@@ -25,6 +25,7 @@ import {
 import { Redirect, Link } from "react-router-dom";
 
 const SoldOut = () => {
+  const token = sessionStorage.getItem("userToken");
   const [products, setProducts] = useState([]);
   const [dateType, setDateType] = useState("");
   const [searchType, setSearchType] = useState("");
@@ -51,15 +52,11 @@ const SoldOut = () => {
     }
   }
 
-  const getSoldOut = async (args) => {
-    const token = sessionStorage.getItem("userToken");
-    if (args === undefined) {
+  const getSoldOut = async (args, token) => {
+    if (args === undefined || args === "") {
       args = "";
     }
-    if (token === null || undefined) {
-      setRedirect(true);
-      return;
-    }
+
     await axios({
       method: "get",
       url: `https://sadmin.piclick.kr/soldout/${args}`,
@@ -85,9 +82,13 @@ const SoldOut = () => {
   };
 
   useEffect(() => {
-    getSoldOut();
+    if (token === null || undefined) {
+      setRedirect(true);
+      return;
+    }
+    getSoldOut("", token);
     const getEveryTimes = setInterval(() => {
-      getSoldOut();
+      getSoldOut("", token);
     }, 60000 * 10);
 
     return () => clearInterval(getEveryTimes);
@@ -144,49 +145,49 @@ const SoldOut = () => {
         if (fromDate === "" || toDate === "") {
           if (searchType === "") {
             if (searchValue === "") {
-              getSoldOut();
+              getSoldOut("", token);
             } else {
               //검색어만
               if (selectOpt === "상품명") {
-                getSoldOut(`?pname=${searchValue}`);
+                getSoldOut(`?pname=${searchValue}`, token);
               } else if (selectOpt === "상품ID") {
-                getSoldOut(`?pid=${searchValue}`);
+                getSoldOut(`?pid=${searchValue}`, token);
               } else if (selectOpt === "주문자") {
-                getSoldOut(`?uname=${searchValue}`);
+                getSoldOut(`?uname=${searchValue}`, token);
               } else {
-                getSoldOut(`?oid=${searchValue}`);
+                getSoldOut(`?oid=${searchValue}`, token);
               }
             }
           } else {
             if (searchValue === "") {
-              getSoldOut();
+              getSoldOut("", token);
             } else {
               //검색어만
               if (selectOpt === "상품명") {
-                getSoldOut(`?pname=${searchValue}`);
-              } else if (selectOpt === "상품ID") {
-                getSoldOut(`?pid=${searchValue}`);
+                getSoldOut(`?pname=${searchValue}`, token);
+              } else if ((selectOpt === "상품ID", token)) {
+                getSoldOut(`?pid=${searchValue}`, token);
               } else if (selectOpt === "주문자") {
-                getSoldOut(`?uname=${searchValue}`);
+                getSoldOut(`?uname=${searchValue}`, token);
               } else {
-                getSoldOut(`?oid=${searchValue}`);
+                getSoldOut(`?oid=${searchValue}`, token);
               }
             }
           }
         } else {
           if (searchType === "") {
             if (searchValue === "") {
-              getSoldOut();
+              getSoldOut("", token);
             } else {
               //검색어만
               if (selectOpt === "상품명") {
-                getSoldOut(`?pname=${searchValue}`);
+                getSoldOut(`?pname=${searchValue}`, token);
               } else if (selectOpt === "상품ID") {
-                getSoldOut(`?pid=${searchValue}`);
+                getSoldOut(`?pid=${searchValue}`, token);
               } else if (selectOpt === "주문자") {
-                getSoldOut(`?uname=${searchValue}`);
+                getSoldOut(`?uname=${searchValue}`, token);
               } else {
-                getSoldOut(`?oid=${searchValue}`);
+                getSoldOut(`?oid=${searchValue}`, token);
               }
             }
           } else {
@@ -197,7 +198,8 @@ const SoldOut = () => {
                   "YYYYMMDD"
                 )}&to_date=${moment(toDate).format(
                   "YYYYMMDD"
-                )}&date_type=${searchType}`
+                )}&date_type=${searchType}`,
+                token
               );
             } else {
               //검색어, 날짜 둘다
@@ -207,7 +209,8 @@ const SoldOut = () => {
                     "YYYYMMDD"
                   )}&to_date=${moment(toDate).format(
                     "YYYYMMDD"
-                  )}&date_type=${searchType}&pname=${searchValue}`
+                  )}&date_type=${searchType}&pname=${searchValue}`,
+                  token
                 );
               } else if (selectOpt === "주문자") {
                 getSoldOut(
@@ -215,7 +218,8 @@ const SoldOut = () => {
                     "YYYYMMDD"
                   )}&to_date=${moment(toDate).format(
                     "YYYYMMDD"
-                  )}&date_type=${searchType}&uname=${searchValue}`
+                  )}&date_type=${searchType}&uname=${searchValue}`,
+                  token
                 );
               } else if (selectOpt === "상품ID") {
                 getSoldOut(
@@ -223,7 +227,8 @@ const SoldOut = () => {
                     "YYYYMMDD"
                   )}&to_date=${moment(toDate).format(
                     "YYYYMMDD"
-                  )}&date_type=${searchType}&pid=${searchValue}`
+                  )}&date_type=${searchType}&pid=${searchValue}`,
+                  token
                 );
               } else {
                 getSoldOut(
@@ -231,7 +236,8 @@ const SoldOut = () => {
                     "YYYYMMDD"
                   )}&to_date=${moment(toDate).format(
                     "YYYYMMDD"
-                  )}&date_type=${searchType}&oid=${searchValue}`
+                  )}&date_type=${searchType}&oid=${searchValue}`,
+                  token
                 );
               }
             }
@@ -245,7 +251,7 @@ const SoldOut = () => {
         setSelectOpt("상품명");
         setSearchType("");
         setSearchValue("");
-        getSoldOut();
+        getSoldOut("", token);
         break;
       default:
         break;
@@ -299,8 +305,7 @@ const SoldOut = () => {
     setSearchValue(value);
   };
 
-  const sendMessage = async () => {
-    const token = sessionStorage.getItem("userToken");
+  const sendMessage = async (token) => {
     await axios
       .get(`https://sadmin.piclick.kr/soldout/sms?idx=${index}`, {
         headers: {

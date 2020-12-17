@@ -7,6 +7,11 @@ const SoldOutReport = () => {
   const [loading, setLoadig] = useState(true);
   const [redirect, setRedirect] = useState(false);
 
+  const clear = () => {
+    setLoadig(true);
+    setRedirect(false);
+  };
+
   const getReport = (token) => {
     axios({
       method: "get",
@@ -34,6 +39,8 @@ const SoldOutReport = () => {
       setRedirect(true);
     }
     getReport(token);
+
+    return () => clear();
   }, []);
 
   if (redirect) {

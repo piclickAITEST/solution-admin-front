@@ -189,7 +189,7 @@ function SoldOutDetail({ match, location }) {
           })
             .then((res) => {
               if (res.data !== undefined || res.data !== null) {
-                getDetail();
+                getDetail(token);
               }
             })
             .catch((error) => {
@@ -232,7 +232,7 @@ function SoldOutDetail({ match, location }) {
           })
             .then((res) => {
               if (res.data !== undefined || res.data !== null) {
-                getDetail();
+                getDetail(token);
               }
             })
             .catch((error) => {
@@ -243,7 +243,7 @@ function SoldOutDetail({ match, location }) {
               }
             });
         } else {
-          getDetail();
+          getDetail(token);
         }
       });
     }
