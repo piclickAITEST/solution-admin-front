@@ -16,7 +16,6 @@ import {
   CModalHeader,
   CModalBody,
   CModalFooter,
-  CLink,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { useCallback } from "react";
@@ -51,6 +50,9 @@ function SoldOutDetail({ match, location }) {
   }
 
   function numberWithPhone(x) {
+    if (x === undefined || x === null) {
+      return;
+    }
     if (x.length < 10) {
       return x.toString().replace(/(\d{2})(\d{3})(\d{3,4})/, "$1-$2-$3");
     } else {
@@ -263,7 +265,7 @@ function SoldOutDetail({ match, location }) {
         </CCardHeader>
         <CCardBody>
           <h3>
-            {productName} - {userName}
+            {productName} / {numberWithCommas(productPrice)}원 - {userName}
           </h3>
           <CFormGroup row>
             <CCol xs="2">
@@ -272,7 +274,7 @@ function SoldOutDetail({ match, location }) {
                 <option value="R">환불</option>
                 <option value="S">적립</option>
                 <option value="E">교환</option>
-                <option value="X">처리완료</option>
+                {/* <option value="X">처리완료</option> */}
               </CSelect>
             </CCol>
             {paymentMethod === "cash" && csStatus === "R" ? (
@@ -368,8 +370,8 @@ function SoldOutDetail({ match, location }) {
                     <td className="text-center">{action_code}</td>
                     <td className="text-center">{account_num}</td>
                     <td className="text-center">{account_holder_info}</td>
-                    <td className="text-center">{receiver}</td>
-                    <td className="text-center">{sender}</td>
+                    <td className="text-center">{numberWithPhone(receiver)}</td>
+                    <td className="text-center">{numberWithPhone(sender)}</td>
                   </tr>
                 );
               })}
