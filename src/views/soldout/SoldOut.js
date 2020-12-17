@@ -477,6 +477,7 @@ const SoldOut = () => {
                   soldout_date,
                   mall_id,
                   payment_method,
+                  bizName,
                 } = product;
 
                 return (
@@ -513,6 +514,13 @@ const SoldOut = () => {
                             product_no: product_id,
                             order_id: order_id,
                             payment_method: payment_method,
+                            bizName: bizName,
+                            user_name: user_name,
+                            product_name: product_name,
+                            order_date: order_date,
+                            option1: option1,
+                            option2: option2,
+                            qty: qty,
                           },
                         }}
                       >

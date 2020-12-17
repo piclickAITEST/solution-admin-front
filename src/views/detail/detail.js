@@ -12,12 +12,16 @@ import {
   CSelect,
   CLabel,
   CInput,
+  CModal,
+  CModalHeader,
+  CModalBody,
+  CModalFooter,
+  CLink,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
+import { useCallback } from "react";
 
 function SoldOutDetail({ match, location }) {
-  // const index = match.params.idx;
-  // const orderNo = match.params.order_no;
   const index = match.params.idx;
   const productInfo = location.productInfo;
   const mallID = productInfo.mall_id;
@@ -25,13 +29,22 @@ function SoldOutDetail({ match, location }) {
   const orderID = productInfo.order_id;
   const productPrice = productInfo.price;
   const paymentMethod = productInfo.payment_method;
-  // const [detail, setDetail] = useState([]);
+  const shopName = productInfo.bizName;
+  const userName = productInfo.user_name;
+  const productName = productInfo.product_name;
+  const orderDate = productInfo.order_date;
+  const option1 = productInfo.option1;
+  const option2 = productInfo.option2;
+  const qty = productInfo.qty;
+
+  const [detail, setDetail] = useState([]);
   const [redirect, setRedirect] = useState(false);
   const [csStatus, setCsStatus] = useState("R");
   const [bankList, setBankList] = useState([]);
   const [bankCode, setBankCode] = useState("002");
   const [bankAccount, setBankAccount] = useState("");
   const [countryCode, setCountryCode] = useState("");
+  const [msgModal, setMsgModal] = useState(false);
 
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -49,6 +62,7 @@ function SoldOutDetail({ match, location }) {
     setRedirect(false);
     setCsStatus("R");
     setBankList([]);
+    setDetail([]);
     setBankCode("002");
     setBankAccount("");
     setCountryCode("");
@@ -71,10 +85,52 @@ function SoldOutDetail({ match, location }) {
     });
   };
 
+  const getDetail = useCallback(
+    (args) => {
+      const token = sessionStorage.getItem("userToken");
+      if (args === undefined) {
+        args = "";
+      }
+      if (token === null || undefined) {
+        setRedirect(true);
+        return;
+      }
+      axios({
+        method: "get",
+        url: `https://sadmin.piclick.kr/log/list?idx=${index}`,
+        headers: {
+          Authorization: `JWT ${token}`,
+        },
+      })
+        .then((res) => {
+          if (res.data === undefined) {
+            setDetail([]);
+          } else {
+            setDetail(res.data.result);
+          }
+        })
+        .catch((error) => {
+          if (error.response.status === 401) {
+            sessionStorage.removeItem("userToken");
+            sessionStorage.removeItem("userName");
+            setRedirect(true);
+          }
+        });
+    },
+    [index]
+  );
+
+  // 은행 리스트 가져오기
   useEffect(() => {
     getbankList();
     return () => clearState();
   }, []);
+
+  // 상세정보 업데이트
+  useEffect(() => {
+    getDetail();
+    return () => clearState();
+  }, [getDetail]);
 
   if (redirect) {
     return <Redirect from="*" to="/login" />;
@@ -115,6 +171,10 @@ function SoldOutDetail({ match, location }) {
               Authorization: `JWT ${token}`,
             },
             data: requestParam,
+          }).then((res) => {
+            if (res.data !== undefined || res.data !== null) {
+              getDetail();
+            }
           });
         }
       });
@@ -134,6 +194,9 @@ function SoldOutDetail({ match, location }) {
             // product_id: productNo,
             status_msg: res.data.res.message,
             status_code: res.data.res.code,
+            account_num: bankAccount,
+            bank_code_std: bankCode,
+            account_holder_info: countryCode,
           };
           //환불 상태변화, 로그 API 전송
           axios({
@@ -143,7 +206,13 @@ function SoldOutDetail({ match, location }) {
               Authorization: `JWT ${token}`,
             },
             data: requestParam,
+          }).then((res) => {
+            if (res.data !== undefined || res.data !== null) {
+              getDetail();
+            }
           });
+        } else {
+          getDetail();
         }
       });
     }
@@ -169,19 +238,6 @@ function SoldOutDetail({ match, location }) {
     setBankCode(value);
   };
 
-  const onBankSubmit = (event) => {
-    const bankObject = {
-      bank_account: bankAccount,
-      bank_code: bankCode,
-      country_code: countryCode,
-    };
-
-    if (bankAccount === "" || bankCode === "" || countryCode === "") {
-      return;
-    } else {
-      console.log(bankObject);
-    }
-  };
   const previewToggle = () => {
     var url = `https://sol.piclick.kr/soldOut/?mallID=rlackdals1&product_no=${productNo}&order_id=${orderID}`;
     window.open(
@@ -189,7 +245,11 @@ function SoldOutDetail({ match, location }) {
       "_blank",
       "menubar=no, resizable=no, width=360, height=640"
     );
-  }
+  };
+
+  const msgModalToggle = () => {
+    setMsgModal(!msgModal);
+  };
 
   return (
     <div>
@@ -202,20 +262,18 @@ function SoldOutDetail({ match, location }) {
           </Link>
         </CCardHeader>
         <CCardBody>
+          <h3>
+            {productName} - {userName}
+          </h3>
           <CFormGroup row>
             <CCol xs="2">
               <CLabel>CS 상태</CLabel>
-              <CInputGroup>
-                <CSelect onChange={csSelectChange} value={csStatus}>
-                  <option value="R">환불</option>
-                  <option value="S">적립</option>
-                  <option value="E">교환</option>
-                  <option value="X">처리완료</option>
-                </CSelect>
-                <CButton color="primary" onClick={postCsStatus}>
-                  변경
-                </CButton>
-              </CInputGroup>
+              <CSelect onChange={csSelectChange} value={csStatus}>
+                <option value="R">환불</option>
+                <option value="S">적립</option>
+                <option value="E">교환</option>
+                <option value="X">처리완료</option>
+              </CSelect>
             </CCol>
             {paymentMethod === "cash" && csStatus === "R" ? (
               <>
@@ -254,15 +312,23 @@ function SoldOutDetail({ match, location }) {
                       placeholder="주민번호 앞자리"
                       type="number"
                     />
-                    <CButton color="primary" onClick={onBankSubmit}>
-                      추가
-                    </CButton>
                   </CInputGroup>
                 </CCol>
               </>
             ) : null}
+            <CButton color="primary" onClick={postCsStatus}>
+              상태 변경
+            </CButton>
             <CCol>
-              <CButton onClick={previewToggle}>현재 선택된 상품 탬플릿 보기</CButton>
+              <CLabel>미리보기</CLabel>
+              <CInputGroup>
+                <CButton color="secondary" onClick={previewToggle}>
+                  품절대체 탬플릿
+                </CButton>
+                <CButton color="secondary" onClick={msgModalToggle}>
+                  메시지 내용
+                </CButton>
+              </CInputGroup>
             </CCol>
           </CFormGroup>
         </CCardBody>
@@ -272,61 +338,72 @@ function SoldOutDetail({ match, location }) {
           <table className="table table-outline mb-0 d-none d-sm-table">
             <thead className="thead-light">
               <tr>
-                <th className="text-center">
-                  주문일자
-                  <br />
-                  품절일자
-                </th>
-                <th className="text-center">주문번호</th>
-                <th className="text-center">상품명</th>
-                <th className="text-center">옵션 1</th>
-                <th className="text-center">옵션 2</th>
-                <th className="text-center">이미지</th>
-                <th className="text-center">수량</th>
-                <th className="text-center">금액</th>
-                <th className="text-center">
-                  주문자
-                  <br />
-                  수령자
-                </th>
-                <th className="text-center">
-                  주문자 휴대폰
-                  <br />
-                  주문자 전화번호
-                </th>
-                <th className="text-center">CS 상태</th>
+                <th className="text-center">상태 갱신 일자</th>
+                <th className="text-center">상태 코드</th>
+                <th className="text-center">계좌번호</th>
+                <th className="text-center">주민번호 앞자리</th>
+                <th className="text-center">수신자</th>
+                <th className="text-center">발신자</th>
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td className="text-center">
-                  2020-12-01 17:23
-                  <br />
-                  2020-12-05 11:00
-                </td>
-                <td className="text-center">20201201-0000123</td>
-                <td className="text-center">테스트용 상품</td>
-                <td className="text-center">핑크</td>
-                <td className="text-center">3XL</td>
-                <td className="text-center">이미지사진</td>
-                <td className="text-center">1</td>
-                <td className="text-center">{numberWithCommas(127000)}</td>
-                <td className="text-center">
-                  이우림
-                  <br />
-                  이우림
-                </td>
-                <td className="text-center">
-                  {numberWithPhone("01012345678")}
-                  <br />
-                  {numberWithPhone("02123456")}
-                </td>
-                <td className="text-center">테스트</td>
-              </tr>
+              {detail.map((product) => {
+                let {
+                  action_date, // 상태 업데이트 날짜 a
+                  account_holder_info, // 주민번호 앞자리 a
+                  account_num, // 계좌번호 a
+                  action_code, // 상태 코드(CS 상태) a
+                  receiver, // 수신자 번호 a
+                  sender, // 발신자 번호 a
+                  id,
+                } = product;
+
+                if (action_code === "CS_MSG_URL_CLICK_TEST") {
+                  action_code = "테스트";
+                }
+
+                return (
+                  <tr key={id}>
+                    <td className="text-center">{action_date}</td>
+                    <td className="text-center">{action_code}</td>
+                    <td className="text-center">{account_num}</td>
+                    <td className="text-center">{account_holder_info}</td>
+                    <td className="text-center">{receiver}</td>
+                    <td className="text-center">{sender}</td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </CCardBody>
       </CCard>
+      <CModal show={msgModal} onClose={msgModalToggle}>
+        <CModalHeader>메시지 내용</CModalHeader>
+        <CModalBody>
+          <strong>안녕하세요, {shopName} 입니다</strong>
+          <br />
+          안녕하세요. {userName}님! {shopName} 입니다.
+          <br />
+          안타깝게도 주문하신 상품이 품절되었습니다.
+          <br />
+          불편을 드려 정말 죄송합니다.
+          <br />
+          <br />- 주문일시 : {orderDate}
+          <br />- 상품명 : {productName} ({option1}
+          {option2 ? `- ${option2}` : ""}) 수량 {qty}
+          <br />
+          <br />
+          {`상세 안내 보러가기 ==>`}
+          <br />
+          <br />
+          {`https://sol.piclick.kr/soldOut/?mallID=rlackdals1&product_no=${productNo}&order_id=${orderID}`}
+        </CModalBody>
+        <CModalFooter>
+          <CButton onClick={msgModalToggle} color="secondary">
+            닫기
+          </CButton>
+        </CModalFooter>
+      </CModal>
     </div>
   );
 }
