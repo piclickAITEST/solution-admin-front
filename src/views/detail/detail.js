@@ -342,6 +342,7 @@ function SoldOutDetail({ match, location }) {
               <tr>
                 <th className="text-center">상태 갱신 일자</th>
                 <th className="text-center">상태 코드</th>
+                <th className="text-center">API 출력 내용</th>
                 <th className="text-center">계좌번호</th>
                 <th className="text-center">주민번호 앞자리</th>
                 <th className="text-center">수신자</th>
@@ -350,7 +351,7 @@ function SoldOutDetail({ match, location }) {
             </thead>
             <tbody>
               {detail.map((product) => {
-                let {
+                const {
                   action_date, // 상태 업데이트 날짜 a
                   account_holder_info, // 주민번호 앞자리 a
                   account_num, // 계좌번호 a
@@ -358,16 +359,16 @@ function SoldOutDetail({ match, location }) {
                   receiver, // 수신자 번호 a
                   sender, // 발신자 번호 a
                   id,
+                  status_msg,
                 } = product;
 
-                if (action_code === "CS_MSG_URL_CLICK_TEST") {
-                  action_code = "테스트";
-                }
+                console.log(product);
 
                 return (
                   <tr key={id}>
                     <td className="text-center">{action_date}</td>
                     <td className="text-center">{action_code}</td>
+                    <td className="text-center">{status_msg}</td>
                     <td className="text-center">{account_num}</td>
                     <td className="text-center">{account_holder_info}</td>
                     <td className="text-center">{numberWithPhone(receiver)}</td>
