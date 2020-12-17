@@ -52,16 +52,27 @@ const SoldOut = () => {
       setRedirect(true);
       return;
     }
-    const res = await axios.get(`https://sadmin.piclick.kr/soldout/${args}`, {
+    await axios({
+      method: "get",
+      url: `https://sadmin.piclick.kr/soldout/${args}`,
       headers: {
         Authorization: `JWT ${token}`,
       },
-    });
-    if (res.data.results === undefined) {
-      setProducts([]);
-    } else {
-      setProducts(res.data.results);
-    }
+    })
+      .then((res) => {
+        if (res.data === undefined) {
+          setProducts([]);
+        } else {
+          setProducts(res.data.results);
+        }
+      })
+      .catch((error) => {
+        if (error.response.status === 401) {
+          sessionStorage.removeItem("userToken");
+          sessionStorage.removeItem("userName");
+          setRedirect(true);
+        }
+      });
   };
 
   useEffect(() => {
@@ -467,7 +478,7 @@ const SoldOut = () => {
                   mall_id,
                   payment_method,
                 } = product;
-      
+
                 return (
                   <tr key={idx}>
                     <td className="text-center">
