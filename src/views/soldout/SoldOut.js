@@ -92,7 +92,7 @@ const SoldOut = () => {
     }, 60000 * 10);
 
     return () => clearInterval(getEveryTimes);
-  }, []);
+  }, [token]);
 
   const changedateType = (event) => {
     event.persist();
