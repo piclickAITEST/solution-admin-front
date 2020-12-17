@@ -1,10 +1,12 @@
 import React from "react";
+const SoldOutReport = React.lazy(() => import("./views/soldout/SoldOutReport"));
 const SoldOut = React.lazy(() => import("./views/soldout/SoldOut"));
 const Detail = React.lazy(() => import("./views/detail/detail"));
 
 const routes = [
   { path: "/", exact: true, name: "Home" },
-  { path: "/soldout", name: "SoldOut", component: SoldOut },
+  { path: "/soldout", exact: true, name: "SoldOut", component: SoldOut },
+  { path: "/soldout/report", name: "SoldOutReport", component: SoldOutReport },
   { path: "/detail/:idx/:order_no", name: "Detail", component: Detail },
 ];
 

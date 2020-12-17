@@ -16,11 +16,13 @@ import {
   CModalHeader,
   CModalBody,
   CModalFooter,
+  CSpinner,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { useCallback } from "react";
 
 function SoldOutDetail({ match, location }) {
+  const token = sessionStorage.getItem("userToken");
   const index = match.params.idx;
   const productInfo = location.productInfo;
   const mallID = productInfo.mall_id;
@@ -44,6 +46,7 @@ function SoldOutDetail({ match, location }) {
   const [bankAccount, setBankAccount] = useState("");
   const [countryCode, setCountryCode] = useState("");
   const [msgModal, setMsgModal] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -70,8 +73,7 @@ function SoldOutDetail({ match, location }) {
     setCountryCode("");
   };
 
-  const getbankList = async () => {
-    const token = sessionStorage.getItem("userToken");
+  const getbankList = async (token) => {
     if (token === null || undefined) {
       setRedirect(true);
       return;
@@ -82,21 +84,21 @@ function SoldOutDetail({ match, location }) {
       headers: {
         Authorization: `JWT ${token}`,
       },
-    }).then((res) => {
-      setBankList(res.data);
-    });
+    })
+      .then((res) => {
+        setBankList(res.data);
+      })
+      .catch((error) => {
+        if (error.response.status === 401) {
+          sessionStorage.removeItem("userToken");
+          sessionStorage.removeItem("userName");
+          setRedirect(true);
+        }
+      });
   };
 
   const getDetail = useCallback(
-    (args) => {
-      const token = sessionStorage.getItem("userToken");
-      if (args === undefined) {
-        args = "";
-      }
-      if (token === null || undefined) {
-        setRedirect(true);
-        return;
-      }
+    (token) => {
       axios({
         method: "get",
         url: `https://sadmin.piclick.kr/log/list?idx=${index}`,
@@ -109,6 +111,7 @@ function SoldOutDetail({ match, location }) {
             setDetail([]);
           } else {
             setDetail(res.data.result);
+            setLoading(false);
           }
         })
         .catch((error) => {
@@ -124,15 +127,25 @@ function SoldOutDetail({ match, location }) {
 
   // 은행 리스트 가져오기
   useEffect(() => {
-    getbankList();
+    if (token === null || undefined) {
+      setRedirect(true);
+      return;
+    }
+
+    getbankList(token);
     return () => clearState();
-  }, []);
+  }, [token]);
 
   // 상세정보 업데이트
   useEffect(() => {
-    getDetail();
+    if (token === null || undefined) {
+      setRedirect(true);
+      return;
+    }
+
+    getDetail(token);
     return () => clearState();
-  }, [getDetail]);
+  }, [token, getDetail]);
 
   if (redirect) {
     return <Redirect from="*" to="/login" />;
@@ -173,11 +186,19 @@ function SoldOutDetail({ match, location }) {
               Authorization: `JWT ${token}`,
             },
             data: requestParam,
-          }).then((res) => {
-            if (res.data !== undefined || res.data !== null) {
-              getDetail();
-            }
-          });
+          })
+            .then((res) => {
+              if (res.data !== undefined || res.data !== null) {
+                getDetail();
+              }
+            })
+            .catch((error) => {
+              if (error.response.status === 401) {
+                sessionStorage.removeItem("userToken");
+                sessionStorage.removeItem("userName");
+                setRedirect(true);
+              }
+            });
         }
       });
     } else if (csStatus === "R") {
@@ -208,11 +229,19 @@ function SoldOutDetail({ match, location }) {
               Authorization: `JWT ${token}`,
             },
             data: requestParam,
-          }).then((res) => {
-            if (res.data !== undefined || res.data !== null) {
-              getDetail();
-            }
-          });
+          })
+            .then((res) => {
+              if (res.data !== undefined || res.data !== null) {
+                getDetail();
+              }
+            })
+            .catch((error) => {
+              if (error.response.status === 401) {
+                sessionStorage.removeItem("userToken");
+                sessionStorage.removeItem("userName");
+                setRedirect(true);
+              }
+            });
         } else {
           getDetail();
         }
@@ -253,7 +282,11 @@ function SoldOutDetail({ match, location }) {
     setMsgModal(!msgModal);
   };
 
-  return (
+  return loading ? (
+    <div className="d-flex justify-content-center align-items-center">
+      <CSpinner color="primary" style={{ width: "4rem", height: "4rem" }} />
+    </div>
+  ) : (
     <div>
       <CCard>
         <CCardHeader>
@@ -361,8 +394,6 @@ function SoldOutDetail({ match, location }) {
                   id,
                   status_msg,
                 } = product;
-
-                console.log(product);
 
                 return (
                   <tr key={id}>

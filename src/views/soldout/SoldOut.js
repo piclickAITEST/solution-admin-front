@@ -20,6 +20,7 @@ import {
   CToastHeader,
   CToastBody,
   CToaster,
+  CSpinner,
 } from "@coreui/react";
 import { Redirect, Link } from "react-router-dom";
 
@@ -36,6 +37,7 @@ const SoldOut = () => {
   const [index, setIndex] = useState("");
   const [msgToastLog, setMsgToastLog] = useState("");
   const [msgToastToggle, setMsgToastToggle] = useState(false);
+  const [loading, setLoading] = useState(true);
 
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -70,6 +72,7 @@ const SoldOut = () => {
           setProducts([]);
         } else {
           setProducts(res.data.results);
+          setLoading(false);
         }
       })
       .catch((error) => {
@@ -345,7 +348,11 @@ const SoldOut = () => {
     return <Redirect from="*" to="/login" />;
   }
 
-  return (
+  return loading ? (
+    <div className="d-flex justify-content-center align-items-center">
+      <CSpinner color="primary" style={{ width: "4rem", height: "4rem" }} />
+    </div>
+  ) : (
     <>
       <CCard>
         <CCardBody>

@@ -1,8 +1,19 @@
 export default [
   {
-    _tag: "CSidebarNavItem",
+    _tag: "CSidebarNavDropdown",
     name: "품절대체",
-    to: "/soldout",
     icon: "cil3d",
+    _children: [
+      {
+        _tag: "CSidebarNavItem",
+        name: "품절 목록",
+        to: "/soldout",
+      },
+      {
+        _tag: "CSidebarNavItem",
+        name: "품절대체 통계",
+        to: "/soldout/report",
+      },
+    ],
   },
 ];
