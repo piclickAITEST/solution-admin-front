@@ -16,6 +16,10 @@ import {
   CModalBody,
   CModalFooter,
   CLabel,
+  CToast,
+  CToastHeader,
+  CToastBody,
+  CToaster,
 } from "@coreui/react";
 import { Redirect, Link } from "react-router-dom";
 
@@ -30,6 +34,8 @@ const SoldOut = () => {
   const [redirect, setRedirect] = useState(false);
   const [sendModal, setSendModal] = useState(false);
   const [index, setIndex] = useState("");
+  const [msgToastLog, setMsgToastLog] = useState("");
+  const [msgToastToggle, setMsgToastToggle] = useState(false);
 
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -292,31 +298,47 @@ const SoldOut = () => {
 
   const sendMessage = async () => {
     const token = sessionStorage.getItem("userToken");
-    const res = await axios.get(
-      `https://sadmin.piclick.kr/soldout/sms?idx=${index}`,
-      {
+    await axios
+      .get(`https://sadmin.piclick.kr/soldout/sms?idx=${index}`, {
         headers: {
           Authorization: `JWT ${token}`,
         },
-      }
-    );
-    if (res.data !== undefined) {
-      if (res.data.results.result_code === "1") {
-        setSendModal(false);
-        setIndex("");
+      })
+      .then((res) => {
+        if (res.data !== undefined) {
+          if (res.data.results.result_code === "1") {
+            setMsgToastToggle(true);
+            setMsgToastLog("성공적으로 메시지를 전송하였습니다.");
+            setSendModal(false);
+            setIndex("");
 
-        const action = document.querySelector(`#action-${index}`);
-        const button = document.querySelector(`#button-${index}`);
-        action.innerText = "메세지전송";
-        button.setAttribute("disabled", "");
-      } else {
+            const action = document.querySelector(`#action-${index}`);
+            const button = document.querySelector(`#button-${index}`);
+            action.innerText = "메세지전송";
+            button.setAttribute("disabled", "");
+          } else {
+            setSendModal(false);
+            setIndex("");
+          }
+        } else {
+          setMsgToastToggle(true);
+          setMsgToastLog("메시지를 전송하지 못했습니다.");
+          setTimeout(() => {
+            setMsgToastToggle(false);
+          }, 3000);
+          setSendModal(false);
+          setIndex("");
+        }
+      })
+      .catch((error) => {
+        setMsgToastToggle(true);
+        setMsgToastLog("메시지를 전송하지 못했습니다.");
+        setTimeout(() => {
+          setMsgToastToggle(false);
+        }, 3000);
         setSendModal(false);
         setIndex("");
-      }
-    } else {
-      setSendModal(false);
-      setIndex("");
-    }
+      });
   };
 
   if (redirect) {
@@ -563,6 +585,12 @@ const SoldOut = () => {
           </CButton>
         </CModalFooter>
       </CModal>
+      <CToaster position="top-right">
+        <CToast show={msgToastToggle} autohide={3000} fade={true}>
+          <CToastHeader>메시지 전송</CToastHeader>
+          <CToastBody>{msgToastLog}</CToastBody>
+        </CToast>
+      </CToaster>
     </>
   );
 };
