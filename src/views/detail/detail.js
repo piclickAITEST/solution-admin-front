@@ -381,10 +381,8 @@ function SoldOutDetail({ match, location }) {
         </CCardBody>
       </CCard>
       <CModal show={msgModal} onClose={msgModalToggle}>
-        <CModalHeader>메시지 내용</CModalHeader>
+        <CModalHeader>안녕하세요, {shopName} 입니다</CModalHeader>
         <CModalBody>
-          <strong>안녕하세요, {shopName} 입니다</strong>
-          <br />
           안녕하세요. {userName}님! {shopName} 입니다.
           <br />
           안타깝게도 주문하신 상품이 품절되었습니다.
