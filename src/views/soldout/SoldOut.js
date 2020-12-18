@@ -344,8 +344,8 @@ const SoldOut = () => {
       .then((res) => {
         if (res.data !== undefined) {
           if (res.data.results.result_code === "1") {
-            enableToast("메시지를 전송하였습니다.");
             setSendModal(false);
+            enableToast("메시지를 전송하였습니다.");
             setIndex("");
 
             const action = document.querySelector(`#action-${index}`);
@@ -354,17 +354,18 @@ const SoldOut = () => {
             button.setAttribute("disabled", "");
           } else {
             setSendModal(false);
+            enableToast("메시지를 전송하지 못했습니다.");
             setIndex("");
           }
         } else {
-          enableToast("메시지를 전송하지 못했습니다.");
           setSendModal(false);
+          enableToast("메시지를 전송하지 못했습니다.");
           setIndex("");
         }
       })
       .catch((error) => {
-        enableToast("메시지를 전송하지 못했습니다.");
         setSendModal(false);
+        enableToast("메시지를 전송하지 못했습니다.");
         setIndex("");
       });
   };

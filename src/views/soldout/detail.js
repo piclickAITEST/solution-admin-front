@@ -210,7 +210,6 @@ function SoldOutDetail({ match, location }) {
               .then((res) => {
                 if (res.data !== undefined || res.data !== null) {
                   enableToast("상태 변경을 하였습니다.");
-                  getDetail(token);
                 }
               })
               .catch((error) => {
