@@ -162,124 +162,6 @@ const SoldOutNew = () => {
     }
   };
 
-  const onSearchClick = (event) => {
-    const {
-      target: { name },
-    } = event;
-
-    switch (name) {
-      case "search":
-        if (fromDate === "" || toDate === "") {
-          if (searchType === "") {
-            if (searchValue === "") {
-              getSoldOut("", token);
-            } else {
-              //검색어만
-              if (selectOpt === "상품명") {
-                getSoldOut(`?pname=${searchValue}`, token);
-              } else if (selectOpt === "상품ID") {
-                getSoldOut(`?pid=${searchValue}`, token);
-              } else if (selectOpt === "주문자") {
-                getSoldOut(`?uname=${searchValue}`, token);
-              } else {
-                getSoldOut(`?oid=${searchValue}`, token);
-              }
-            }
-          } else {
-            if (searchValue === "") {
-              getSoldOut("", token);
-            } else {
-              //검색어만
-              if (selectOpt === "상품명") {
-                getSoldOut(`?pname=${searchValue}`, token);
-              } else if ((selectOpt === "상품ID", token)) {
-                getSoldOut(`?pid=${searchValue}`, token);
-              } else if (selectOpt === "주문자") {
-                getSoldOut(`?uname=${searchValue}`, token);
-              } else {
-                getSoldOut(`?oid=${searchValue}`, token);
-              }
-            }
-          }
-        } else {
-          if (searchType === "") {
-            if (searchValue === "") {
-              getSoldOut("", token);
-            } else {
-              //검색어만
-              if (selectOpt === "상품명") {
-                getSoldOut(`?pname=${searchValue}`, token);
-              } else if (selectOpt === "상품ID") {
-                getSoldOut(`?pid=${searchValue}`, token);
-              } else if (selectOpt === "주문자") {
-                getSoldOut(`?uname=${searchValue}`, token);
-              } else {
-                getSoldOut(`?oid=${searchValue}`, token);
-              }
-            }
-          } else {
-            if (searchValue === "") {
-              //날짜만
-              getSoldOut(
-                `?from_date=${moment(fromDate).format(
-                  "YYYYMMDD"
-                )}&to_date=${moment(toDate).format(
-                  "YYYYMMDD"
-                )}&date_type=${searchType}`,
-                token
-              );
-            } else {
-              //검색어, 날짜 둘다
-              if (selectOpt === "상품명") {
-                getSoldOut(
-                  `?from_date=${moment(fromDate).format(
-                    "YYYYMMDD"
-                  )}&to_date=${moment(toDate).format(
-                    "YYYYMMDD"
-                  )}&date_type=${searchType}&pname=${searchValue}`,
-                  token
-                );
-              } else if (selectOpt === "주문자") {
-                getSoldOut(
-                  `?from_date=${moment(fromDate).format(
-                    "YYYYMMDD"
-                  )}&to_date=${moment(toDate).format(
-                    "YYYYMMDD"
-                  )}&date_type=${searchType}&uname=${searchValue}`,
-                  token
-                );
-              } else if (selectOpt === "상품ID") {
-                getSoldOut(
-                  `?from_date=${moment(fromDate).format(
-                    "YYYYMMDD"
-                  )}&to_date=${moment(toDate).format(
-                    "YYYYMMDD"
-                  )}&date_type=${searchType}&pid=${searchValue}`,
-                  token
-                );
-              } else {
-                getSoldOut(
-                  `?from_date=${moment(fromDate).format(
-                    "YYYYMMDD"
-                  )}&to_date=${moment(toDate).format(
-                    "YYYYMMDD"
-                  )}&date_type=${searchType}&oid=${searchValue}`,
-                  token
-                );
-              }
-            }
-          }
-        }
-        break;
-      case "clear":
-        clearState();
-        getSoldOut("", token);
-        break;
-      default:
-        break;
-    }
-  };
-
   const onSelectChange = (event) => {
     const {
       target: { value },
@@ -469,47 +351,6 @@ const SoldOutNew = () => {
               </CInputGroup>
             </CCol>
           </CFormGroup>
-          <CFormGroup row>
-            <CCol xs="3">
-              <CInputGroup>
-                <CSelect
-                  custom
-                  name="search-filter"
-                  id="search-filter"
-                  onChange={onSelectChange}
-                  value={selectOpt}
-                >
-                  <option value="상품명">상품명</option>
-                  <option value="상품ID">상품ID</option>
-                  <option value="주문자">주문자</option>
-                  <option value="주문번호">주문번호</option>
-                </CSelect>
-                <CInput
-                  type="text"
-                  id="nf-email"
-                  name="nf-email"
-                  placeholder="검색"
-                  value={searchValue}
-                  onChange={searchValueChange}
-                />
-              </CInputGroup>
-            </CCol>
-            <CCol>
-              <CInputGroup>
-                <CButton
-                  color="primary"
-                  name="search"
-                  onClick={onSearchClick}
-                  style={{ marginRight: "5px" }}
-                >
-                  검색
-                </CButton>
-                <CButton color="secondary" name="clear" onClick={onSearchClick}>
-                  초기화
-                </CButton>
-              </CInputGroup>
-            </CCol>
-          </CFormGroup>
         </CCardBody>
       </CCard>
       <CCard>
@@ -544,7 +385,7 @@ const SoldOutNew = () => {
                 </td>
               ),
             }}
-          ></CDataTable>
+          />
         </CCardBody>
       </CCard>
       <CModal show={sendModal} onClose={sendToggle}>

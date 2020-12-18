@@ -21,7 +21,6 @@ import {
   CToastBody,
   CToaster,
   CSpinner,
-  CDataTable,
 } from "@coreui/react";
 import { Redirect, Link } from "react-router-dom";
 
@@ -377,74 +376,6 @@ const SoldOut = () => {
     return <Redirect from="*" to="/login" />;
   }
 
-  // const {
-  //   action,
-  //   idx,
-  //   list_image,
-  //   option1,
-  //   option2,
-  //   order_date,
-  //   order_id,
-  //   phone,
-  //   price,
-  //   product_name,
-  //   qty,
-  //   user_name,
-  //   product_id,
-  //   soldout_date,
-  //   mall_id,
-  //   payment_method,
-  //   bizName,
-  // } = product;
-
-  // <th className="text-center">주문일자</th>
-  // <th className="text-center">품절일자</th>
-  // <th className="text-center">주문번호</th>
-  // <th className="text-center">상품명</th>
-  // <th className="text-center">옵션 1</th>
-  // <th className="text-center">옵션 2</th>
-  // <th className="text-center">이미지</th>
-  // <th className="text-center">수량</th>
-  // <th className="text-center">금액</th>
-  // <th className="text-center">
-  //   주문자
-  //   <br />
-  //   수령자
-  // </th>
-  // <th className="text-center">
-  //   주문자 휴대폰
-  //   <br />
-  //   주문자 전화번호
-  // </th>
-  // <th className="text-center">CS 상태</th>
-  // <th className="text-center"></th>
-
-  const fields = [
-    { key: "order_date", label: "주문일자" },
-    { key: "soldout_date", label: "품절일자" },
-    { key: "order_id", label: "주문번호" },
-    { key: "product_id", label: "상품명" },
-    {
-      key: "option1",
-      label: "옵션1",
-      _style: { width: "5%" },
-    },
-    { key: "option2", label: "옵션2", _style: { width: "5%" } },
-    { key: "list_image", label: "이미지", sorter: false, filter: false },
-    { key: "qty", label: "수량", _style: { width: "5%" } },
-    { key: "price", label: "금액" },
-    { key: "user_name", label: "주문자" },
-    { key: "phone", label: "주문자 휴대폰" },
-    { key: "action", label: "CS상태", _style: { width: "5%" } },
-    {
-      key: "message",
-      label: "",
-      sorter: false,
-      filter: false,
-      _style: { width: "5%" },
-    },
-  ];
-
   return loading ? (
     <div className="d-flex justify-content-center align-items-center">
       <CSpinner color="primary" style={{ width: "4rem", height: "4rem" }} />
@@ -560,37 +491,6 @@ const SoldOut = () => {
       </CCard>
       <CCard>
         <CCardBody>
-          {/* <CDataTable
-            items={products}
-            fields={fields}
-            itemsPerPageSelect
-            itemsPerPage={10}
-            pagination
-            sorter
-            tableFilter
-            columnFilter
-            scopedSlots={{
-              list_image: (item) => (
-                <td>
-                  <img src={item.list_image} alt="" width="65px" />
-                </td>
-              ),
-              price: (item) => <td>{numberWithCommas(item.price)}</td>,
-              phone: (item) => <td>{numberWithPhone(item.phone)}</td>,
-              message: (item) => (
-                <td>
-                  <CButton
-                    color="primary"
-                    disabled={item.action !== "품절대상"}
-                    onClick={() => sendToggle(item.idx)}
-                    id={`button-${item.idx}`}
-                  >
-                    전송
-                  </CButton>
-                </td>
-              ),
-            }}
-          ></CDataTable> */}
           <table className="table table-outline mb-0 d-none d-sm-table">
             <thead className="thead-light">
               <tr>
