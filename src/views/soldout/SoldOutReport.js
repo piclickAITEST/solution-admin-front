@@ -2,7 +2,6 @@ import { useState, useEffect } from "react";
 import axios from "axios";
 import { CCard, CCardBody, CCardHeader, CSpinner } from "@coreui/react";
 import { Redirect } from "react-router-dom";
-import unknown from "core-js/stable";
 
 const SoldOutReport = () => {
   const token = sessionStorage.getItem("userToken");
@@ -16,6 +15,14 @@ const SoldOutReport = () => {
     setLoadig(true);
     setRedirect(false);
   };
+
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+
+  function numberToDate(x) {
+    return x.toString().replace(/(\d{4})(\d{2})(\d{2})/, "$1-$2-$3");
+  }
 
   const getReport = (token) => {
     axios({
@@ -110,30 +117,83 @@ const SoldOutReport = () => {
                 save_conv_count,
                 save_conv_rate,
                 save_conv_sum,
-                soldout_conv_count,
-                soldout_conv_rate,
+                soldout_count,
+                soldout_rate,
                 unknown_user_count,
                 user_count,
               } = report;
+
               return (
                 <tr key={date}>
-                  <td className="text-center">{date}</td>
-                  <td className="text-center">{exchange_conv_count}</td>
-                  <td className="text-center">{exchange_conv_rate}</td>
-                  <td className="text-center">{exchange_conv_sum}</td>
-                  <td className="text-center">{message_sent_count}</td>
-                  <td className="text-center">{order_count}</td>
-                  <td className="text-center">{reco_view_count}</td>
-                  <td className="text-center">{refund_count}</td>
-                  <td className="text-center">{refund_rate}</td>
-                  <td className="text-center">{refund_sum}</td>
-                  <td className="text-center">{save_conv_count}</td>
-                  <td className="text-center">{save_conv_rate}</td>
-                  <td className="text-center">{save_conv_sum}</td>
-                  <td className="text-center">{soldout_conv_count}</td>
-                  <td className="text-center">{soldout_conv_rate}</td>
-                  <td className="text-center">{unknown_user_count}</td>
-                  <td className="text-center">{user_count}</td>
+                  <td className="text-center">{numberToDate(date)}</td>
+                  <td className="text-center">
+                    {exchange_conv_count !== null
+                      ? numberWithCommas(exchange_conv_count)
+                      : "0"}
+                  </td>
+                  <td className="text-center">
+                    {exchange_conv_rate !== null
+                      ? `${exchange_conv_rate}%`
+                      : "0%"}
+                  </td>
+                  <td className="text-center">
+                    {exchange_conv_sum !== null
+                      ? numberWithCommas(exchange_conv_sum)
+                      : "0"}
+                  </td>
+                  <td className="text-center">
+                    {message_sent_count !== null
+                      ? numberWithCommas(message_sent_count)
+                      : "0"}
+                  </td>
+                  <td className="text-center">
+                    {order_count !== null ? numberWithCommas(order_count) : "0"}
+                  </td>
+                  <td className="text-center">
+                    {reco_view_count !== null
+                      ? numberWithCommas(reco_view_count)
+                      : "0"}
+                  </td>
+                  <td className="text-center">
+                    {refund_count !== null
+                      ? numberWithCommas(refund_count)
+                      : "0"}
+                  </td>
+                  <td className="text-center">
+                    {refund_rate !== null ? `${refund_rate}%` : "0%"}
+                  </td>
+                  <td className="text-center">
+                    {refund_sum !== null ? numberWithCommas(refund_sum) : "0"}
+                  </td>
+                  <td className="text-center">
+                    {save_conv_count !== null
+                      ? numberWithCommas(save_conv_count)
+                      : "0"}
+                  </td>
+                  <td className="text-center">
+                    {save_conv_rate !== null ? `${save_conv_rate}%` : "0%"}
+                  </td>
+                  <td className="text-center">
+                    {save_conv_sum !== null
+                      ? numberWithCommas(save_conv_count)
+                      : "0"}
+                  </td>
+                  <td className="text-center">
+                    {soldout_count !== null
+                      ? numberWithCommas(soldout_count)
+                      : "0"}
+                  </td>
+                  <td className="text-center">
+                    {soldout_rate !== null ? `${soldout_rate}%` : "0%"}
+                  </td>
+                  <td className="text-center">
+                    {unknown_user_count !== null
+                      ? numberWithCommas(unknown_user_count)
+                      : "0"}
+                  </td>
+                  <td className="text-center">
+                    {user_count !== null ? numberWithCommas(user_count) : "0"}
+                  </td>
                 </tr>
               );
             })}
