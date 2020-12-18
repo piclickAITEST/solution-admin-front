@@ -83,22 +83,24 @@ const SoldOutReport = () => {
           <thead className="thead-light">
             <tr>
               <th className="text-center">날짜</th>
-              <th className="text-center">교환 전환수</th>
-              <th className="text-center">교환 전환율</th>
-              <th className="text-center">교환 전환합계</th>
-              <th className="text-center">메시지 발송 수</th>
-              <th className="text-center">주문 수</th>
+              <th className="text-center">교환수</th>
+              <th className="text-center">교환율</th>
+              <th className="text-center">교환합계</th>
+              <th className="text-center">메시지 발송</th>
+              <th className="text-center">주문수</th>
               <th className="text-center">추천 조회수</th>
-              <th className="text-center">환불 횟수</th>
-              <th className="text-center">환불 환불율</th>
+              <th className="text-center">환불수</th>
+              <th className="text-center">환불율</th>
               <th className="text-center">환불 합계</th>
-              <th className="text-center">적립 전환수</th>
-              <th className="text-center">적립 전환율</th>
-              <th className="text-center">적립 전환합계</th>
-              <th className="text-center">품절 수</th>
+              <th className="text-center">적립수</th>
+              <th className="text-center">적립율</th>
+              <th className="text-center">적립합계</th>
+              <th className="text-center">지연 적립수</th>
+              <th className="text-center">지연 적립합계</th>
+              <th className="text-center">품절수</th>
               <th className="text-center">품절율</th>
-              <th className="text-center">비회원 수</th>
-              <th className="text-center">회원 수</th>
+              <th className="text-center">비회원</th>
+              <th className="text-center">회원</th>
             </tr>
           </thead>
           <tbody>
@@ -121,6 +123,8 @@ const SoldOutReport = () => {
                 soldout_rate,
                 unknown_user_count,
                 user_count,
+                lazy_save_count,
+                lazy_save_sum,
               } = report;
 
               return (
@@ -176,6 +180,16 @@ const SoldOutReport = () => {
                   <td className="text-center">
                     {save_conv_sum !== null
                       ? numberWithCommas(save_conv_count)
+                      : "0"}
+                  </td>
+                  <td className="text-center">
+                    {lazy_save_count !== null
+                      ? numberWithCommas(lazy_save_count)
+                      : "0"}
+                  </td>
+                  <td className="text-center">
+                    {lazy_save_sum !== null
+                      ? numberWithCommas(lazy_save_sum)
                       : "0"}
                   </td>
                   <td className="text-center">
