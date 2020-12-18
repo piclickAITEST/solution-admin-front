@@ -225,7 +225,7 @@ function SoldOutDetail({ match, location }) {
         }
       });
     } else if (csStatus === "R") {
-      if (bankCode === "" || bankAccount === "" || countryCode === "") {
+      if (bankCode === "" || bankAccount === "") {
         return;
       }
       // 환불 (Refund)
@@ -365,7 +365,7 @@ function SoldOutDetail({ match, location }) {
                     type="number"
                   />
                 </CCol>
-                <CCol xs="2">
+                {/* <CCol xs="2">
                   <CLabel>주민번호 앞자리</CLabel>
                   <CInputGroup>
                     <CInput
@@ -376,7 +376,7 @@ function SoldOutDetail({ match, location }) {
                       type="number"
                     />
                   </CInputGroup>
-                </CCol>
+                </CCol> */}
               </>
             ) : null}
             <CButton color="primary" onClick={postCsStatus}>
@@ -385,7 +385,11 @@ function SoldOutDetail({ match, location }) {
             <CCol>
               <CLabel>미리보기</CLabel>
               <CInputGroup>
-                <CButton color="secondary" onClick={previewToggle}>
+                <CButton
+                  color="secondary"
+                  onClick={previewToggle}
+                  style={{ marginRight: "5px" }}
+                >
                   품절대체 탬플릿
                 </CButton>
                 <CButton color="secondary" onClick={msgModalToggle}>

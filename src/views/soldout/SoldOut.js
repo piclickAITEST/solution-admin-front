@@ -473,10 +473,15 @@ const SoldOut = () => {
             </CCol>
             <CCol>
               <CInputGroup>
-                <CButton color="primary" name="search" onClick={onSearchClick}>
+                <CButton
+                  color="primary"
+                  name="search"
+                  onClick={onSearchClick}
+                  style={{ marginRight: "5px" }}
+                >
                   검색
                 </CButton>
-                <CButton name="clear" onClick={onSearchClick}>
+                <CButton color="secondary" name="clear" onClick={onSearchClick}>
                   초기화
                 </CButton>
               </CInputGroup>
@@ -489,11 +494,8 @@ const SoldOut = () => {
           <table className="table table-outline mb-0 d-none d-sm-table">
             <thead className="thead-light">
               <tr>
-                <th className="text-center">
-                  주문일자
-                  <br />
-                  품절일자
-                </th>
+                <th className="text-center">주문일자</th>
+                <th className="text-center">품절일자</th>
                 <th className="text-center">주문번호</th>
                 <th className="text-center">상품명</th>
                 <th className="text-center">옵션 1</th>
@@ -539,11 +541,8 @@ const SoldOut = () => {
 
                 return (
                   <tr key={idx}>
-                    <td className="text-center">
-                      {order_date}
-                      <br />
-                      {soldout_date}
-                    </td>
+                    <td className="text-center">{order_date}</td>
+                    <td className="text-center">{soldout_date}</td>
                     <td className="text-center">{order_id}</td>
                     <td className="text-center">{product_name}</td>
                     <td className="text-center">{option1}</td>
