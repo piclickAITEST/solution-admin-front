@@ -486,6 +486,9 @@ const SoldOut = () => {
                 </CButton>
               </CInputGroup>
             </CCol>
+            <CLabel style={{ color: "gray" }}>
+              해당 페이지는 10분마다 새로 갱신됩니다.
+            </CLabel>
           </CFormGroup>
         </CCardBody>
       </CCard>

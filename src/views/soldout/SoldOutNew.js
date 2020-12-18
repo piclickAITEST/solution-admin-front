@@ -1,3 +1,8 @@
+// 새로운 품절대체 페이지입니다.
+// 새로운 품절대체 페이지입니다.
+// 새로운 품절대체 페이지입니다.
+// 새로운 품절대체 페이지입니다.
+
 import { useState, useEffect } from "react";
 import axios from "axios";
 import moment from "moment";
@@ -9,7 +14,6 @@ import {
   CCol,
   CInput,
   CInputGroup,
-  CSelect,
   CFormGroup,
   CModal,
   CModalHeader,
@@ -23,7 +27,7 @@ import {
   CSpinner,
   CDataTable,
 } from "@coreui/react";
-import { Redirect, Link } from "react-router-dom";
+import { Redirect } from "react-router-dom";
 
 const SoldOutNew = () => {
   const token = sessionStorage.getItem("userToken");
@@ -32,8 +36,6 @@ const SoldOutNew = () => {
   const [searchType, setSearchType] = useState("");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
-  const [selectOpt, setSelectOpt] = useState("상품명");
-  const [searchValue, setSearchValue] = useState("");
   const [redirect, setRedirect] = useState(false);
   const [sendModal, setSendModal] = useState(false);
   const [index, setIndex] = useState("");
@@ -95,8 +97,6 @@ const SoldOutNew = () => {
     setSearchType("");
     setFromDate("");
     setToDate("");
-    setSelectOpt("상품명");
-    setSearchValue("");
     setRedirect(false);
     setSendModal(false);
     setIndex("");
@@ -162,14 +162,6 @@ const SoldOutNew = () => {
     }
   };
 
-  const onSelectChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-
-    setSelectOpt(value);
-  };
-
   const onChangeDate = (event) => {
     const {
       target: { name, value },
@@ -192,22 +184,14 @@ const SoldOutNew = () => {
     setIndex(idx);
   };
 
-  const previewToggle = (product_no, order_id) => {
-    var url = `https://sol.piclick.kr/soldOut/?mallID=rlackdals1&product_no=${product_no}&order_id=${order_id}`;
-    window.open(
-      url,
-      "_blank",
-      "menubar=no, resizable=no, width=360, height=640"
-    );
-  };
-
-  const searchValueChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-
-    setSearchValue(value);
-  };
+  // const previewToggle = (product_no, order_id) => {
+  //   var url = `https://sol.piclick.kr/soldOut/?mallID=rlackdals1&product_no=${product_no}&order_id=${order_id}`;
+  //   window.open(
+  //     url,
+  //     "_blank",
+  //     "menubar=no, resizable=no, width=360, height=640"
+  //   );
+  // };
 
   const enableToast = (msg) => {
     setMsgToastToggle(true);
@@ -416,3 +400,8 @@ const SoldOutNew = () => {
 };
 
 export default SoldOutNew;
+
+// 새로운 품절대체 페이지입니다.
+// 새로운 품절대체 페이지입니다.
+// 새로운 품절대체 페이지입니다.
+// 새로운 품절대체 페이지입니다.
