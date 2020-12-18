@@ -61,8 +61,14 @@ const SoldOutReport = () => {
       setRedirect(true);
     }
     getReport(token);
+    const getEveryTimes = setInterval(() => {
+      getReport(token);
+    }, 60000 * 10);
 
-    return () => clear();
+    return () => {
+      clearInterval(getEveryTimes);
+      clear();
+    };
   }, [token]);
 
   if (redirect === true) {

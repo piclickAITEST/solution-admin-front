@@ -52,12 +52,12 @@ const SoldOut = () => {
     }
   }
 
-  const getSoldOut = async (args, token) => {
+  const getSoldOut = (args, token) => {
     if (args === undefined || args === "") {
       args = "";
     }
 
-    await axios({
+    axios({
       method: "get",
       url: `https://sadmin.piclick.kr/soldout/${args}`,
       headers: {
@@ -334,8 +334,8 @@ const SoldOut = () => {
     }, 3000);
   };
 
-  const sendMessage = async (token) => {
-    await axios
+  const sendMessage = (token) => {
+    axios
       .get(`https://sadmin.piclick.kr/soldout/sms?idx=${index}`, {
         headers: {
           Authorization: `JWT ${token}`,

@@ -83,12 +83,12 @@ function SoldOutDetail({ match, location }) {
     setToastLog("");
   };
 
-  const getbankList = async (token) => {
+  const getbankList = (token) => {
     if (token === null || undefined) {
       setRedirect(true);
       return;
     }
-    await axios({
+    axios({
       method: "get",
       url: "https://sadmin.piclick.kr/soldout/banks",
       headers: {
@@ -181,7 +181,7 @@ function SoldOutDetail({ match, location }) {
     setCsStatus(value);
   };
 
-  const postCsStatus = async () => {
+  const postCsStatus = () => {
     const token = sessionStorage.getItem("userToken");
     if (csStatus === "S") {
       // 적립(Save)
