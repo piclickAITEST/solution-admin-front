@@ -104,6 +104,7 @@ const SoldOutReport = () => {
             </tr>
           </thead>
           <tbody>
+            {/* toDo : 반복문과  spread operator 등으로 코드 단축*/}
             {reports.map((report) => {
               const {
                 date,

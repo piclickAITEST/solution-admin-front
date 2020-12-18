@@ -73,10 +73,17 @@ const SoldOut = () => {
         }
       })
       .catch((error) => {
-        if (error.response.status === 401) {
-          sessionStorage.removeItem("userToken");
-          sessionStorage.removeItem("userName");
-          setRedirect(true);
+        if (
+          error.responce.status !== undefined ||
+          error.responce.status !== null
+        ) {
+          if (error.response.status === 401) {
+            sessionStorage.removeItem("userToken");
+            sessionStorage.removeItem("userName");
+            setRedirect(true);
+          }
+        } else {
+          console.log(error);
         }
       });
   };
@@ -265,6 +272,7 @@ const SoldOut = () => {
         break;
       case "clear":
         clearState();
+        getSoldOut("", token);
         break;
       default:
         break;
@@ -555,7 +563,7 @@ const SoldOut = () => {
                       <br />
                       <Link
                         to={{
-                          pathname: `/detail/${idx}/${order_id}`,
+                          pathname: `/soldout/${idx}/${order_id}`,
                           productInfo: {
                             price: price,
                             mall_id: mall_id,
