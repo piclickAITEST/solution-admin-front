@@ -1,4 +1,4 @@
-export default [
+const Nav = [
   {
     _tag: "CSidebarNavDropdown",
     name: "품절대체",
@@ -17,3 +17,5 @@ export default [
     ],
   },
 ];
+
+export default Nav;
