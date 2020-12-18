@@ -88,29 +88,28 @@ const SoldOutReport = () => {
         <table className="table table-outline mb-0 d-none d-sm-table">
           <thead className="thead-light">
             <tr>
-              <th className="text-center">날짜</th>
-              <th className="text-center">교환수</th>
-              <th className="text-center">교환율</th>
-              <th className="text-center">교환합계</th>
-              <th className="text-center">메시지 발송</th>
-              <th className="text-center">주문수</th>
-              <th className="text-center">추천 조회수</th>
-              <th className="text-center">환불수</th>
-              <th className="text-center">환불율</th>
-              <th className="text-center">환불 합계</th>
-              <th className="text-center">적립수</th>
-              <th className="text-center">적립율</th>
-              <th className="text-center">적립합계</th>
-              <th className="text-center">지연 적립수</th>
-              <th className="text-center">지연 적립합계</th>
-              <th className="text-center">품절수</th>
-              <th className="text-center">품절율</th>
-              <th className="text-center">비회원</th>
-              <th className="text-center">회원</th>
+              <th>날짜</th>
+              <th>주문 건수</th>
+              <th>품절 건수</th>
+              <th>품절률</th>
+              <th>문자 발송수</th>
+              <th>유저 수</th>
+              <th>비회원 수</th>
+              <th>추천 뷰</th>
+              <th>교환전환 상품수</th>
+              <th>교환전환 금액(원)</th>
+              <th>적립전환 상품수</th>
+              <th>적립전환 금액(원)</th>
+              <th>지연 적립건수</th>
+              <th>지연 적립금액(원)</th>
+              <th>환불 상품수</th>
+              <th>환불 금액</th>
+              <th>교환 전환율</th>
+              <th>적립 전환율</th>
+              <th>환불율</th>
             </tr>
           </thead>
           <tbody>
-            {/* toDo : 반복문과  spread operator 등으로 코드 단축*/}
             {reports.map((report) => {
               const {
                 date,
@@ -134,87 +133,35 @@ const SoldOutReport = () => {
                 lazy_save_sum,
               } = report;
 
+              const changeToComma = (arg) => {
+                return arg !== null ? numberWithCommas(arg) : "0";
+              };
+
+              const changeToPercent = (arg) => {
+                return arg !== null ? `${arg}%` : "0%";
+              };
+
               return (
                 <tr key={date}>
-                  <td className="text-center">{numberToDate(date)}</td>
-                  <td className="text-center">
-                    {exchange_conv_count !== null
-                      ? numberWithCommas(exchange_conv_count)
-                      : "0"}
-                  </td>
-                  <td className="text-center">
-                    {exchange_conv_rate !== null
-                      ? `${exchange_conv_rate}%`
-                      : "0%"}
-                  </td>
-                  <td className="text-center">
-                    {exchange_conv_sum !== null
-                      ? numberWithCommas(exchange_conv_sum)
-                      : "0"}
-                  </td>
-                  <td className="text-center">
-                    {message_sent_count !== null
-                      ? numberWithCommas(message_sent_count)
-                      : "0"}
-                  </td>
-                  <td className="text-center">
-                    {order_count !== null ? numberWithCommas(order_count) : "0"}
-                  </td>
-                  <td className="text-center">
-                    {reco_view_count !== null
-                      ? numberWithCommas(reco_view_count)
-                      : "0"}
-                  </td>
-                  <td className="text-center">
-                    {refund_count !== null
-                      ? numberWithCommas(refund_count)
-                      : "0"}
-                  </td>
-                  <td className="text-center">
-                    {refund_rate !== null ? `${refund_rate}%` : "0%"}
-                  </td>
-                  <td className="text-center">
-                    {refund_sum !== null ? numberWithCommas(refund_sum) : "0"}
-                  </td>
-                  <td className="text-center">
-                    {save_conv_count !== null
-                      ? numberWithCommas(save_conv_count)
-                      : "0"}
-                  </td>
-                  <td className="text-center">
-                    {save_conv_rate !== null ? `${save_conv_rate}%` : "0%"}
-                  </td>
-                  <td className="text-center">
-                    {save_conv_sum !== null
-                      ? numberWithCommas(save_conv_count)
-                      : "0"}
-                  </td>
-                  <td className="text-center">
-                    {lazy_save_count !== null
-                      ? numberWithCommas(lazy_save_count)
-                      : "0"}
-                  </td>
-                  <td className="text-center">
-                    {lazy_save_sum !== null
-                      ? numberWithCommas(lazy_save_sum)
-                      : "0"}
-                  </td>
-                  <td className="text-center">
-                    {soldout_count !== null
-                      ? numberWithCommas(soldout_count)
-                      : "0"}
-                  </td>
-                  <td className="text-center">
-                    {soldout_rate !== null ? `${soldout_rate}%` : "0%"}
-                  </td>
-                  <td className="text-center">
-                    {unknown_user_count !== null
-                      ? numberWithCommas(unknown_user_count)
-                      : "0"}
-                  </td>
-                  <td className="text-center">
-                    {user_count !== null ? numberWithCommas(user_count) : "0"}
-                  </td>
+                  <td>{numberToDate(date)}</td>
+                  <td>{changeToComma(order_count)}</td>
+                  <td>{changeToComma(soldout_count)}</td>
+                  <td>{changeToPercent(soldout_rate)}</td>
+                  <td>{changeToComma(message_sent_count)}</td>
+                  <td>{changeToComma(user_count)}</td>
+                  <td>{changeToComma(unknown_user_count)}</td>
+                  <td>{changeToComma(reco_view_count)}</td>
+                  <td>{changeToComma(exchange_conv_count)}</td>
+                  <td>{changeToComma(exchange_conv_sum)}</td>
+                  <td>{changeToComma(save_conv_count)}</td>
+                  <td>{changeToComma(save_conv_sum)}</td>
+                  <td>{changeToComma(lazy_save_count)}</td>
+                  <td>{changeToComma(lazy_save_sum)}</td>
+                  <td>{changeToComma(refund_count)}</td>
+                  <td>{changeToComma(refund_sum)}</td>
+                  <td>{changeToPercent(exchange_conv_rate)}</td>
+                  <td>{changeToPercent(save_conv_rate)}</td>
+                  <td>{changeToPercent(refund_rate)}</td>
                 </tr>
               );
             })}
