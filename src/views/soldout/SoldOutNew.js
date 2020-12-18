@@ -128,6 +128,12 @@ const SoldOutNew = () => {
       case "오늘":
         setFromDate(moment().format("YYYY-MM-DD"));
         setToDate(moment().format("YYYY-MM-DD"));
+        // getSoldOut(
+        //   `?from_date=${moment(fromDate).format("YYYYMMDD")}&to_date=${moment(
+        //     toDate
+        //   ).format("YYYYMMDD")}&date_type=${searchType}`,
+        //   token
+        // );
         break;
       case "어제":
         setFromDate(moment().subtract(1, "days").format("YYYY-MM-DD"));
@@ -240,28 +246,41 @@ const SoldOutNew = () => {
   }
 
   const fields = [
-    { key: "order_date", label: "주문일자" },
-    { key: "soldout_date", label: "품절일자" },
+    {
+      key: "order_date",
+      label: "주문일자",
+      _style: {
+        width: "10%",
+      },
+    },
+    {
+      key: "soldout_date",
+      label: "품절일자",
+      _style: {
+        width: "10%",
+      },
+    },
     { key: "order_id", label: "주문번호" },
     { key: "product_id", label: "상품명" },
     {
       key: "option1",
       label: "옵션1",
-      _style: { width: "5%" },
     },
-    { key: "option2", label: "옵션2", _style: { width: "5%" } },
+    { key: "option2", label: "옵션2" },
     { key: "list_image", label: "이미지", sorter: false, filter: false },
-    { key: "qty", label: "수량", _style: { width: "5%" } },
+    { key: "qty", label: "수량" },
     { key: "price", label: "금액" },
     { key: "user_name", label: "주문자" },
     { key: "phone", label: "주문자 휴대폰" },
-    { key: "action", label: "CS상태", _style: { width: "5%" } },
+    { key: "action", label: "CS상태" },
     {
       key: "message",
       label: "",
       sorter: false,
       filter: false,
-      _style: { width: "5%" },
+      _style: {
+        width: "5%",
+      },
     },
   ];
 
@@ -342,12 +361,24 @@ const SoldOutNew = () => {
           <CDataTable
             items={products}
             fields={fields}
-            itemsPerPageSelect
+            itemsPerPageSelect={{
+              label: "표시 할 갯수",
+            }}
             itemsPerPage={10}
+            noItemsView={{
+              noResults: "검색결과가 없습니다",
+              noItems: "데이터가 존재하지 않습니다.",
+            }}
             pagination
             sorter
-            tableFilter
+            tableFilter={{
+              label: "검색",
+              placeholder: "검색어 입력",
+            }}
             columnFilter
+            outlined
+            responsive
+            cleaner
             scopedSlots={{
               list_image: (item) => (
                 <td>
