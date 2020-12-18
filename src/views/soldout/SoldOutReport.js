@@ -88,25 +88,25 @@ const SoldOutReport = () => {
         <table className="table table-outline mb-0 d-none d-sm-table">
           <thead className="thead-light">
             <tr>
-              <th>날짜</th>
-              <th>주문 건수</th>
-              <th>품절 건수</th>
-              <th>품절률</th>
-              <th>문자 발송수</th>
-              <th>유저 수</th>
-              <th>비회원 수</th>
-              <th>추천 뷰</th>
-              <th>교환전환 상품수</th>
-              <th>교환전환 금액(원)</th>
-              <th>적립전환 상품수</th>
-              <th>적립전환 금액(원)</th>
-              <th>지연 적립건수</th>
-              <th>지연 적립금액(원)</th>
-              <th>환불 상품수</th>
-              <th>환불 금액</th>
-              <th>교환 전환율</th>
-              <th>적립 전환율</th>
-              <th>환불율</th>
+              <th className="text-center">날짜</th>
+              <th className="text-center">주문 건수</th>
+              <th className="text-center">품절 건수</th>
+              <th className="text-center">품절률</th>
+              <th className="text-center">문자 발송수</th>
+              <th className="text-center">유저 수</th>
+              <th className="text-center">비회원 수</th>
+              <th className="text-center">추천 뷰</th>
+              <th className="text-center">교환전환 상품수</th>
+              <th className="text-center">교환전환 금액(원)</th>
+              <th className="text-center">적립전환 상품수</th>
+              <th className="text-center">적립전환 금액(원)</th>
+              <th className="text-center">지연 적립건수</th>
+              <th className="text-center">지연 적립금액(원)</th>
+              <th className="text-center">환불 상품수</th>
+              <th className="text-center">환불 금액</th>
+              <th className="text-center">교환 전환율</th>
+              <th className="text-center">적립 전환율</th>
+              <th className="text-center">환불율</th>
             </tr>
           </thead>
           <tbody>
@@ -143,25 +143,53 @@ const SoldOutReport = () => {
 
               return (
                 <tr key={date}>
-                  <td>{numberToDate(date)}</td>
-                  <td>{changeToComma(order_count)}</td>
-                  <td>{changeToComma(soldout_count)}</td>
-                  <td>{changeToPercent(soldout_rate)}</td>
-                  <td>{changeToComma(message_sent_count)}</td>
-                  <td>{changeToComma(user_count)}</td>
-                  <td>{changeToComma(unknown_user_count)}</td>
-                  <td>{changeToComma(reco_view_count)}</td>
-                  <td>{changeToComma(exchange_conv_count)}</td>
-                  <td>{changeToComma(exchange_conv_sum)}</td>
-                  <td>{changeToComma(save_conv_count)}</td>
-                  <td>{changeToComma(save_conv_sum)}</td>
-                  <td>{changeToComma(lazy_save_count)}</td>
-                  <td>{changeToComma(lazy_save_sum)}</td>
-                  <td>{changeToComma(refund_count)}</td>
-                  <td>{changeToComma(refund_sum)}</td>
-                  <td>{changeToPercent(exchange_conv_rate)}</td>
-                  <td>{changeToPercent(save_conv_rate)}</td>
-                  <td>{changeToPercent(refund_rate)}</td>
+                  <td className="text-center">{numberToDate(date)}</td>
+                  <td className="text-center">{changeToComma(order_count)}</td>
+                  <td className="text-center">
+                    {changeToComma(soldout_count)}
+                  </td>
+                  <td className="text-center">
+                    {changeToPercent(soldout_rate)}
+                  </td>
+                  <td className="text-center">
+                    {changeToComma(message_sent_count)}
+                  </td>
+                  <td className="text-center">{changeToComma(user_count)}</td>
+                  <td className="text-center">
+                    {changeToComma(unknown_user_count)}
+                  </td>
+                  <td className="text-center">
+                    {changeToComma(reco_view_count)}
+                  </td>
+                  <td className="text-center">
+                    {changeToComma(exchange_conv_count)}
+                  </td>
+                  <td className="text-center">
+                    {changeToComma(exchange_conv_sum)}
+                  </td>
+                  <td className="text-center">
+                    {changeToComma(save_conv_count)}
+                  </td>
+                  <td className="text-center">
+                    {changeToComma(save_conv_sum)}
+                  </td>
+                  <td className="text-center">
+                    {changeToComma(lazy_save_count)}
+                  </td>
+                  <td className="text-center">
+                    {changeToComma(lazy_save_sum)}
+                  </td>
+                  <td className="text-center">{changeToComma(refund_count)}</td>
+                  <td className="text-center">{changeToComma(refund_sum)}</td>
+                  <td className="text-center">
+                    {changeToPercent(exchange_conv_rate)}
+                  </td>
+                  <td className="text-center">
+                    {changeToPercent(save_conv_rate)}
+                  </td>
+                  <td className="text-center">
+                    {changeToPercent(refund_rate)}
+                  </td>
                 </tr>
               );
             })}
