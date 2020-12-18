@@ -17,6 +17,10 @@ import {
   CModalBody,
   CModalFooter,
   CSpinner,
+  CToaster,
+  CToast,
+  CToastHeader,
+  CToastBody,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { useCallback } from "react";
@@ -47,6 +51,8 @@ function SoldOutDetail({ match, location }) {
   const [countryCode, setCountryCode] = useState("");
   const [msgModal, setMsgModal] = useState(false);
   const [loading, setLoading] = useState(true);
+  const [toast, setToast] = useState(false);
+  const [toastLog, setToastLog] = useState("");
 
   function numberWithCommas(x) {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
@@ -63,6 +69,7 @@ function SoldOutDetail({ match, location }) {
     }
   }
 
+  // component unmount 시 state 초기화
   const clearState = () => {
     setRedirect(false);
     setCsStatus("R");
@@ -71,6 +78,9 @@ function SoldOutDetail({ match, location }) {
     setBankCode("002");
     setBankAccount("");
     setCountryCode("");
+    setLoading(true);
+    setToast(false);
+    setToastLog("");
   };
 
   const getbankList = async (token) => {
@@ -136,6 +146,16 @@ function SoldOutDetail({ match, location }) {
     return () => clearState();
   }, [token]);
 
+  const enableToast = (msg) => {
+    setToastLog(msg);
+    setToast(true);
+    setTimeout(() => {
+      setToastLog("");
+      setToast(false);
+    }, 3000);
+    getDetail(token);
+  };
+
   // 상세정보 업데이트
   useEffect(() => {
     if (token === null || undefined) {
@@ -170,80 +190,87 @@ function SoldOutDetail({ match, location }) {
         url: `https://sol.piclick.kr/soldOut/saveOrder?mallID=${mallID}&product_no=${productNo}&order_id=${orderID}`,
       }).then((res) => {
         if (res.data !== undefined || res.data !== null) {
-          const requestParam = {
-            action_code: csStatus,
-            price: productPrice,
-            idx: index,
-            // mall_id: mallID,
-            // order_id: orderID,
-            // product_id: productNo,
-            status_msg: res.data.res.message,
-            status_code: res.data.res.code,
-          };
-          //적립 상태변화, 로그 API 전송
-          axios({
-            method: "post",
-            url: `https://sadmin.piclick.kr/soldout/action`,
-            headers: {
-              Authorization: `JWT ${token}`,
-            },
-            data: requestParam,
-          })
-            .then((res) => {
-              if (res.data !== undefined || res.data !== null) {
-                getDetail(token);
-              }
+          if (res.data.status === "T") {
+            const requestParam = {
+              action_code: csStatus,
+              price: productPrice,
+              idx: index,
+              status_msg: res.data.res.message,
+              status_code: res.data.res.code,
+            };
+            //적립 상태변화, 로그 API 전송
+            axios({
+              method: "post",
+              url: `https://sadmin.piclick.kr/soldout/action`,
+              headers: {
+                Authorization: `JWT ${token}`,
+              },
+              data: requestParam,
             })
-            .catch((error) => {
-              if (error.response.status === 401) {
-                sessionStorage.removeItem("userToken");
-                sessionStorage.removeItem("userName");
-                setRedirect(true);
-              }
-            });
+              .then((res) => {
+                if (res.data !== undefined || res.data !== null) {
+                  enableToast("상태 변경을 하였습니다.");
+                  getDetail(token);
+                }
+              })
+              .catch((error) => {
+                if (error.response.status === 401) {
+                  sessionStorage.removeItem("userToken");
+                  sessionStorage.removeItem("userName");
+                  setRedirect(true);
+                }
+              });
+          } else {
+            enableToast("상태 변경 살패.");
+          }
         }
       });
     } else if (csStatus === "R") {
+      if (bankCode === "" || bankAccount === "" || countryCode === "") {
+        return;
+      }
       // 환불 (Refund)
       axios({
         method: "get",
         url: `https://sol.piclick.kr/soldOut/refundOrder?mallID=${mallID}&product_no=${productNo}&order_id=${orderID}`,
       }).then((res) => {
         if (res.data !== undefined || res.data !== null) {
-          const requestParam = {
-            action_code: csStatus,
-            price: productPrice,
-            idx: index,
-            // mall_id: mallID,
-            // order_id: orderID,
-            // product_id: productNo,
-            status_msg: res.data.res.message,
-            status_code: res.data.res.code,
-            account_num: bankAccount,
-            bank_code_std: bankCode,
-            account_holder_info: countryCode,
-          };
-          //환불 상태변화, 로그 API 전송
-          axios({
-            method: "post",
-            url: `https://sadmin.piclick.kr/soldout/action`,
-            headers: {
-              Authorization: `JWT ${token}`,
-            },
-            data: requestParam,
-          })
-            .then((res) => {
-              if (res.data !== undefined || res.data !== null) {
-                getDetail(token);
-              }
+          if (res.data.status === "T") {
+            const requestParam = {
+              action_code: csStatus,
+              price: productPrice,
+              idx: index,
+              status_msg: res.data.res.message,
+              status_code: res.data.res.code,
+              account_num: bankAccount,
+              bank_code_std: bankCode,
+              account_holder_info: countryCode,
+            };
+            // 환불 상태변화, 로그 API 전송
+            axios({
+              method: "post",
+              url: `https://sadmin.piclick.kr/soldout/action`,
+              headers: {
+                Authorization: `JWT ${token}`,
+              },
+              data: requestParam,
             })
-            .catch((error) => {
-              if (error.response.status === 401) {
-                sessionStorage.removeItem("userToken");
-                sessionStorage.removeItem("userName");
-                setRedirect(true);
-              }
-            });
+              .then((res) => {
+                if (res.data !== undefined || res.data !== null) {
+                  enableToast("상태 변경을 하였습니다.");
+                  getDetail(token);
+                }
+              })
+              .catch((error) => {
+                if (error.response.status === 401) {
+                  sessionStorage.removeItem("userToken");
+                  sessionStorage.removeItem("userName");
+                  setRedirect(true);
+                }
+              });
+          } else {
+            enableToast("상태 변경 실패");
+          }
         } else {
           getDetail(token);
         }
@@ -438,6 +465,12 @@ function SoldOutDetail({ match, location }) {
           </CButton>
         </CModalFooter>
       </CModal>
+      <CToaster position="top-right">
+        <CToast show={toast} autohide={3000}>
+          <CToastHeader closeButton={false}>상태 변경</CToastHeader>
+          <CToastBody>{toastLog}</CToastBody>
+        </CToast>
+      </CToaster>
     </div>
   );
 }

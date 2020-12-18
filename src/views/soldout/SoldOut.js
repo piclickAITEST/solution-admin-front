@@ -81,6 +81,22 @@ const SoldOut = () => {
       });
   };
 
+  const clearState = () => {
+    setProducts([]);
+    setDateType("");
+    setSearchType("");
+    setFromDate("");
+    setToDate("");
+    setSelectOpt("상품명");
+    setSearchValue("");
+    setRedirect(false);
+    setSendModal(false);
+    setIndex("");
+    setMsgToastLog("");
+    setMsgToastToggle(false);
+    setLoading(true);
+  };
+
   useEffect(() => {
     if (token === null || undefined) {
       setRedirect(true);
@@ -91,7 +107,10 @@ const SoldOut = () => {
       getSoldOut("", token);
     }, 60000 * 10);
 
-    return () => clearInterval(getEveryTimes);
+    return () => {
+      clearInterval(getEveryTimes);
+      clearState();
+    };
   }, [token]);
 
   const changedateType = (event) => {
@@ -245,13 +264,7 @@ const SoldOut = () => {
         }
         break;
       case "clear":
-        setFromDate("");
-        setToDate("");
-        setDateType("");
-        setSelectOpt("상품명");
-        setSearchType("");
-        setSearchValue("");
-        getSoldOut("", token);
+        clearState();
         break;
       default:
         break;
@@ -305,6 +318,14 @@ const SoldOut = () => {
     setSearchValue(value);
   };
 
+  const enableToast = (msg) => {
+    setMsgToastToggle(true);
+    setMsgToastLog(msg);
+    setTimeout(() => {
+      setMsgToastToggle(false);
+    }, 3000);
+  };
+
   const sendMessage = async (token) => {
     await axios
       .get(`https://sadmin.piclick.kr/soldout/sms?idx=${index}`, {
@@ -315,8 +336,7 @@ const SoldOut = () => {
       .then((res) => {
         if (res.data !== undefined) {
           if (res.data.results.result_code === "1") {
-            setMsgToastToggle(true);
-            setMsgToastLog("성공적으로 메시지를 전송하였습니다.");
+            enableToast("메시지를 전송하였습니다.");
             setSendModal(false);
             setIndex("");
 
@@ -329,21 +349,13 @@ const SoldOut = () => {
             setIndex("");
           }
         } else {
-          setMsgToastToggle(true);
-          setMsgToastLog("메시지를 전송하지 못했습니다.");
-          setTimeout(() => {
-            setMsgToastToggle(false);
-          }, 3000);
+          enableToast("메시지를 전송하지 못했습니다.");
           setSendModal(false);
           setIndex("");
         }
       })
       .catch((error) => {
-        setMsgToastToggle(true);
-        setMsgToastLog("메시지를 전송하지 못했습니다.");
-        setTimeout(() => {
-          setMsgToastToggle(false);
-        }, 3000);
+        enableToast("메시지를 전송하지 못했습니다.");
         setSendModal(false);
         setIndex("");
       });
@@ -600,8 +612,8 @@ const SoldOut = () => {
         </CModalFooter>
       </CModal>
       <CToaster position="top-right">
-        <CToast show={msgToastToggle} autohide={3000} fade={true}>
-          <CToastHeader>메시지 전송</CToastHeader>
+        <CToast show={msgToastToggle} autohide={3000}>
+          <CToastHeader closeButton={false}>메시지 전송</CToastHeader>
           <CToastBody>{msgToastLog}</CToastBody>
         </CToast>
       </CToaster>
