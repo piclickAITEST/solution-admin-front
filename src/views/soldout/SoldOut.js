@@ -442,7 +442,8 @@ const SoldOut = () => {
             </CCol>
           </CFormGroup>
           <h6 style={{ color: "#999", textAlign: "right", fontSize: "12px" }}>
-            품절 데이터는 10분마다 업데이트됩니다. <br />
+            품절 데이터는 10분마다 업데이트됩니다.
+            <br />
             주문번호 클릭 시 해당 상품의 상세 페이지로 접근합니다.
           </h6>
         </CCardBody>
