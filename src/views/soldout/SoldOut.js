@@ -295,14 +295,16 @@ const SoldOut = () => {
     {
       key: "order_id",
       label: "주문번호",
+      sorter: false,
       _style: {
         width: "10%",
       },
     },
-    { key: "product_id", label: "상품명" },
+    { key: "product_id", label: "상품명", sorter: false },
     {
       key: "option1",
       label: "옵션1",
+      sorter: false,
       _style: {
         width: "5%",
       },
@@ -310,6 +312,7 @@ const SoldOut = () => {
     {
       key: "option2",
       label: "옵션2",
+      sorter: false,
       _style: {
         width: "5%",
       },
@@ -321,11 +324,12 @@ const SoldOut = () => {
       _style: {
         width: "4%",
       },
+      sorter: false,
     },
-    { key: "price", label: "금액" },
-    { key: "user_name", label: "주문자" },
-    { key: "phone", label: "주문자 휴대폰" },
-    { key: "action", label: "CS상태" },
+    { key: "price", label: "금액", sorter: false },
+    { key: "user_name", label: "주문자", sorter: false },
+    { key: "phone", label: "주문자 휴대폰", sorter: false },
+    { key: "action", label: "CS상태", sorter: false },
     {
       key: "detail",
       label: "",
@@ -470,6 +474,7 @@ const SoldOut = () => {
             outlined
             responsive
             hover
+            cleaner
             scopedSlots={{
               list_image: (item) => (
                 <td>
@@ -495,10 +500,10 @@ const SoldOut = () => {
               message: (item) => (
                 <td>
                   <CButton
-                    color="primary"
+                    color={item.action === "재입고" ? "secondary" : "primary"}
                     shape="square"
                     size="sm"
-                    disabled={item.action !== "품절대상"}
+                    disabled={item.action !== "판매중지"}
                     onClick={() => sendToggle(item.idx)}
                     id={`button-${item.idx}`}
                   >
@@ -524,6 +529,7 @@ const SoldOut = () => {
                         option1: item.option1,
                         option2: item.option2,
                         qty: item.qty,
+                        origin_action: item.action,
                       },
                     }}
                   >
