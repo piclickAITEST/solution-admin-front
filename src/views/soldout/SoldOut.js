@@ -363,6 +363,24 @@ const SoldOut = () => {
               </CInputGroup>
             </CCol>
             <CCol xs="0">
+              <CLabel>날짜 선택범위</CLabel>
+              <CInputGroup>
+                <CButtonGroup>
+                  {["오늘", "어제", "1주", "1개월"].map((value) => (
+                    <CButton
+                      color="outline-secondary"
+                      key={value}
+                      className="mx-0"
+                      active={value === dateType}
+                      onClick={changeDateType}
+                    >
+                      {value}
+                    </CButton>
+                  ))}
+                </CButtonGroup>
+              </CInputGroup>
+            </CCol>
+            <CCol>
               <CLabel>날짜 선택기준</CLabel>
               <CInputGroup>
                 <CButtonGroup>
@@ -380,24 +398,6 @@ const SoldOut = () => {
                       onClick={changeSearchType}
                     >
                       {value[0]}
-                    </CButton>
-                  ))}
-                </CButtonGroup>
-              </CInputGroup>
-            </CCol>
-            <CCol>
-              <CLabel>날짜 선택범위</CLabel>
-              <CInputGroup>
-                <CButtonGroup>
-                  {["오늘", "어제", "1주", "1개월"].map((value) => (
-                    <CButton
-                      color="outline-secondary"
-                      key={value}
-                      className="mx-0"
-                      active={value === dateType}
-                      onClick={changeDateType}
-                    >
-                      {value}
                     </CButton>
                   ))}
                 </CButtonGroup>

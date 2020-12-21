@@ -269,10 +269,6 @@ const SoldOutReport = () => {
               noResults: "검색결과가 없습니다",
               noItems: "데이터가 존재하지 않습니다.",
             }}
-            tableFilter={{
-              label: "검색",
-              placeholder: "검색어 입력",
-            }}
             outlined
             responsive
             scopedSlots={{
