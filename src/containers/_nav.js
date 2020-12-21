@@ -1,7 +1,7 @@
 const Nav = [
   {
     _tag: "CSidebarNavDropdown",
-    name: "품절대체",
+    name: "품절대체 솔루션",
     icon: "cil3d",
     _children: [
       {

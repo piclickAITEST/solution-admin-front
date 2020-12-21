@@ -19,7 +19,7 @@ import moment from "moment";
 
 const SoldOutReport = () => {
   const token = sessionStorage.getItem("userToken");
-  const [loading, setLoadig] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [redirect, setRedirect] = useState(false);
   const [reports, setReports] = useState([]);
   const [fromDate, setFromDate] = useState("");
@@ -29,7 +29,7 @@ const SoldOutReport = () => {
   /* 필터 제작 전 임시 일일 값 */
 
   const cleearState = () => {
-    setLoadig(true);
+    setLoading(true);
     setRedirect(false);
     setReports([]);
   };
@@ -39,6 +39,7 @@ const SoldOutReport = () => {
   }
 
   const getReport = (args, token) => {
+    setLoading(true);
     if (args === undefined || args === "") {
       args = "";
     }
@@ -51,13 +52,13 @@ const SoldOutReport = () => {
       },
     })
       .then((res) => {
-        setLoadig(false);
         if (res.data === undefined || res.data === null) {
           setReports([]);
           return;
         } else {
           setReports(res.data);
         }
+        setLoading(false);
       })
       .catch((error) => {
         if (error.response === undefined) {
@@ -239,13 +240,13 @@ const SoldOutReport = () => {
               </CInputGroup>
             </CCol>
           </CFormGroup>
-          <h6 style={{ color: "#d8dbe0", textAlign: "right" }}>
-            해당 테이블은 10분마다 갱신됩니다.
+          <h6 style={{ color: "#999", textAlign: "right", fontSize: "12px" }}>
+            품절 데이터는 10분마다 업데이트됩니다.
           </h6>
         </CCardBody>
       </CCard>
       <CCard>
-        <CCardHeader>통계(월간)</CCardHeader>
+        <CCardHeader>일별 통계</CCardHeader>
         <CCardBody>
           <CDataTable
             items={reports}
@@ -253,6 +254,10 @@ const SoldOutReport = () => {
             noItemsView={{
               noResults: "검색결과가 없습니다",
               noItems: "데이터가 존재하지 않습니다.",
+            }}
+            tableFilter={{
+              label: "검색",
+              placeholder: "검색어 입력",
             }}
             outlined
             responsive

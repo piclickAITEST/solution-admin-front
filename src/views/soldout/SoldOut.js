@@ -404,8 +404,8 @@ const SoldOut = () => {
               </CInputGroup>
             </CCol>
           </CFormGroup>
-          <h6 style={{ color: "#d8dbe0", textAlign: "right" }}>
-            해당 테이블은 10분마다 갱신됩니다.
+          <h6 style={{ color: "#999", textAlign: "right", fontSize: "12px" }}>
+            품절 데이터는 10분마다 업데이트됩니다.
           </h6>
         </CCardBody>
       </CCard>
