@@ -10,7 +10,6 @@ import {
   CCol,
   CInputGroup,
   CSelect,
-  CLabel,
   CInput,
   CModal,
   CModalHeader,

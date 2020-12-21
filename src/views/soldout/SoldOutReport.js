@@ -237,6 +237,19 @@ const SoldOutReport = () => {
                     </CButton>
                   ))}
                 </CButtonGroup>
+                <CButton
+                  color="primary"
+                  onClick={() => {
+                    getReport(
+                      `?from_date=${moment(fromDate).format(
+                        "YYYYMMDD"
+                      )}&to_date=${moment(toDate).format("YYYYMMDD")}`,
+                      token
+                    );
+                  }}
+                >
+                  검색
+                </CButton>
               </CInputGroup>
             </CCol>
           </CFormGroup>

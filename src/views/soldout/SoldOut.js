@@ -401,6 +401,21 @@ const SoldOut = () => {
                     </CButton>
                   ))}
                 </CButtonGroup>
+                <CButton
+                  color="primary"
+                  onClick={() => {
+                    getSoldOut(
+                      `?from_date=${moment(fromDate).format(
+                        "YYYYMMDD"
+                      )}&to_date=${moment(toDate).format(
+                        "YYYYMMDD"
+                      )}&date_type=${searchType}`,
+                      token
+                    );
+                  }}
+                >
+                  검색
+                </CButton>
               </CInputGroup>
             </CCol>
           </CFormGroup>
