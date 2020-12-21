@@ -239,6 +239,7 @@ const SoldOutReport = () => {
                 </CButtonGroup>
                 <CButton
                   color="primary"
+                  style={{ marginLeft: "20px" }}
                   onClick={() => {
                     getReport(
                       `?from_date=${moment(fromDate).format(

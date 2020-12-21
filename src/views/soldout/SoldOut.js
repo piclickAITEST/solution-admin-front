@@ -403,6 +403,7 @@ const SoldOut = () => {
                 </CButtonGroup>
                 <CButton
                   color="primary"
+                  style={{ marginLeft: "20px" }}
                   onClick={() => {
                     getSoldOut(
                       `?from_date=${moment(fromDate).format(
