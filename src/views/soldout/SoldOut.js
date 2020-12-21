@@ -1,3 +1,8 @@
+// 새로운 품절대체 페이지입니다.
+// 새로운 품절대체 페이지입니다.
+// 새로운 품절대체 페이지입니다.
+// 새로운 품절대체 페이지입니다.
+
 import { useState, useEffect } from "react";
 import axios from "axios";
 import moment from "moment";
@@ -9,7 +14,6 @@ import {
   CCol,
   CInput,
   CInputGroup,
-  CSelect,
   CFormGroup,
   CModal,
   CModalHeader,
@@ -21,18 +25,17 @@ import {
   CToastBody,
   CToaster,
   CSpinner,
+  CDataTable,
 } from "@coreui/react";
-import { Redirect, Link } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 
 const SoldOut = () => {
   const token = sessionStorage.getItem("userToken");
   const [products, setProducts] = useState([]);
   const [dateType, setDateType] = useState("");
-  const [searchType, setSearchType] = useState("");
+  const [searchType, setSearchType] = useState("order");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
-  const [selectOpt, setSelectOpt] = useState("상품명");
-  const [searchValue, setSearchValue] = useState("");
   const [redirect, setRedirect] = useState(false);
   const [sendModal, setSendModal] = useState(false);
   const [index, setIndex] = useState("");
@@ -91,11 +94,9 @@ const SoldOut = () => {
   const clearState = () => {
     setProducts([]);
     setDateType("");
-    setSearchType("");
+    setSearchType("order");
     setFromDate("");
     setToDate("");
-    setSelectOpt("상품명");
-    setSearchValue("");
     setRedirect(false);
     setSendModal(false);
     setIndex("");
@@ -120,28 +121,65 @@ const SoldOut = () => {
     };
   }, [token]);
 
-  const changedateType = (event) => {
+  const changeDateType = (event) => {
     event.persist();
     setDateType(event.target.innerText);
     switch (event.target.innerText) {
       case "오늘":
         setFromDate(moment().format("YYYY-MM-DD"));
         setToDate(moment().format("YYYY-MM-DD"));
+        getSoldOut(
+          `?from_date=${moment().format("YYYYMMDD")}&to_date=${moment().format(
+            "YYYYMMDD"
+          )}&date_type=${searchType}`,
+          token
+        );
         break;
       case "어제":
         setFromDate(moment().subtract(1, "days").format("YYYY-MM-DD"));
         setToDate(moment().subtract(1, "days").format("YYYY-MM-DD"));
+        getSoldOut(
+          `?from_date=${moment()
+            .subtract(1, "days")
+            .format("YYYYMMDD")}&to_date=${moment()
+            .subtract(1, "days")
+            .format("YYYYMMDD")}&date_type=${searchType}`,
+          token
+        );
         break;
       case "1주":
         setFromDate(moment().subtract(1, "weeks").format("YYYY-MM-DD"));
         setToDate(moment().format("YYYY-MM-DD"));
+        getSoldOut(
+          `?from_date=${moment()
+            .subtract(1, "weeks")
+            .format("YYYYMMDD")}&to_date=${moment().format(
+            "YYYYMMDD"
+          )}&date_type=${searchType}`,
+          token
+        );
         break;
       case "1개월":
         setFromDate(moment().subtract(1, "months").format("YYYY-MM-DD"));
         setToDate(moment().format("YYYY-MM-DD"));
+        getSoldOut(
+          `?from_date=${moment()
+            .subtract(1, "months")
+            .format("YYYYMMDD")}&to_date=${moment().format(
+            "YYYYMMDD"
+          )}&date_type=${searchType}`,
+          token
+        );
         break;
       default:
         break;
+    }
+
+    if (dateType === event.target.innerText) {
+      setFromDate("");
+      setToDate("");
+      setDateType("");
+      getSoldOut("", token);
     }
   };
 
@@ -161,169 +199,24 @@ const SoldOut = () => {
     }
   };
 
-  const onSearchClick = (event) => {
-    const {
-      target: { name },
-    } = event;
-
-    switch (name) {
-      case "search":
-        if (fromDate === "" || toDate === "") {
-          if (searchType === "") {
-            if (searchValue === "") {
-              getSoldOut("", token);
-            } else {
-              //검색어만
-              if (selectOpt === "상품명") {
-                getSoldOut(`?pname=${searchValue}`, token);
-              } else if (selectOpt === "상품ID") {
-                getSoldOut(`?pid=${searchValue}`, token);
-              } else if (selectOpt === "주문자") {
-                getSoldOut(`?uname=${searchValue}`, token);
-              } else {
-                getSoldOut(`?oid=${searchValue}`, token);
-              }
-            }
-          } else {
-            if (searchValue === "") {
-              getSoldOut("", token);
-            } else {
-              //검색어만
-              if (selectOpt === "상품명") {
-                getSoldOut(`?pname=${searchValue}`, token);
-              } else if ((selectOpt === "상품ID", token)) {
-                getSoldOut(`?pid=${searchValue}`, token);
-              } else if (selectOpt === "주문자") {
-                getSoldOut(`?uname=${searchValue}`, token);
-              } else {
-                getSoldOut(`?oid=${searchValue}`, token);
-              }
-            }
-          }
-        } else {
-          if (searchType === "") {
-            if (searchValue === "") {
-              getSoldOut("", token);
-            } else {
-              //검색어만
-              if (selectOpt === "상품명") {
-                getSoldOut(`?pname=${searchValue}`, token);
-              } else if (selectOpt === "상품ID") {
-                getSoldOut(`?pid=${searchValue}`, token);
-              } else if (selectOpt === "주문자") {
-                getSoldOut(`?uname=${searchValue}`, token);
-              } else {
-                getSoldOut(`?oid=${searchValue}`, token);
-              }
-            }
-          } else {
-            if (searchValue === "") {
-              //날짜만
-              getSoldOut(
-                `?from_date=${moment(fromDate).format(
-                  "YYYYMMDD"
-                )}&to_date=${moment(toDate).format(
-                  "YYYYMMDD"
-                )}&date_type=${searchType}`,
-                token
-              );
-            } else {
-              //검색어, 날짜 둘다
-              if (selectOpt === "상품명") {
-                getSoldOut(
-                  `?from_date=${moment(fromDate).format(
-                    "YYYYMMDD"
-                  )}&to_date=${moment(toDate).format(
-                    "YYYYMMDD"
-                  )}&date_type=${searchType}&pname=${searchValue}`,
-                  token
-                );
-              } else if (selectOpt === "주문자") {
-                getSoldOut(
-                  `?from_date=${moment(fromDate).format(
-                    "YYYYMMDD"
-                  )}&to_date=${moment(toDate).format(
-                    "YYYYMMDD"
-                  )}&date_type=${searchType}&uname=${searchValue}`,
-                  token
-                );
-              } else if (selectOpt === "상품ID") {
-                getSoldOut(
-                  `?from_date=${moment(fromDate).format(
-                    "YYYYMMDD"
-                  )}&to_date=${moment(toDate).format(
-                    "YYYYMMDD"
-                  )}&date_type=${searchType}&pid=${searchValue}`,
-                  token
-                );
-              } else {
-                getSoldOut(
-                  `?from_date=${moment(fromDate).format(
-                    "YYYYMMDD"
-                  )}&to_date=${moment(toDate).format(
-                    "YYYYMMDD"
-                  )}&date_type=${searchType}&oid=${searchValue}`,
-                  token
-                );
-              }
-            }
-          }
-        }
-        break;
-      case "clear":
-        clearState();
-        getSoldOut("", token);
-        break;
-      default:
-        break;
-    }
-  };
-
-  const onSelectChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-
-    setSelectOpt(value);
-  };
-
   const onChangeDate = (event) => {
     const {
       target: { name, value },
     } = event;
 
-    switch (name) {
-      case "fromDate":
-        setFromDate(value);
-        break;
-      case "toDate":
-        setToDate(value);
-        break;
-      default:
-        break;
+    if (name === "fromDate") {
+      setFromDate(value);
+    } else if (name === "toDate") {
+      setToDate(value);
     }
   };
+
+  if (fromDate !== "" && toDate !== "") {
+  }
 
   const sendToggle = (idx) => {
     setSendModal(!sendModal);
     setIndex(idx);
-  };
-
-  const previewToggle = (product_no, order_id) => {
-    var url = `https://sol.piclick.kr/soldOut/?mallID=rlackdals1&product_no=${product_no}&order_id=${order_id}`;
-    window.open(
-      url,
-      "_blank",
-      "menubar=no, resizable=no, width=360, height=640"
-    );
-  };
-
-  const searchValueChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-
-    setSearchValue(value);
   };
 
   const enableToast = (msg) => {
@@ -332,6 +225,7 @@ const SoldOut = () => {
     setTimeout(() => {
       setMsgToastToggle(false);
     }, 3000);
+    getSoldOut(token);
   };
 
   const sendMessage = (token) => {
@@ -347,11 +241,6 @@ const SoldOut = () => {
             setSendModal(false);
             enableToast("메시지를 전송하였습니다.");
             setIndex("");
-
-            const action = document.querySelector(`#action-${index}`);
-            const button = document.querySelector(`#button-${index}`);
-            action.innerText = "메세지전송";
-            button.setAttribute("disabled", "");
           } else {
             setSendModal(false);
             enableToast("메시지를 전송하지 못했습니다.");
@@ -375,6 +264,75 @@ const SoldOut = () => {
     sessionStorage.removeItem("userName");
     return <Redirect from="*" to="/login" />;
   }
+
+  const fields = [
+    {
+      key: "order_date",
+      label: "주문일자",
+      _style: {
+        width: "10%",
+      },
+    },
+    {
+      key: "soldout_date",
+      label: "품절일자",
+      _style: {
+        width: "10%",
+      },
+    },
+    {
+      key: "order_id",
+      label: "주문번호",
+      _style: {
+        width: "10%",
+      },
+    },
+    { key: "product_id", label: "상품명" },
+    {
+      key: "option1",
+      label: "옵션1",
+      _style: {
+        width: "5%",
+      },
+    },
+    {
+      key: "option2",
+      label: "옵션2",
+      _style: {
+        width: "5%",
+      },
+    },
+    { key: "list_image", label: "이미지", sorter: false, filter: false },
+    {
+      key: "qty",
+      label: "수량",
+      _style: {
+        width: "4%",
+      },
+    },
+    { key: "price", label: "금액" },
+    { key: "user_name", label: "주문자" },
+    { key: "phone", label: "주문자 휴대폰" },
+    { key: "action", label: "CS상태" },
+    {
+      key: "detail",
+      label: "",
+      sorter: false,
+      filter: false,
+      _style: {
+        width: "5%",
+      },
+    },
+    {
+      key: "message",
+      label: "",
+      sorter: false,
+      filter: false,
+      _style: {
+        width: "4%",
+      },
+    },
+  ];
 
   return loading ? (
     <div className="d-flex justify-content-center align-items-center">
@@ -437,7 +395,7 @@ const SoldOut = () => {
                       key={value}
                       className="mx-0"
                       active={value === dateType}
-                      onClick={changedateType}
+                      onClick={changeDateType}
                     >
                       {value}
                     </CButton>
@@ -446,168 +404,89 @@ const SoldOut = () => {
               </CInputGroup>
             </CCol>
           </CFormGroup>
-          <CFormGroup row>
-            <CCol xs="3">
-              <CInputGroup>
-                <CSelect
-                  custom
-                  name="search-filter"
-                  id="search-filter"
-                  onChange={onSelectChange}
-                  value={selectOpt}
-                >
-                  <option value="상품명">상품명</option>
-                  <option value="상품ID">상품ID</option>
-                  <option value="주문자">주문자</option>
-                  <option value="주문번호">주문번호</option>
-                </CSelect>
-                <CInput
-                  type="text"
-                  id="nf-email"
-                  name="nf-email"
-                  placeholder="검색"
-                  value={searchValue}
-                  onChange={searchValueChange}
-                />
-              </CInputGroup>
-            </CCol>
-            <CCol>
-              <CInputGroup>
-                <CButton
-                  color="primary"
-                  name="search"
-                  onClick={onSearchClick}
-                  style={{ marginRight: "5px" }}
-                >
-                  검색
-                </CButton>
-                <CButton color="secondary" name="clear" onClick={onSearchClick}>
-                  초기화
-                </CButton>
-              </CInputGroup>
-            </CCol>
-            <CLabel style={{ color: "gray" }}>
-              해당 페이지는 10분마다 새로 갱신됩니다.
-            </CLabel>
-          </CFormGroup>
+          <h6 style={{ color: "#d8dbe0", textAlign: "right" }}>
+            해당 테이블은 10분마다 갱신됩니다.
+          </h6>
         </CCardBody>
       </CCard>
       <CCard>
         <CCardBody>
-          <table className="table table-outline mb-0 d-none d-sm-table">
-            <thead className="thead-light">
-              <tr>
-                <th className="text-center">주문일자</th>
-                <th className="text-center">품절일자</th>
-                <th className="text-center">주문번호</th>
-                <th className="text-center">상품명</th>
-                <th className="text-center">옵션 1</th>
-                <th className="text-center">옵션 2</th>
-                <th className="text-center">이미지</th>
-                <th className="text-center">수량</th>
-                <th className="text-center">금액</th>
-                <th className="text-center">
-                  주문자
-                  <br />
-                  수령자
-                </th>
-                <th className="text-center">
-                  주문자 휴대폰
-                  <br />
-                  주문자 전화번호
-                </th>
-                <th className="text-center">CS 상태</th>
-                <th className="text-center"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map((product) => {
-                const {
-                  action,
-                  idx,
-                  list_image,
-                  option1,
-                  option2,
-                  order_date,
-                  order_id,
-                  phone,
-                  price,
-                  product_name,
-                  qty,
-                  user_name,
-                  product_id,
-                  soldout_date,
-                  mall_id,
-                  payment_method,
-                  bizName,
-                } = product;
-
-                return (
-                  <tr key={idx}>
-                    <td className="text-center">{order_date}</td>
-                    <td className="text-center">{soldout_date}</td>
-                    <td className="text-center">{order_id}</td>
-                    <td className="text-center">{product_name}</td>
-                    <td className="text-center">{option1}</td>
-                    <td className="text-center">{option2}</td>
-                    <td className="text-center">
-                      <img
-                        src={list_image}
-                        alt={product_name}
-                        style={{ width: "65px" }}
-                      />
-                    </td>
-                    <td className="text-center">{qty}</td>
-                    <td className="text-center">{numberWithCommas(price)}원</td>
-                    <td className="text-center">{user_name}</td>
-                    <td className="text-center">{numberWithPhone(phone)}</td>
-                    <td className="text-center action">
-                      <CLabel id={`action-${idx}`}>{action}</CLabel>
-                      <br />
-                      <Link
-                        to={{
-                          pathname: `/soldout/${idx}/${order_id}`,
-                          productInfo: {
-                            price: price,
-                            mall_id: mall_id,
-                            product_no: product_id,
-                            order_id: order_id,
-                            payment_method: payment_method,
-                            bizName: bizName,
-                            user_name: user_name,
-                            product_name: product_name,
-                            order_date: order_date,
-                            option1: option1,
-                            option2: option2,
-                            qty: qty,
-                          },
-                        }}
-                      >
-                        <CButton color="secondary">상세정보</CButton>
-                      </Link>
-                    </td>
-                    <td className="text-center">
-                      <CButton
-                        onClick={() => {
-                          previewToggle(product_id, order_id);
-                        }}
-                      >
-                        미리보기
-                      </CButton>
-                      <CButton
-                        color="primary"
-                        disabled={action !== "품절대상"}
-                        onClick={() => sendToggle(idx)}
-                        id={`button-${idx}`}
-                      >
-                        전송
-                      </CButton>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+          <CDataTable
+            items={products}
+            fields={fields}
+            itemsPerPageSelect={{
+              label: "표시 할 갯수",
+            }}
+            itemsPerPage={10}
+            noItemsView={{
+              noResults: "검색결과가 없습니다",
+              noItems: "데이터가 존재하지 않습니다.",
+            }}
+            pagination
+            sorter
+            tableFilter={{
+              label: "검색",
+              placeholder: "검색어 입력",
+            }}
+            outlined
+            responsive
+            hover
+            scopedSlots={{
+              list_image: (item) => (
+                <td>
+                  <img src={item.list_image} alt="" width="65px" />
+                </td>
+              ),
+              price: (item) => <td>{numberWithCommas(item.price)}</td>,
+              phone: (item) => <td>{numberWithPhone(item.phone)}</td>,
+              detail: (item) => (
+                <td>
+                  <Link
+                    to={{
+                      pathname: `/soldout/${item.idx}/${item.order_id}`,
+                      productInfo: {
+                        price: item.price,
+                        mall_id: item.mall_id,
+                        product_no: item.product_id,
+                        order_id: item.order_id,
+                        payment_method: item.payment_method,
+                        bizName: item.bizName,
+                        user_name: item.user_name,
+                        product_name: item.product_name,
+                        order_date: item.order_date,
+                        option1: item.option1,
+                        option2: item.option2,
+                        qty: item.qty,
+                      },
+                    }}
+                  >
+                    <CButton
+                      color="secondary"
+                      shape="square"
+                      size="sm"
+                      id={`button-${item.idx}`}
+                    >
+                      상세보기
+                    </CButton>
+                  </Link>
+                </td>
+              ),
+              message: (item) => (
+                <td>
+                  <CButton
+                    color="primary"
+                    shape="square"
+                    size="sm"
+                    disabled={item.action !== "품절대상"}
+                    onClick={() => sendToggle(item.idx)}
+                    id={`button-${item.idx}`}
+                  >
+                    전송
+                  </CButton>
+                </td>
+              ),
+            }}
+          />
         </CCardBody>
       </CCard>
       <CModal show={sendModal} onClose={sendToggle}>
@@ -638,3 +517,8 @@ const SoldOut = () => {
 };
 
 export default SoldOut;
+
+// 새로운 품절대체 페이지입니다.
+// 새로운 품절대체 페이지입니다.
+// 새로운 품절대체 페이지입니다.
+// 새로운 품절대체 페이지입니다.

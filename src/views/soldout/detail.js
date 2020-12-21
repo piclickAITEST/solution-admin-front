@@ -54,10 +54,6 @@ function SoldOutDetail({ match, location }) {
   const [toast, setToast] = useState(false);
   const [toastLog, setToastLog] = useState("");
 
-  function numberWithCommas(x) {
-    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-  }
-
   function numberWithPhone(x) {
     if (x === undefined || x === null) {
       return;
@@ -220,60 +216,111 @@ function SoldOutDetail({ match, location }) {
                 }
               });
           } else {
-            enableToast("상태 변경 살패.");
+            enableToast("상태 변경 실패.");
           }
         }
       });
     } else if (csStatus === "R") {
-      if (bankCode === "" || bankAccount === "") {
-        return;
-      }
-      // 환불 (Refund)
-      axios({
-        method: "get",
-        url: `https://sol.piclick.kr/soldOut/refundOrder?mallID=${mallID}&product_no=${productNo}&order_id=${orderID}`,
-      }).then((res) => {
-        if (res.data !== undefined || res.data !== null) {
-          if (res.data.status === "T") {
-            const requestParam = {
-              action_code: csStatus,
-              price: productPrice,
-              idx: index,
-              status_msg: res.data.res.message,
-              status_code: res.data.res.code,
-              account_num: bankAccount,
-              bank_code_std: bankCode,
-              account_holder_info: countryCode,
-            };
-            // 환불 상태변화, 로그 API 전송
-            axios({
-              method: "post",
-              url: `https://sadmin.piclick.kr/soldout/action`,
-              headers: {
-                Authorization: `JWT ${token}`,
-              },
-              data: requestParam,
-            })
-              .then((res) => {
-                if (res.data !== undefined || res.data !== null) {
-                  enableToast("상태 변경을 하였습니다.");
-                  getDetail(token);
-                }
-              })
-              .catch((error) => {
-                if (error.response.status === 401) {
-                  sessionStorage.removeItem("userToken");
-                  sessionStorage.removeItem("userName");
-                  setRedirect(true);
-                }
-              });
-          } else {
-            enableToast("상태 변경 실패");
-          }
+      // 현금(무통장)
+      if (paymentMethod === "cash") {
+        if (bankCode === "" || bankAccount === "") {
+          return;
         } else {
-          getDetail(token);
+          // 환불 (Refund)
+          axios({
+            method: "get",
+            url: `https://sol.piclick.kr/soldOut/refundOrder?mallID=${mallID}&product_no=${productNo}&order_id=${orderID}`,
+          }).then((res) => {
+            if (res.data !== undefined || res.data !== null) {
+              if (res.data.status === "T") {
+                const requestParam = {
+                  action_code: csStatus,
+                  price: productPrice,
+                  idx: index,
+                  status_msg: res.data.res.message,
+                  status_code: res.data.res.code,
+                  account_num: bankAccount,
+                  bank_code_std: bankCode,
+                  account_holder_info: countryCode,
+                };
+                // 환불 상태변화, 로그 API 전송
+                axios({
+                  method: "post",
+                  url: `https://sadmin.piclick.kr/soldout/action`,
+                  headers: {
+                    Authorization: `JWT ${token}`,
+                  },
+                  data: requestParam,
+                })
+                  .then((res) => {
+                    if (res.data !== undefined || res.data !== null) {
+                      enableToast("상태 변경을 하였습니다.");
+                      getDetail(token);
+                    }
+                  })
+                  .catch((error) => {
+                    if (error.response.status === 401) {
+                      sessionStorage.removeItem("userToken");
+                      sessionStorage.removeItem("userName");
+                      setRedirect(true);
+                    }
+                  });
+              } else {
+                enableToast("상태 변경 실패");
+              }
+            } else {
+              getDetail(token);
+            }
+          });
         }
-      });
+      } else {
+        // 무통장 아닐 경우(카드 / 모바일 결제)
+        axios({
+          method: "get",
+          url: `https://sol.piclick.kr/soldOut/refundOrder?mallID=${mallID}&product_no=${productNo}&order_id=${orderID}`,
+        }).then((res) => {
+          if (res.data !== undefined || res.data !== null) {
+            if (res.data.status === "T") {
+              const requestParam = {
+                action_code: csStatus,
+                price: productPrice,
+                idx: index,
+                status_msg: res.data.res.message,
+                status_code: res.data.res.code,
+                account_num: bankAccount,
+                bank_code_std: bankCode,
+                account_holder_info: countryCode,
+              };
+              // 환불 상태변화, 로그 API 전송
+              axios({
+                method: "post",
+                url: `https://sadmin.piclick.kr/soldout/action`,
+                headers: {
+                  Authorization: `JWT ${token}`,
+                },
+                data: requestParam,
+              })
+                .then((res) => {
+                  if (res.data !== undefined || res.data !== null) {
+                    enableToast("상태 변경을 하였습니다.");
+                    getDetail(token);
+                  }
+                })
+                .catch((error) => {
+                  if (error.response.status === 401) {
+                    sessionStorage.removeItem("userToken");
+                    sessionStorage.removeItem("userName");
+                    setRedirect(true);
+                  }
+                });
+            } else {
+              enableToast("상태 변경 실패");
+            }
+          } else {
+            getDetail(token);
+          }
+        });
+      }
     }
   };
 
@@ -318,30 +365,27 @@ function SoldOutDetail({ match, location }) {
     <div>
       <CCard>
         <CCardHeader>
-          <Link to="/soldout">
+          <Link to="/soldout_new">
             <CButton>
               <CIcon name="cil-chevron-left" size="lg" />
             </CButton>
           </Link>
         </CCardHeader>
         <CCardBody>
-          <h3>
-            {productName} / {numberWithCommas(productPrice)}원 - {userName}
-          </h3>
+          <h4>{productName}</h4>
+          <h5>{userName}</h5>
           <CFormGroup row>
-            <CCol xs="2">
-              <CLabel>CS 상태</CLabel>
-              <CSelect onChange={csSelectChange} value={csStatus}>
-                <option value="R">환불</option>
-                <option value="S">적립</option>
-                <option value="E">교환</option>
-                {/* <option value="X">처리완료</option> */}
-              </CSelect>
-            </CCol>
             {paymentMethod === "cash" && csStatus === "R" ? (
               <>
-                <CCol xs="2">
-                  <CLabel>은행명</CLabel>
+                <CCol lg="1">
+                  <CSelect onChange={csSelectChange} value={csStatus}>
+                    <option value="R">환불</option>
+                    <option value="S">적립</option>
+                    <option value="E">교환</option>
+                    {/* <option value="X">처리완료</option> */}
+                  </CSelect>
+                </CCol>
+                <CCol lg="2">
                   <CInputGroup>
                     <CSelect value={bankCode} onChange={bankCodeOnChange}>
                       {bankList &&
@@ -355,15 +399,19 @@ function SoldOutDetail({ match, location }) {
                     </CSelect>
                   </CInputGroup>
                 </CCol>
-                <CCol xs="2">
-                  <CLabel>계좌 번호</CLabel>
-                  <CInput
-                    name="bankAccount"
-                    value={bankAccount}
-                    onChange={onInputChange}
-                    placeholder="계좌번호"
-                    type="number"
-                  />
+                <CCol lg="3">
+                  <CInputGroup>
+                    <CInput
+                      name="bankAccount"
+                      value={bankAccount}
+                      onChange={onInputChange}
+                      placeholder="계좌번호"
+                      type="number"
+                    />
+                    <CButton color="primary" onClick={postCsStatus}>
+                      CS상태 변경
+                    </CButton>
+                  </CInputGroup>
                 </CCol>
                 {/* <CCol xs="2">
                   <CLabel>주민번호 앞자리</CLabel>
@@ -378,19 +426,29 @@ function SoldOutDetail({ match, location }) {
                   </CInputGroup>
                 </CCol> */}
               </>
-            ) : null}
-            <CButton color="primary" onClick={postCsStatus}>
-              상태 변경
-            </CButton>
-            <CCol>
-              <CLabel>미리보기</CLabel>
+            ) : (
+              <CCol lg="2">
+                <CInputGroup>
+                  <CSelect onChange={csSelectChange} value={csStatus}>
+                    <option value="R">환불</option>
+                    <option value="S">적립</option>
+                    <option value="E">교환</option>
+                    {/* <option value="X">처리완료</option> */}
+                  </CSelect>
+                  <CButton color="primary" onClick={postCsStatus}>
+                    CS상태 변경
+                  </CButton>
+                </CInputGroup>
+              </CCol>
+            )}
+            <CCol lg="3">
               <CInputGroup>
                 <CButton
                   color="secondary"
                   onClick={previewToggle}
                   style={{ marginRight: "5px" }}
                 >
-                  품절대체 탬플릿
+                  고객 페이지
                 </CButton>
                 <CButton color="secondary" onClick={msgModalToggle}>
                   메시지 내용
