@@ -320,6 +320,43 @@ function SoldOutDetail({ match, location }) {
           }
         });
       }
+    } else if (csStatus === "O") {
+      const requestParam = {
+        action_code: csStatus,
+        price: productPrice,
+        idx: index,
+        // status_msg: res.data.res.message,
+        // status_code: res.data.res.code,
+        account_num: bankAccount,
+        bank_code_std: bankCode,
+        account_holder_info: countryCode,
+      };
+      axios({
+        method: "post",
+        url: `https://sadmin.piclick.kr/soldout/action`,
+        headers: {
+          Authorization: `JWT ${token}`,
+        },
+        data: requestParam,
+      })
+        .then((res) => {
+          if (res.data !== undefined || res.data !== null) {
+            enableToast("상태 변경을 하였습니다.");
+            getDetail(token);
+          }
+        })
+        .catch((error) => {
+          if (error.response === undefined) {
+            enableToast("상태 변경 실패");
+            return;
+          } else {
+            if (error.response.status === 401) {
+              sessionStorage.removeItem("userToken");
+              sessionStorage.removeItem("userName");
+              setRedirect(true);
+            }
+          }
+        });
     }
   };
 
@@ -381,7 +418,7 @@ function SoldOutDetail({ match, location }) {
                     <option value="R">환불</option>
                     <option value="S">적립</option>
                     <option value="E">교환</option>
-                    {/* <option value="X">처리완료</option> */}
+                    <option value="O">재입고</option>
                   </CSelect>
                 </CCol>
                 <CCol lg="2">
@@ -432,7 +469,7 @@ function SoldOutDetail({ match, location }) {
                     <option value="R">환불</option>
                     <option value="S">적립</option>
                     <option value="E">교환</option>
-                    {/* <option value="X">처리완료</option> */}
+                    <option value="O">재입고</option>
                   </CSelect>
                   <CButton color="primary" onClick={postCsStatus}>
                     CS상태 변경

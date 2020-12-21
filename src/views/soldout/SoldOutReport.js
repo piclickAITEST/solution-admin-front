@@ -65,7 +65,7 @@ const SoldOutReport = () => {
           console.log("error: 500");
           return;
         } else {
-          if (error.response.status) {
+          if (error.response.status === 401) {
             sessionStorage.removeItem("userToken");
             sessionStorage.removeItem("userName");
             setRedirect(true);
