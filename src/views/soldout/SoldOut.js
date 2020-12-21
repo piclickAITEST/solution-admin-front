@@ -33,7 +33,7 @@ const SoldOut = () => {
   const token = sessionStorage.getItem("userToken");
   const [products, setProducts] = useState([]);
   const [dateType, setDateType] = useState("");
-  const [searchType, setSearchType] = useState("order");
+  const [searchType, setSearchType] = useState("soldout");
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [redirect, setRedirect] = useState(false);
@@ -94,7 +94,7 @@ const SoldOut = () => {
   const clearState = () => {
     setProducts([]);
     setDateType("");
-    setSearchType("order");
+    setSearchType("soldout");
     setFromDate("");
     setToDate("");
     setRedirect(false);
@@ -346,6 +346,15 @@ const SoldOut = () => {
     },
   ];
 
+  const previewToggle = (productNo, orderID) => {
+    var url = `https://sol.piclick.kr/soldOut/?mallID=rlackdals1&product_no=${productNo}&order_id=${orderID}`;
+    window.open(
+      url,
+      "_blank",
+      "menubar=no, resizable=no, width=360, height=640"
+    );
+  };
+
   return loading ? (
     <div className="d-flex justify-content-center align-items-center">
       <CSpinner color="primary" style={{ width: "4rem", height: "4rem" }} />
@@ -397,8 +406,8 @@ const SoldOut = () => {
               <CInputGroup>
                 <CButtonGroup>
                   {[
-                    ["주문일자", "order"],
                     ["품절일자", "soldout"],
+                    ["주문일자", "order"],
                   ].map((value) => (
                     <CButton
                       color="outline-secondary"
@@ -433,7 +442,8 @@ const SoldOut = () => {
             </CCol>
           </CFormGroup>
           <h6 style={{ color: "#999", textAlign: "right", fontSize: "12px" }}>
-            품절 데이터는 10분마다 업데이트됩니다.
+            품절 데이터는 10분마다 업데이트됩니다. <br />
+            주문번호 클릭 시 해당 상품의 상세 페이지로 접근합니다.
           </h6>
         </CCardBody>
       </CCard>
@@ -469,6 +479,34 @@ const SoldOut = () => {
               phone: (item) => <td>{numberWithPhone(item.phone)}</td>,
               detail: (item) => (
                 <td>
+                  <CButton
+                    color="secondary"
+                    shape="square"
+                    size="sm"
+                    onClick={() => {
+                      previewToggle(item.product_id, item.order_id);
+                    }}
+                  >
+                    미리보기
+                  </CButton>
+                </td>
+              ),
+              message: (item) => (
+                <td>
+                  <CButton
+                    color="primary"
+                    shape="square"
+                    size="sm"
+                    disabled={item.action !== "품절대상"}
+                    onClick={() => sendToggle(item.idx)}
+                    id={`button-${item.idx}`}
+                  >
+                    전송
+                  </CButton>
+                </td>
+              ),
+              order_id: (item) => (
+                <td>
                   <Link
                     to={{
                       pathname: `/soldout/${item.idx}/${item.order_id}`,
@@ -488,29 +526,8 @@ const SoldOut = () => {
                       },
                     }}
                   >
-                    <CButton
-                      color="secondary"
-                      shape="square"
-                      size="sm"
-                      id={`button-${item.idx}`}
-                    >
-                      상세보기
-                    </CButton>
+                    {item.order_id}
                   </Link>
-                </td>
-              ),
-              message: (item) => (
-                <td>
-                  <CButton
-                    color="primary"
-                    shape="square"
-                    size="sm"
-                    disabled={item.action !== "품절대상"}
-                    onClick={() => sendToggle(item.idx)}
-                    id={`button-${item.idx}`}
-                  >
-                    전송
-                  </CButton>
                 </td>
               ),
             }}
