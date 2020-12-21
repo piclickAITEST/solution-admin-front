@@ -190,9 +190,21 @@ const SoldOut = () => {
     switch (name) {
       case "주문일자":
         setSearchType(value);
+        getSoldOut(
+          `?from_date=${moment(fromDate).format("YYYYMMDD")}&to_date=${moment(
+            toDate
+          ).format("YYYYMMDD")}&date_type=${value}`,
+          token
+        );
         break;
       case "품절일자":
         setSearchType(value);
+        getSoldOut(
+          `?from_date=${moment(fromDate).format("YYYYMMDD")}&to_date=${moment(
+            toDate
+          ).format("YYYYMMDD")}&date_type=${value}`,
+          token
+        );
         break;
       default:
         break;
