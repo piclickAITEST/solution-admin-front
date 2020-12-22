@@ -478,7 +478,11 @@ const SoldOut = () => {
             scopedSlots={{
               list_image: (item) => (
                 <td>
-                  <img src={item.list_image} alt="" width="65px" />
+                  <a
+                    href={`http://shescloset.com/product/detail.html?product_no=${item.product_id}`}
+                  >
+                    <img src={item.list_image} alt="" width="65px" />
+                  </a>
                 </td>
               ),
               price: (item) => <td>{numberWithCommas(item.price)}</td>,

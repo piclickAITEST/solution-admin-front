@@ -20,6 +20,7 @@ import {
   CToast,
   CToastHeader,
   CToastBody,
+  CDataTable,
 } from "@coreui/react";
 import CIcon from "@coreui/icons-react";
 import { useCallback } from "react";
@@ -450,6 +451,14 @@ function SoldOutDetail({ match, location }) {
     setMsgModal(!msgModal);
   };
 
+  const fields = [
+    { key: "action_date", label: "상태 갱신 일자" },
+    { key: "action", label: "처리상태" },
+    { key: "bank_name", label: "은행명" },
+    { key: "account_num", label: "계좌번호" },
+    { key: "bank_user_name", label: "예금주" },
+  ];
+
   return loading ? (
     <div className="d-flex justify-content-center align-items-center">
       <CSpinner color="primary" style={{ width: "4rem", height: "4rem" }} />
@@ -564,39 +573,23 @@ function SoldOutDetail({ match, location }) {
       </CCard>
       <CCard>
         <CCardBody>
-          <table className="table table-outline mb-0 d-none d-sm-table">
-            <thead className="thead-light">
-              <tr>
-                <th className="text-center">상태 갱신 일자</th>
-                <th className="text-center">처리 상태</th>
-                <th className="text-center">은행명</th>
-                <th className="text-center">계좌번호</th>
-                <th className="text-center">예금주</th>
-              </tr>
-            </thead>
-            <tbody>
-              {detail.map((product) => {
-                const {
-                  action_date, // 상태 업데이트 날짜 a
-                  account_num, // 계좌번호 a
-                  action, // 상태 코드(CS 상태) a
-                  id, // key용 id(상세 idx)
-                  bank_user_name,
-                  bank_name,
-                } = product;
-
-                return (
-                  <tr key={id}>
-                    <td className="text-center">{action_date}</td>
-                    <td className="text-center">{action}</td>
-                    <td className="text-center">{bank_name}</td>
-                    <td className="text-center">{account_num}</td>
-                    <td className="text-center">{bank_user_name}</td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
+          <CDataTable
+            items={detail}
+            fields={fields}
+            scopedSlots={{
+              bank_name: (item) => (
+                <td>{item.bank_name !== null ? item.bank_name : ""}</td>
+              ),
+              account_num: (item) => (
+                <td>{item.account_num !== null ? item.account_num : ""}</td>
+              ),
+              bank_user_name: (item) => (
+                <td>
+                  {item.bank_user_name !== null ? item.bank_user_name : ""}
+                </td>
+              ),
+            }}
+          />
         </CCardBody>
       </CCard>
       <CModal show={msgModal} onClose={msgModalToggle}>

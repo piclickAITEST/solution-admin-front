@@ -38,6 +38,11 @@ const SoldOutReport = () => {
     return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   }
 
+  function numberToDate(x) {
+    if (x === "합계") return null;
+    return x.toString().replace(/(\d{4})(\d{2})(\d{2})/, "$1-$2-$3");
+  }
+
   const getReport = (args, token) => {
     setLoading(true);
     if (args === undefined || args === "") {
@@ -94,6 +99,17 @@ const SoldOutReport = () => {
     sessionStorage.removeItem("userName");
     return <Redirect from="*" to="/login" />;
   }
+
+  const getDays = (date) => {
+    switch (date) {
+      case 0:
+        return "red";
+      case 6:
+        return "blue";
+      default:
+        return null;
+    }
+  };
 
   const fields = [
     { key: "date", label: "날짜" },
@@ -272,52 +288,161 @@ const SoldOutReport = () => {
             outlined
             responsive
             scopedSlots={{
-              order_count: (item) => <td>{changeToComma(item.order_count)}</td>,
+              date: (item) => (
+                <td
+                  style={{
+                    color: getDays(moment(numberToDate(item.date)).day()),
+                  }}
+                >
+                  {item.date}
+                </td>
+              ),
+              order_count: (item) => (
+                <td
+                  style={{
+                    color: getDays(moment(numberToDate(item.date)).day()),
+                  }}
+                >
+                  {changeToComma(item.order_count)}
+                </td>
+              ),
               soldout_count: (item) => (
-                <td>{changeToComma(item.soldout_count)}</td>
+                <td
+                  style={{
+                    color: getDays(moment(numberToDate(item.date)).day()),
+                  }}
+                >
+                  {changeToComma(item.soldout_count)}
+                </td>
               ),
               soldout_rate: (item) => (
-                <td>{changeToRate(item.soldout_rate)}</td>
+                <td
+                  style={{
+                    color: getDays(moment(numberToDate(item.date)).day()),
+                  }}
+                >
+                  {changeToRate(item.soldout_rate)}
+                </td>
               ),
               message_sent_count: (item) => (
-                <td>{changeToComma(item.message_sent_count)}</td>
+                <td
+                  style={{
+                    color: getDays(moment(numberToDate(item.date)).day()),
+                  }}
+                >
+                  {changeToComma(item.message_sent_count)}
+                </td>
               ),
               user_count: (item) => <td>{changeToComma(item.user_count)}</td>,
               unknown_user_count: (item) => (
-                <td>{changeToComma(item.unknown_user_count)}</td>
+                <td
+                  style={{
+                    color: getDays(moment(numberToDate(item.date)).day()),
+                  }}
+                >
+                  {changeToComma(item.unknown_user_count)}
+                </td>
               ),
               reco_view_count: (item) => (
-                <td>{changeToComma(item.reco_view_count)}</td>
+                <td
+                  style={{
+                    color: getDays(moment(numberToDate(item.date)).day()),
+                  }}
+                >
+                  {changeToComma(item.reco_view_count)}
+                </td>
               ),
               exchange_conv_count: (item) => (
-                <td>{changeToComma(item.exchange_conv_count)}</td>
+                <td
+                  style={{
+                    color: getDays(moment(numberToDate(item.date)).day()),
+                  }}
+                >
+                  {changeToComma(item.exchange_conv_count)}
+                </td>
               ),
               exchange_conv_sum: (item) => (
-                <td>{changeToComma(item.exchange_conv_sum)}</td>
+                <td
+                  style={{
+                    color: getDays(moment(numberToDate(item.date)).day()),
+                  }}
+                >
+                  {changeToComma(item.exchange_conv_sum)}
+                </td>
               ),
               save_conv_count: (item) => (
-                <td>{changeToComma(item.save_conv_count)}</td>
+                <td
+                  style={{
+                    color: getDays(moment(numberToDate(item.date)).day()),
+                  }}
+                >
+                  {changeToComma(item.save_conv_count)}
+                </td>
               ),
               save_conv_sum: (item) => (
-                <td>{changeToComma(item.save_conv_sum)}</td>
+                <td
+                  style={{
+                    color: getDays(moment(numberToDate(item.date)).day()),
+                  }}
+                >
+                  {changeToComma(item.save_conv_sum)}
+                </td>
               ),
               lazy_save_count: (item) => (
-                <td>{changeToComma(item.lazy_save_count)}</td>
+                <td
+                  style={{
+                    color: getDays(moment(numberToDate(item.date)).day()),
+                  }}
+                >
+                  {changeToComma(item.lazy_save_count)}
+                </td>
               ),
               lazy_save_sum: (item) => (
-                <td>{changeToComma(item.lazy_save_sum)}</td>
+                <td
+                  style={{
+                    color: getDays(moment(numberToDate(item.date)).day()),
+                  }}
+                >
+                  {changeToComma(item.lazy_save_sum)}
+                </td>
               ),
               refund_count: (item) => (
-                <td>{changeToComma(item.refund_count)}</td>
+                <td
+                  style={{
+                    color: getDays(moment(numberToDate(item.date)).day()),
+                  }}
+                >
+                  {changeToComma(item.refund_count)}
+                </td>
               ),
               refund_sum: (item) => <td>{changeToComma(item.refund_sum)}</td>,
               exchange_conv_rate: (item) => (
-                <td>{changeToRate(item.exchange_conv_rate)}</td>
+                <td
+                  style={{
+                    color: getDays(moment(numberToDate(item.date)).day()),
+                  }}
+                >
+                  {changeToRate(item.exchange_conv_rate)}
+                </td>
               ),
               save_conv_rate: (item) => (
-                <td>{changeToRate(item.save_conv_rate)}</td>
+                <td
+                  style={{
+                    color: getDays(moment(numberToDate(item.date)).day()),
+                  }}
+                >
+                  {changeToRate(item.save_conv_rate)}
+                </td>
               ),
-              refund_rate: (item) => <td>{changeToRate(item.refund_rate)}</td>,
+              refund_rate: (item) => (
+                <td
+                  style={{
+                    color: getDays(moment(numberToDate(item.date)).day()),
+                  }}
+                >
+                  {changeToRate(item.refund_rate)}
+                </td>
+              ),
             }}
           />
         </CCardBody>
