@@ -194,6 +194,7 @@ const SoldOutReport = () => {
       setFromDate("");
       setToDate("");
       setDateType("");
+      getReport("", token);
     }
   };
 
