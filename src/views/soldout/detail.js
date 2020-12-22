@@ -261,20 +261,20 @@ function SoldOutDetail({ match, location }) {
           }
         });
     } else if (csStatus === "R") {
-      // 현금(무통장)
       if (paymentMethod === "cash") {
-        if (bankCode === "" || bankAccount === "") {
-          return;
-        } else {
-          // 환불 (Refund)
-          axios({
-            method: "get",
-            url: `https://sol.piclick.kr/soldOut/refundOrder?mallID=${mallID}&product_no=${productNo}&order_id=${orderID}`,
-          })
-            .then((res) => {
-              if (res.data !== undefined) {
-                if (res.data.status === "T") {
-                  const requestParam = {
+        if (bankAccount === "" || bankUserName === "") return;
+      }
+
+      axios({
+        method: "get",
+        url: `https://sol.piclick.kr/soldOut/refundOrder?mallID=${mallID}&product_no=${productNo}&order_id=${orderID}`,
+      })
+        .then((res) => {
+          if (res.data !== undefined) {
+            if (res.data.status === "T") {
+              const requestParam = () => {
+                if (paymentMethod === "cash") {
+                  return {
                     action_code: csStatus,
                     price: productPrice,
                     idx: index,
@@ -285,108 +285,58 @@ function SoldOutDetail({ match, location }) {
                     bank_user_name: bankUserName,
                     // account_holder_info: countryCode,
                   };
-                  // 환불 상태변화, 로그 API 전송
-                  axios({
-                    method: "post",
-                    url: `https://sadmin.piclick.kr/soldout/action`,
-                    headers: {
-                      Authorization: `JWT ${token}`,
-                    },
-                    data: requestParam,
-                  })
-                    .then((res) => {
-                      if (res.data !== undefined) {
-                        enableToast("상태 변경을 하였습니다.");
-                        getDetail(token);
-                      }
-                    })
-                    .catch((error) => {
-                      if (error.response === undefined) {
-                        enableToast("상태 변경 실패");
-                      } else {
-                        if (error.response.status === 401) {
-                          sessionStorage.removeItem("userToken");
-                          sessionStorage.removeItem("userName");
-                          setRedirect(true);
-                        }
-                      }
-                    });
                 } else {
-                  enableToast("상태 변경 실패");
+                  return {
+                    action_code: csStatus,
+                    price: productPrice,
+                    idx: index,
+                    status_msg: res.data.res.message,
+                    status_code: res.data.res.code,
+                  };
                 }
-              } else {
-                getDetail(token);
-              }
-            })
-            .catch((error) => {
-              enableToast("상태 변경 실패");
-              if (error.response.status === 401) {
-                sessionStorage.removeItem("userToken");
-                sessionStorage.removeItem("userName");
-                setRedirect(true);
-                return;
-              }
-            });
-        }
-      } else {
-        // 무통장 아닐 경우(카드 / 모바일 결제)
-        axios({
-          method: "get",
-          url: `https://sol.piclick.kr/soldOut/refundOrder?mallID=${mallID}&product_no=${productNo}&order_id=${orderID}`,
-        })
-          .then((res) => {
-            if (res.data !== undefined) {
-              if (res.data.status === "T") {
-                const requestParam = {
-                  action_code: csStatus,
-                  price: productPrice,
-                  idx: index,
-                  status_msg: res.data.res.message,
-                  status_code: res.data.res.code,
-                };
-                // 환불 상태변화, 로그 API 전송
-                axios({
-                  method: "post",
-                  url: `https://sadmin.piclick.kr/soldout/action`,
-                  headers: {
-                    Authorization: `JWT ${token}`,
-                  },
-                  data: requestParam,
+              };
+              // 환불 상태변화, 로그 API 전송
+              axios({
+                method: "post",
+                url: `https://sadmin.piclick.kr/soldout/action`,
+                headers: {
+                  Authorization: `JWT ${token}`,
+                },
+                data: requestParam(),
+              })
+                .then((res) => {
+                  if (res.data !== undefined) {
+                    enableToast("상태 변경을 하였습니다.");
+                    getDetail(token);
+                  }
                 })
-                  .then((res) => {
-                    if (res.data !== undefined) {
-                      enableToast("상태 변경을 하였습니다.");
-                      getDetail(token);
+                .catch((error) => {
+                  if (error.response === undefined) {
+                    enableToast("상태 변경 실패");
+                  } else {
+                    if (error.response.status === 401) {
+                      sessionStorage.removeItem("userToken");
+                      sessionStorage.removeItem("userName");
+                      setRedirect(true);
                     }
-                  })
-                  .catch((error) => {
-                    if (error.response === undefined) {
-                      enableToast("상태 변경 실패");
-                    } else {
-                      if (error.response.status === 401) {
-                        sessionStorage.removeItem("userToken");
-                        sessionStorage.removeItem("userName");
-                        setRedirect(true);
-                      }
-                    }
-                  });
-              } else {
-                enableToast("상태 변경 실패");
-              }
+                  }
+                });
             } else {
-              getDetail(token);
+              enableToast("상태 변경 실패");
             }
-          })
-          .catch((error) => {
-            enableToast("상태 변경 실패");
-            if (error.response.status === 401) {
-              sessionStorage.removeItem("userToken");
-              sessionStorage.removeItem("userName");
-              setRedirect(true);
-              return;
-            }
-          });
-      }
+          } else {
+            getDetail(token);
+          }
+        })
+        .catch((error) => {
+          enableToast("상태 변경 실패");
+          if (error.response.status === 401) {
+            sessionStorage.removeItem("userToken");
+            sessionStorage.removeItem("userName");
+            setRedirect(true);
+            return;
+          }
+        });
     } else if (csStatus === "O") {
       const requestParam = {
         action_code: csStatus,
@@ -444,7 +394,6 @@ function SoldOutDetail({ match, location }) {
           };
         }
       };
-      console.log(requestParam());
       // 교환 로그 API 전송
       axios({
         method: "post",
