@@ -251,20 +251,6 @@ const SoldOutReport = () => {
                   value={toDate}
                   onChange={onChangeDate}
                 />
-                {/* <CButton
-                  color="primary"
-                  style={{ marginLeft: "5px" }}
-                  onClick={() => {
-                    getReport(
-                      `?from_date=${moment(fromDate).format(
-                        "YYYYMMDD"
-                      )}&to_date=${moment(toDate).format("YYYYMMDD")}`,
-                      token
-                    );
-                  }}
-                >
-                  검색
-                </CButton> */}
               </CInputGroup>
             </CCol>
             <CCol>
@@ -293,7 +279,7 @@ const SoldOutReport = () => {
                     getReport("", token);
                   }}
                 >
-                  초기화
+                  날짜 선택 초기화
                 </CButton>
               </CInputGroup>
             </CCol>

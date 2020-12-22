@@ -398,22 +398,6 @@ const SoldOut = () => {
                   value={toDate}
                   onChange={onChangeDate}
                 />
-                {/* <CButton
-                  color="primary"
-                  style={{ marginLeft: "5px" }}
-                  onClick={() => {
-                    getSoldOut(
-                      `?from_date=${moment(fromDate).format(
-                        "YYYYMMDD"
-                      )}&to_date=${moment(toDate).format(
-                        "YYYYMMDD"
-                      )}&date_type=${searchType}`,
-                      token
-                    );
-                  }}
-                >
-                  검색
-                </CButton> */}
               </CInputGroup>
             </CCol>
             <CCol xs="0">
@@ -466,7 +450,7 @@ const SoldOut = () => {
                     getSoldOut("", token);
                   }}
                 >
-                  초기화
+                  날짜 선택 초기화
                 </CButton>
               </CInputGroup>
             </CCol>
