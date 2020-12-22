@@ -250,7 +250,16 @@ const SoldOut = () => {
     setTimeout(() => {
       setMsgToastToggle(false);
     }, 3000);
-    getSoldOut(token);
+    if (fromDate !== "" && toDate !== "") {
+      getSoldOut(
+        `?from_date=${moment(fromDate).format("YYYYMMDD")}&to_date=${moment(
+          toDate
+        ).format("YYYYMMDD")}&date_type=${searchType}`,
+        token
+      );
+    } else {
+      getSoldOut("", token);
+    }
   };
 
   const sendMessage = (token) => {
