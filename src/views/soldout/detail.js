@@ -491,7 +491,9 @@ function SoldOutDetail({ match, location }) {
         setExcOpt2(value);
       }
     } else {
-      if (name === "bankUserName") {
+      if (name === "bankAccount") {
+        setBankAccount(value);
+      } else if (name === "bankUserName") {
         setBankUserName(value);
       } else if (name === "excName") {
         setExcName(value);
