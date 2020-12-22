@@ -478,7 +478,7 @@ function SoldOutDetail({ match, location }) {
       setMsgModal(!msgModal);
       axios({
         method: "get",
-        url: `https://sadmin.piclick.kr/soldout/sms/preview?idx=14864`,
+        url: `https://sadmin.piclick.kr/soldout/sms/preview?idx=${index}`,
         headers: {
           Authorization: `JWT ${token}`,
         },
