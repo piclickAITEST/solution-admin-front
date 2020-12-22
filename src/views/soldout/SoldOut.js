@@ -459,7 +459,7 @@ const SoldOut = () => {
                     getSoldOut("", token);
                   }}
                 >
-                  날짜 선택 초기화
+                  검색 필터 초기화
                 </CButton>
               </CInputGroup>
             </CCol>
