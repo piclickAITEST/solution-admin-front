@@ -39,7 +39,7 @@ const SoldOutReport = () => {
   }
 
   function numberToDate(x) {
-    if (x === "합계") return null;
+    if (x === "합계") return "합계";
     return x.toString().replace(/(\d{4})(\d{2})(\d{2})/, "$1-$2-$3");
   }
 
@@ -107,7 +107,7 @@ const SoldOutReport = () => {
       case 6:
         return "blue";
       default:
-        return null;
+        return "";
     }
   };
 
@@ -306,16 +306,24 @@ const SoldOutReport = () => {
               date: (item) => (
                 <td
                   style={{
-                    color: getDays(moment(numberToDate(item.date)).day()),
+                    color: getDays(
+                      moment(
+                        item.date === "합계" ? "" : numberToDate(item.date)
+                      ).day()
+                    ),
                   }}
                 >
-                  {item.date}
+                  {item.date === "합계" ? "합계" : numberToDate(item.date)}
                 </td>
               ),
               order_count: (item) => (
                 <td
                   style={{
-                    color: getDays(moment(numberToDate(item.date)).day()),
+                    color: getDays(
+                      moment(
+                        item.date === "합계" ? "" : numberToDate(item.date)
+                      ).day()
+                    ),
                   }}
                 >
                   {changeToComma(item.order_count)}
@@ -324,7 +332,11 @@ const SoldOutReport = () => {
               soldout_count: (item) => (
                 <td
                   style={{
-                    color: getDays(moment(numberToDate(item.date)).day()),
+                    color: getDays(
+                      moment(
+                        item.date === "합계" ? "" : numberToDate(item.date)
+                      ).day()
+                    ),
                   }}
                 >
                   {changeToComma(item.soldout_count)}
@@ -333,7 +345,11 @@ const SoldOutReport = () => {
               soldout_rate: (item) => (
                 <td
                   style={{
-                    color: getDays(moment(numberToDate(item.date)).day()),
+                    color: getDays(
+                      moment(
+                        item.date === "합계" ? "" : numberToDate(item.date)
+                      ).day()
+                    ),
                   }}
                 >
                   {changeToRate(item.soldout_rate)}
@@ -342,17 +358,37 @@ const SoldOutReport = () => {
               message_sent_count: (item) => (
                 <td
                   style={{
-                    color: getDays(moment(numberToDate(item.date)).day()),
+                    color: getDays(
+                      moment(
+                        item.date === "합계" ? "" : numberToDate(item.date)
+                      ).day()
+                    ),
                   }}
                 >
                   {changeToComma(item.message_sent_count)}
                 </td>
               ),
-              user_count: (item) => <td>{changeToComma(item.user_count)}</td>,
+              user_count: (item) => (
+                <td
+                  style={{
+                    color: getDays(
+                      moment(
+                        item.date === "합계" ? "" : numberToDate(item.date)
+                      ).day()
+                    ),
+                  }}
+                >
+                  {changeToComma(item.user_count)}
+                </td>
+              ),
               unknown_user_count: (item) => (
                 <td
                   style={{
-                    color: getDays(moment(numberToDate(item.date)).day()),
+                    color: getDays(
+                      moment(
+                        item.date === "합계" ? "" : numberToDate(item.date)
+                      ).day()
+                    ),
                   }}
                 >
                   {changeToComma(item.unknown_user_count)}
@@ -361,7 +397,11 @@ const SoldOutReport = () => {
               reco_view_count: (item) => (
                 <td
                   style={{
-                    color: getDays(moment(numberToDate(item.date)).day()),
+                    color: getDays(
+                      moment(
+                        item.date === "합계" ? "" : numberToDate(item.date)
+                      ).day()
+                    ),
                   }}
                 >
                   {changeToComma(item.reco_view_count)}
@@ -370,7 +410,11 @@ const SoldOutReport = () => {
               exchange_conv_count: (item) => (
                 <td
                   style={{
-                    color: getDays(moment(numberToDate(item.date)).day()),
+                    color: getDays(
+                      moment(
+                        item.date === "합계" ? "" : numberToDate(item.date)
+                      ).day()
+                    ),
                   }}
                 >
                   {changeToComma(item.exchange_conv_count)}
@@ -379,7 +423,11 @@ const SoldOutReport = () => {
               exchange_conv_sum: (item) => (
                 <td
                   style={{
-                    color: getDays(moment(numberToDate(item.date)).day()),
+                    color: getDays(
+                      moment(
+                        item.date === "합계" ? "" : numberToDate(item.date)
+                      ).day()
+                    ),
                   }}
                 >
                   {changeToComma(item.exchange_conv_sum)}
@@ -388,7 +436,11 @@ const SoldOutReport = () => {
               save_conv_count: (item) => (
                 <td
                   style={{
-                    color: getDays(moment(numberToDate(item.date)).day()),
+                    color: getDays(
+                      moment(
+                        item.date === "합계" ? "" : numberToDate(item.date)
+                      ).day()
+                    ),
                   }}
                 >
                   {changeToComma(item.save_conv_count)}
@@ -397,7 +449,11 @@ const SoldOutReport = () => {
               save_conv_sum: (item) => (
                 <td
                   style={{
-                    color: getDays(moment(numberToDate(item.date)).day()),
+                    color: getDays(
+                      moment(
+                        item.date === "합계" ? "" : numberToDate(item.date)
+                      ).day()
+                    ),
                   }}
                 >
                   {changeToComma(item.save_conv_sum)}
@@ -406,7 +462,11 @@ const SoldOutReport = () => {
               lazy_save_count: (item) => (
                 <td
                   style={{
-                    color: getDays(moment(numberToDate(item.date)).day()),
+                    color: getDays(
+                      moment(
+                        item.date === "합계" ? "" : numberToDate(item.date)
+                      ).day()
+                    ),
                   }}
                 >
                   {changeToComma(item.lazy_save_count)}
@@ -415,7 +475,11 @@ const SoldOutReport = () => {
               lazy_save_sum: (item) => (
                 <td
                   style={{
-                    color: getDays(moment(numberToDate(item.date)).day()),
+                    color: getDays(
+                      moment(
+                        item.date === "합계" ? "" : numberToDate(item.date)
+                      ).day()
+                    ),
                   }}
                 >
                   {changeToComma(item.lazy_save_sum)}
@@ -424,17 +488,37 @@ const SoldOutReport = () => {
               refund_count: (item) => (
                 <td
                   style={{
-                    color: getDays(moment(numberToDate(item.date)).day()),
+                    color: getDays(
+                      moment(
+                        item.date === "합계" ? "" : numberToDate(item.date)
+                      ).day()
+                    ),
                   }}
                 >
                   {changeToComma(item.refund_count)}
                 </td>
               ),
-              refund_sum: (item) => <td>{changeToComma(item.refund_sum)}</td>,
+              refund_sum: (item) => (
+                <td
+                  style={{
+                    color: getDays(
+                      moment(
+                        item.date === "합계" ? "" : numberToDate(item.date)
+                      ).day()
+                    ),
+                  }}
+                >
+                  {changeToComma(item.refund_sum)}
+                </td>
+              ),
               exchange_conv_rate: (item) => (
                 <td
                   style={{
-                    color: getDays(moment(numberToDate(item.date)).day()),
+                    color: getDays(
+                      moment(
+                        item.date === "합계" ? "" : numberToDate(item.date)
+                      ).day()
+                    ),
                   }}
                 >
                   {changeToRate(item.exchange_conv_rate)}
@@ -443,7 +527,11 @@ const SoldOutReport = () => {
               save_conv_rate: (item) => (
                 <td
                   style={{
-                    color: getDays(moment(numberToDate(item.date)).day()),
+                    color: getDays(
+                      moment(
+                        item.date === "합계" ? "" : numberToDate(item.date)
+                      ).day()
+                    ),
                   }}
                 >
                   {changeToRate(item.save_conv_rate)}
@@ -452,7 +540,11 @@ const SoldOutReport = () => {
               refund_rate: (item) => (
                 <td
                   style={{
-                    color: getDays(moment(numberToDate(item.date)).day()),
+                    color: getDays(
+                      moment(
+                        item.date === "합계" ? "" : numberToDate(item.date)
+                      ).day()
+                    ),
                   }}
                 >
                   {changeToRate(item.refund_rate)}
