@@ -752,9 +752,9 @@ function SoldOutDetail({ match, location }) {
         <CModal show={msgModal} onClose={msgModalToggle}>
           <CModalHeader>안녕하세요, {shopName} 입니다</CModalHeader>
           <CModalBody>
-            {msg.split("\n").map((line) => {
+            {msg.split("\n").map((line, idx) => {
               return (
-                <span>
+                <span key={idx}>
                   {line}
                   <br />
                 </span>

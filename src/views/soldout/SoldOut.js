@@ -372,8 +372,8 @@ const SoldOut = () => {
     },
   ];
 
-  const previewToggle = (productNo, orderID) => {
-    var url = `https://sol.piclick.kr/soldOut/?mallID=rlackdals1&product_no=${productNo}&order_id=${orderID}`;
+  const previewToggle = (mallID, productNo, orderID) => {
+    var url = `https://sol.piclick.kr/soldOut/?mallID=${mallID}&product_no=${productNo}&order_id=${orderID}`;
     window.open(
       url,
       "_blank",
@@ -497,9 +497,7 @@ const SoldOut = () => {
             scopedSlots={{
               list_image: (item) => (
                 <td>
-                  <a
-                    href={`http://shescloset.com/product/detail.html?product_no=${item.product_id}`}
-                  >
+                  <a href={item.product_url}>
                     <img src={item.list_image} alt="" width="65px" />
                   </a>
                 </td>
@@ -513,7 +511,11 @@ const SoldOut = () => {
                     shape="square"
                     size="sm"
                     onClick={() => {
-                      previewToggle(item.product_id, item.order_id);
+                      previewToggle(
+                        item.mall_id,
+                        item.product_id,
+                        item.order_id
+                      );
                     }}
                   >
                     미리보기
