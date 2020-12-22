@@ -518,7 +518,11 @@ function SoldOutDetail({ match, location }) {
                       value={bankUserName}
                       onChange={onInputChange}
                     ></CInput>
-                    <CButton color="primary" onClick={postCsStatus}>
+                    <CButton
+                      color="primary"
+                      onClick={postCsStatus}
+                      disabled={csStatus === "*"}
+                    >
                       CS상태 변경
                     </CButton>
                   </CInputGroup>
@@ -548,7 +552,11 @@ function SoldOutDetail({ match, location }) {
                     {/* <option value="E">교환</option> */}
                     <option value="O">재입고</option>
                   </CSelect>
-                  <CButton color="primary" onClick={postCsStatus}>
+                  <CButton
+                    color="primary"
+                    onClick={postCsStatus}
+                    disabled={csStatus === "*"}
+                  >
                     CS상태 변경
                   </CButton>
                 </CInputGroup>
@@ -569,6 +577,12 @@ function SoldOutDetail({ match, location }) {
               </CInputGroup>
             </CCol>
           </CFormGroup>
+          <h6 style={{ color: "#999", textAlign: "right", fontSize: "12px" }}>
+            CS상태를 "판매중지"로 변경 불가능 하며, 다른 선택지가 선택되면
+            버튼이 활성화 됩니다.
+            <br />
+            이는 문자 중복 발신을 방지하기 위함이므로 양해 부탁드립니다.
+          </h6>
         </CCardBody>
       </CCard>
       <CCard>

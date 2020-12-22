@@ -218,8 +218,24 @@ const SoldOut = () => {
 
     if (name === "fromDate") {
       setFromDate(value);
+      if (toDate !== "") {
+        getSoldOut(
+          `?from_date=${moment(value).format("YYYYMMDD")}&to_date=${moment(
+            toDate
+          ).format("YYYYMMDD")}&date_type=${searchType}`,
+          token
+        );
+      }
     } else if (name === "toDate") {
       setToDate(value);
+      if (fromDate !== "") {
+        getSoldOut(
+          `?from_date=${moment(fromDate).format("YYYYMMDD")}&to_date=${moment(
+            value
+          ).format("YYYYMMDD")}&date_type=${searchType}`,
+          token
+        );
+      }
     }
   };
 
@@ -382,7 +398,7 @@ const SoldOut = () => {
                   value={toDate}
                   onChange={onChangeDate}
                 />
-                <CButton
+                {/* <CButton
                   color="primary"
                   style={{ marginLeft: "5px" }}
                   onClick={() => {
@@ -397,7 +413,7 @@ const SoldOut = () => {
                   }}
                 >
                   검색
-                </CButton>
+                </CButton> */}
               </CInputGroup>
             </CCol>
             <CCol xs="0">
@@ -439,6 +455,19 @@ const SoldOut = () => {
                     </CButton>
                   ))}
                 </CButtonGroup>
+                <CButton
+                  color="secondary"
+                  style={{ marginLeft: "5px" }}
+                  onClick={() => {
+                    setFromDate("");
+                    setToDate("");
+                    setDateType("");
+                    setSearchType("soldout");
+                    getSoldOut("", token);
+                  }}
+                >
+                  초기화
+                </CButton>
               </CInputGroup>
             </CCol>
           </CFormGroup>

@@ -204,8 +204,24 @@ const SoldOutReport = () => {
 
     if (name === "fromDate") {
       setFromDate(value);
+      if (toDate !== "") {
+        getReport(
+          `?from_date=${moment(value).format("YYYYMMDD")}&to_date=${moment(
+            toDate
+          ).format("YYYYMMDD")}`,
+          token
+        );
+      }
     } else if (name === "toDate") {
       setToDate(value);
+      if (fromDate !== "") {
+        getReport(
+          `?from_date=${moment(fromDate).format("YYYYMMDD")}&to_date=${moment(
+            value
+          ).format("YYYYMMDD")}`,
+          token
+        );
+      }
     }
   };
 
@@ -235,7 +251,7 @@ const SoldOutReport = () => {
                   value={toDate}
                   onChange={onChangeDate}
                 />
-                <CButton
+                {/* <CButton
                   color="primary"
                   style={{ marginLeft: "5px" }}
                   onClick={() => {
@@ -248,7 +264,7 @@ const SoldOutReport = () => {
                   }}
                 >
                   검색
-                </CButton>
+                </CButton> */}
               </CInputGroup>
             </CCol>
             <CCol>
@@ -267,6 +283,18 @@ const SoldOutReport = () => {
                     </CButton>
                   ))}
                 </CButtonGroup>
+                <CButton
+                  color="secondary"
+                  style={{ marginLeft: "5px" }}
+                  onClick={() => {
+                    setFromDate("");
+                    setToDate("");
+                    setDateType("");
+                    getReport("", token);
+                  }}
+                >
+                  초기화
+                </CButton>
               </CInputGroup>
             </CCol>
           </CFormGroup>
