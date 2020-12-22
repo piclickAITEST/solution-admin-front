@@ -32,6 +32,9 @@ const SoldOutReport = () => {
     setLoading(true);
     setRedirect(false);
     setReports([]);
+    setFromDate("");
+    setToDate("");
+    setDateType("");
   };
 
   function numberWithCommas(x) {
@@ -100,13 +103,15 @@ const SoldOutReport = () => {
     return <Redirect from="*" to="/login" />;
   }
 
+  // 요일 확인
   const getDays = (date) => {
     switch (date) {
-      case 0:
+      case 0: // 일요일
         return "red";
-      case 6:
+      case 6: // 토요일
         return "blue";
       default:
+        // 평일
         return "";
     }
   };
