@@ -313,7 +313,7 @@ const SoldOut = () => {
         width: "10%",
       },
     },
-    { key: "product_id", label: "상품명", sorter: false },
+    { key: "product_name", label: "상품명", sorter: false },
     {
       key: "option1",
       label: "옵션1",
