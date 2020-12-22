@@ -69,6 +69,10 @@ function SoldOutDetail({ match, location }) {
   const [toast, setToast] = useState(false);
   const [toastLog, setToastLog] = useState("");
   const [bankUserName, setBankUserName] = useState("");
+  const [excPrice, setExcPrice] = useState("");
+  const [excName, setExcName] = useState("");
+  const [excOpt1, setExcOpt1] = useState("");
+  const [excOpt2, setExcOpt2] = useState("");
 
   // component unmount 시 state 초기화
   const clearState = () => {
@@ -83,6 +87,10 @@ function SoldOutDetail({ match, location }) {
     setToast(false);
     setToastLog("");
     setBankUserName("");
+    setExcPrice("");
+    setExcName("");
+    setExcOpt1("");
+    setExcOpt2("");
   };
 
   // 은행 목록 가져오기
@@ -204,7 +212,7 @@ function SoldOutDetail({ match, location }) {
         url: `https://sol.piclick.kr/soldOut/saveOrder?mallID=${mallID}&product_no=${productNo}&order_id=${orderID}`,
       })
         .then((res) => {
-          if (res.data !== undefined || res.data !== null) {
+          if (res.data !== undefined) {
             if (res.data.status === "T") {
               const requestParam = {
                 action_code: csStatus,
@@ -223,7 +231,7 @@ function SoldOutDetail({ match, location }) {
                 data: requestParam,
               })
                 .then((res) => {
-                  if (res.data !== undefined || res.data !== null) {
+                  if (res.data !== undefined) {
                     enableToast("상태 변경을 하였습니다.");
                   }
                 })
@@ -264,7 +272,7 @@ function SoldOutDetail({ match, location }) {
             url: `https://sol.piclick.kr/soldOut/refundOrder?mallID=${mallID}&product_no=${productNo}&order_id=${orderID}`,
           })
             .then((res) => {
-              if (res.data !== undefined || res.data !== null) {
+              if (res.data !== undefined) {
                 if (res.data.status === "T") {
                   const requestParam = {
                     action_code: csStatus,
@@ -287,7 +295,7 @@ function SoldOutDetail({ match, location }) {
                     data: requestParam,
                   })
                     .then((res) => {
-                      if (res.data !== undefined || res.data !== null) {
+                      if (res.data !== undefined) {
                         enableToast("상태 변경을 하였습니다.");
                         getDetail(token);
                       }
@@ -327,7 +335,7 @@ function SoldOutDetail({ match, location }) {
           url: `https://sol.piclick.kr/soldOut/refundOrder?mallID=${mallID}&product_no=${productNo}&order_id=${orderID}`,
         })
           .then((res) => {
-            if (res.data !== undefined || res.data !== null) {
+            if (res.data !== undefined) {
               if (res.data.status === "T") {
                 const requestParam = {
                   action_code: csStatus,
@@ -346,7 +354,7 @@ function SoldOutDetail({ match, location }) {
                   data: requestParam,
                 })
                   .then((res) => {
-                    if (res.data !== undefined || res.data !== null) {
+                    if (res.data !== undefined) {
                       enableToast("상태 변경을 하였습니다.");
                       getDetail(token);
                     }
@@ -394,7 +402,7 @@ function SoldOutDetail({ match, location }) {
         data: requestParam,
       })
         .then((res) => {
-          if (res.data !== undefined || res.data !== null) {
+          if (res.data !== undefined) {
             enableToast("상태 변경을 하였습니다.");
             getDetail(token);
           }
@@ -406,6 +414,61 @@ function SoldOutDetail({ match, location }) {
             sessionStorage.removeItem("userName");
             setRedirect(true);
             return;
+          }
+        });
+    } else if (csStatus === "E") {
+      if (excName === "" || excPrice === "") {
+        return;
+      }
+      const requestParam = () => {
+        if (bankAccount === "" || bankUserName === "") {
+          return {
+            action_code: csStatus,
+            product_name: excName, // 새로운 교환품 이름
+            product_option1: excOpt1, // 새로운 교환품 옵션 1
+            product_option2: excOpt2, // 새로운 교환품 옵션2
+            price: excPrice, // 새로운 교환품 가격
+            idx: index,
+          };
+        } else {
+          return {
+            action_code: csStatus,
+            product_name: excName, // 새로운 교환품 이름
+            product_option1: excOpt1, // 새로운 교환품 옵션 1
+            product_option2: excOpt2, // 새로운 교환품 옵션2
+            price: excPrice, // 새로운 교환품 가격
+            bank_code_std: bankCode,
+            account_num: bankAccount,
+            bank_user_name: bankUserName,
+            idx: index,
+          };
+        }
+      };
+      console.log(requestParam());
+      // 교환 로그 API 전송
+      axios({
+        method: "post",
+        url: `https://sadmin.piclick.kr/soldout/action`,
+        headers: {
+          Authorization: `JWT ${token}`,
+        },
+        data: requestParam(),
+      })
+        .then((res) => {
+          if (res.data !== undefined) {
+            enableToast("상태 변경을 하였습니다.");
+            getDetail(token);
+          }
+        })
+        .catch((error) => {
+          if (error.response === undefined) {
+            enableToast("상태 변경 실패");
+          } else {
+            if (error.response.status === 401) {
+              sessionStorage.removeItem("userToken");
+              sessionStorage.removeItem("userName");
+              setRedirect(true);
+            }
           }
         });
     }
@@ -420,12 +483,25 @@ function SoldOutDetail({ match, location }) {
     if (regex.test(event.target.value)) {
       if (name === "bankAccount") {
         setBankAccount(value);
+      } else if (name === "excPrice") {
+        setExcPrice(value);
+      } else if (name === "excOpt1") {
+        setExcOpt1(value);
+      } else if (name === "excOpt2") {
+        setExcOpt2(value);
       }
     } else {
       if (name === "bankUserName") {
         setBankUserName(value);
+      } else if (name === "excName") {
+        setExcName(value);
+      } else if (name === "excOpt1") {
+        setExcOpt1(value);
+      } else if (name === "excOpt2") {
+        setExcOpt2(value);
       } else {
         setBankAccount("");
+        setExcPrice("");
       }
     }
   };
@@ -454,10 +530,18 @@ function SoldOutDetail({ match, location }) {
   const fields = [
     { key: "action_date", label: "상태 갱신 일자" },
     { key: "action", label: "처리상태" },
+    { key: "product_name", label: "교환 상품명" },
+    { key: "product_option1", label: "교환 상품 옵션1" },
+    { key: "product_option2", label: "교환 상품 옵션2" },
+    { key: "price", label: "교환 상품 가격" },
     { key: "bank_name", label: "은행명" },
     { key: "account_num", label: "계좌번호" },
     { key: "bank_user_name", label: "예금주" },
   ];
+
+  function numberWithCommas(x) {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
 
   return loading ? (
     <div className="d-flex justify-content-center align-items-center">
@@ -479,18 +563,18 @@ function SoldOutDetail({ match, location }) {
           <CFormGroup row>
             {paymentMethod === "cash" && csStatus === "R" ? (
               <>
-                <CCol lg="1">
+                <CCol lg="2">
                   <CSelect onChange={csSelectChange} value={csStatus}>
                     <option value="*" disabled>
                       판매중지
                     </option>
+                    <option value="E">교환</option>
                     <option value="R">환불</option>
                     <option value="S">적립</option>
-                    {/* <option value="E">교환</option> */}
                     <option value="O">재입고</option>
                   </CSelect>
                 </CCol>
-                <CCol lg="2">
+                <CCol lg="3">
                   <CInputGroup>
                     <CSelect value={bankCode} onChange={bankCodeOnChange}>
                       {bankList &&
@@ -502,16 +586,16 @@ function SoldOutDetail({ match, location }) {
                           );
                         })}
                     </CSelect>
-                  </CInputGroup>
-                </CCol>
-                <CCol lg="4">
-                  <CInputGroup>
                     <CInput
                       name="bankAccount"
                       value={bankAccount}
                       onChange={onInputChange}
                       placeholder="계좌번호"
                     />
+                  </CInputGroup>
+                </CCol>
+                <CCol lg="2">
+                  <CInputGroup>
                     <CInput
                       name="bankUserName"
                       placeholder="예금주"
@@ -527,29 +611,106 @@ function SoldOutDetail({ match, location }) {
                     </CButton>
                   </CInputGroup>
                 </CCol>
-                {/* <CCol xs="2">
-                  <CLabel>주민번호 앞자리</CLabel>
+              </>
+            ) : csStatus === "E" ? (
+              <>
+                <CCol lg="2">
                   <CInputGroup>
+                    <CSelect onChange={csSelectChange} value={csStatus}>
+                      <option value="*" disabled>
+                        판매중지
+                      </option>
+                      <option value="E">교환</option>
+                      <option value="R">환불</option>
+                      <option value="S">적립</option>
+                      <option value="O">재입고</option>
+                    </CSelect>
+                  </CInputGroup>
+                </CCol>
+                <CCol lg="3">
+                  <CInputGroup>
+                    <CSelect value={bankCode} onChange={bankCodeOnChange}>
+                      {bankList &&
+                        bankList.map((bank) => {
+                          return (
+                            <option value={bank.code} key={bank.code}>
+                              {bank.name}
+                            </option>
+                          );
+                        })}
+                    </CSelect>
                     <CInput
-                      name="countryCode"
-                      value={countryCode}
+                      name="bankAccount"
+                      value={bankAccount}
                       onChange={onInputChange}
-                      placeholder="주민번호 앞자리"
-                      type="number"
+                      placeholder="계좌번호"
                     />
                   </CInputGroup>
-                </CCol> */}
+                </CCol>
+                <CCol lg="2">
+                  <CInputGroup>
+                    <CInput
+                      name="bankUserName"
+                      placeholder="예금주"
+                      value={bankUserName}
+                      onChange={onInputChange}
+                    ></CInput>
+                  </CInputGroup>
+                </CCol>
+                <CCol>
+                  <CInputGroup>
+                    <CInput
+                      placeholder="상품명"
+                      name="excName"
+                      value={excName}
+                      onChange={onInputChange}
+                    />
+                  </CInputGroup>
+                </CCol>
+                <CCol>
+                  <CInputGroup>
+                    <CInput
+                      placeholder="옵션1"
+                      name="excOpt1"
+                      value={excOpt1}
+                      onChange={onInputChange}
+                    />
+                    <CInput
+                      placeholder="옵션2"
+                      name="excOpt2"
+                      value={excOpt2}
+                      onChange={onInputChange}
+                    />
+                  </CInputGroup>
+                </CCol>
+                <CCol>
+                  <CInputGroup>
+                    <CInput
+                      placeholder="가격"
+                      name="excPrice"
+                      value={excPrice}
+                      onChange={onInputChange}
+                    />
+                    <CButton
+                      color="primary"
+                      onClick={postCsStatus}
+                      disabled={csStatus === "*"}
+                    >
+                      CS상태 변경
+                    </CButton>
+                  </CInputGroup>
+                </CCol>
               </>
             ) : (
-              <CCol lg="2">
+              <CCol lg="3">
                 <CInputGroup>
                   <CSelect onChange={csSelectChange} value={csStatus}>
                     <option value="*" disabled>
                       판매중지
                     </option>
+                    <option value="E">교환</option>
                     <option value="R">환불</option>
                     <option value="S">적립</option>
-                    {/* <option value="E">교환</option> */}
                     <option value="O">재입고</option>
                   </CSelect>
                   <CButton
@@ -562,7 +723,9 @@ function SoldOutDetail({ match, location }) {
                 </CInputGroup>
               </CCol>
             )}
-            <CCol lg="3">
+          </CFormGroup>
+          <CFormGroup row>
+            <CCol>
               <CInputGroup>
                 <CButton
                   color="secondary"
@@ -576,13 +739,11 @@ function SoldOutDetail({ match, location }) {
                 </CButton>
               </CInputGroup>
             </CCol>
+            <h6 style={{ color: "#999", textAlign: "right", fontSize: "12px" }}>
+              문자 중복 전송을 방지하기 위해 CS상태를 "판매중지"로 변경 불가능
+              하며, 다른 선택지가 선택되면 버튼이 활성화 됩니다.
+            </h6>
           </CFormGroup>
-          <h6 style={{ color: "#999", textAlign: "right", fontSize: "12px" }}>
-            CS상태를 "판매중지"로 변경 불가능 하며, 다른 선택지가 선택되면
-            버튼이 활성화 됩니다.
-            <br />
-            이는 문자 중복 발신을 방지하기 위함이므로 양해 부탁드립니다.
-          </h6>
         </CCardBody>
       </CCard>
       <CCard>
@@ -591,6 +752,24 @@ function SoldOutDetail({ match, location }) {
             items={detail}
             fields={fields}
             scopedSlots={{
+              product_name: (item) => (
+                <td>{item.product_name !== null ? item.product_name : ""}</td>
+              ),
+              product_option1: (item) => (
+                <td>
+                  {item.product_option1 !== null ? item.product_option1 : ""}
+                </td>
+              ),
+              product_option2: (item) => (
+                <td>
+                  {item.product_option2 !== null ? item.product_option2 : ""}
+                </td>
+              ),
+              price: (item) => (
+                <td>
+                  {item.price !== null ? numberWithCommas(item.price) : ""}
+                </td>
+              ),
               bank_name: (item) => (
                 <td>{item.bank_name !== null ? item.bank_name : ""}</td>
               ),
