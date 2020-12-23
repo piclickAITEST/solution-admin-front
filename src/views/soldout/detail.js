@@ -515,7 +515,7 @@ function SoldOutDetail({ match, location }) {
           <CCardHeader>
             <Link to="/soldout">
               <CButton>
-                <CIcon name="cil-chevron-left" size="lg" />
+                <CIcon name="cil-arrow-left" size="lg" />
               </CButton>
             </Link>
           </CCardHeader>
@@ -580,11 +580,7 @@ function SoldOutDetail({ match, location }) {
                         disabled={csStatus === "*"}
                         size="sm"
                       >
-                        <CIcon
-                          size="sm"
-                          name="cil-check-alt"
-                          style={{ margin: 0, pading: 0 }}
-                        />
+                        CS 상태 적용
                       </CButton>
                     </CInputGroup>
                   </CCol>
@@ -688,11 +684,7 @@ function SoldOutDetail({ match, location }) {
                         disabled={csStatus === "*"}
                         size="sm"
                       >
-                        <CIcon
-                          size="sm"
-                          name="cil-check-alt"
-                          style={{ margin: 0, pading: 0 }}
-                        />
+                        CS 상태 적용
                       </CButton>
                     </CInputGroup>
                   </CCol>
@@ -719,11 +711,7 @@ function SoldOutDetail({ match, location }) {
                       disabled={csStatus === "*"}
                       size="sm"
                     >
-                      <CIcon
-                        size="sm"
-                        name="cil-check-alt"
-                        style={{ margin: 0, pading: 0 }}
-                      />
+                      CS 상태 적용
                     </CButton>
                   </CInputGroup>
                 </CCol>

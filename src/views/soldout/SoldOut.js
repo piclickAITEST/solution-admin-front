@@ -28,7 +28,6 @@ import {
   CDataTable,
 } from "@coreui/react";
 import { Link, Redirect } from "react-router-dom";
-import CIcon from "@coreui/icons-react";
 
 const SoldOut = () => {
   const token = sessionStorage.getItem("userToken");
@@ -517,11 +516,7 @@ const SoldOut = () => {
                   onClick={resetFilter}
                   size="sm"
                 >
-                  <CIcon
-                    name="cil-filter-x"
-                    size="sm"
-                    style={{ margin: 0, pading: 0 }}
-                  />
+                  날짜선택 초기화
                 </CButton>
               </CInputGroup>
             </CCol>
