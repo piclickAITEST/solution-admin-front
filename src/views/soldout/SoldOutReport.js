@@ -5,7 +5,6 @@ import {
   CButtonGroup,
   CCard,
   CCardBody,
-  CCardHeader,
   CCol,
   CDataTable,
   CFormGroup,
@@ -300,7 +299,6 @@ const SoldOutReport = () => {
         </CCardBody>
       </CCard>
       <CCard>
-        <CCardHeader>일별 통계</CCardHeader>
         <CCardBody>
           <CDataTable
             items={reports}
