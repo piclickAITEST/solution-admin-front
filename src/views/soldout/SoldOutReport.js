@@ -16,6 +16,7 @@ import {
 } from "@coreui/react";
 import { Redirect } from "react-router-dom";
 import moment from "moment";
+import CIcon from "@coreui/icons-react";
 
 const SoldOutReport = () => {
   const token = sessionStorage.getItem("userToken");
@@ -240,7 +241,7 @@ const SoldOutReport = () => {
       <CCard>
         <CCardBody>
           <CFormGroup row>
-            <CCol xs="3">
+            <CCol sm="12" lg="auto" style={{ marginTop: "5px" }}>
               <CLabel>시작일/종료일</CLabel>
               <CInputGroup>
                 <CInput
@@ -249,6 +250,7 @@ const SoldOutReport = () => {
                   name="fromDate"
                   value={fromDate}
                   onChange={onChangeDate}
+                  size="sm"
                 />
                 <CInput
                   type="date"
@@ -256,10 +258,11 @@ const SoldOutReport = () => {
                   name="toDate"
                   value={toDate}
                   onChange={onChangeDate}
+                  size="sm"
                 />
               </CInputGroup>
             </CCol>
-            <CCol>
+            <CCol sm="12" lg="auto" style={{ marginTop: "5px" }}>
               <CLabel>날짜 선택범위</CLabel>
               <CInputGroup>
                 <CButtonGroup>
@@ -270,6 +273,7 @@ const SoldOutReport = () => {
                       className="mx-0"
                       onClick={changeDateType}
                       active={value === dateType}
+                      size="sm"
                     >
                       {value}
                     </CButton>
@@ -284,8 +288,13 @@ const SoldOutReport = () => {
                     setDateType("");
                     getReport("", token);
                   }}
+                  size="sm"
                 >
-                  검색 필터 초기화
+                  <CIcon
+                    name="cil-filter-x"
+                    size="sm"
+                    style={{ margin: 0, pading: 0 }}
+                  />
                 </CButton>
               </CInputGroup>
             </CCol>

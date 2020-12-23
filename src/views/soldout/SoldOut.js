@@ -28,6 +28,7 @@ import {
   CDataTable,
 } from "@coreui/react";
 import { Link, Redirect } from "react-router-dom";
+import CIcon from "@coreui/icons-react";
 
 const SoldOut = () => {
   const token = sessionStorage.getItem("userToken");
@@ -448,7 +449,7 @@ const SoldOut = () => {
       <CCard>
         <CCardBody>
           <CFormGroup row>
-            <CCol xs="3">
+            <CCol sm="12" lg="auto" style={{ marginTop: "5px" }}>
               <CLabel>시작일/종료일</CLabel>
               <CInputGroup>
                 <CInput
@@ -457,6 +458,7 @@ const SoldOut = () => {
                   name="fromDate"
                   value={fromDate}
                   onChange={onChangeDate}
+                  size="sm"
                 />
                 <CInput
                   type="date"
@@ -464,10 +466,11 @@ const SoldOut = () => {
                   name="toDate"
                   value={toDate}
                   onChange={onChangeDate}
+                  size="sm"
                 />
               </CInputGroup>
             </CCol>
-            <CCol xs="0">
+            <CCol sm="auto" style={{ marginTop: "5px" }}>
               <CLabel>날짜 선택범위</CLabel>
               <CInputGroup>
                 <CButtonGroup>
@@ -478,6 +481,7 @@ const SoldOut = () => {
                       className="mx-0"
                       active={value === dateType}
                       onClick={changeDateType}
+                      size="sm"
                     >
                       {value}
                     </CButton>
@@ -485,7 +489,7 @@ const SoldOut = () => {
                 </CButtonGroup>
               </CInputGroup>
             </CCol>
-            <CCol>
+            <CCol sm="auto" style={{ marginTop: "5px" }}>
               <CLabel>날짜 선택기준</CLabel>
               <CInputGroup>
                 <CButtonGroup>
@@ -501,6 +505,7 @@ const SoldOut = () => {
                       active={value[1] === searchType}
                       value={value[1]}
                       onClick={changeSearchType}
+                      size="sm"
                     >
                       {value[0]}
                     </CButton>
@@ -510,8 +515,13 @@ const SoldOut = () => {
                   color="secondary"
                   style={{ marginLeft: "5px" }}
                   onClick={resetFilter}
+                  size="sm"
                 >
-                  검색 필터 초기화
+                  <CIcon
+                    name="cil-filter-x"
+                    size="sm"
+                    style={{ margin: 0, pading: 0 }}
+                  />
                 </CButton>
               </CInputGroup>
             </CCol>
@@ -536,7 +546,9 @@ const SoldOut = () => {
               noResults: "검색결과가 없습니다",
               noItems: "데이터가 존재하지 않습니다.",
             }}
-            pagination
+            pagination={{
+              size: "sm",
+            }}
             sorter
             tableFilter={{
               label: "검색",
@@ -545,7 +557,6 @@ const SoldOut = () => {
             outlined
             responsive
             hover
-            cleaner
             scopedSlots={{
               list_image: (item) => (
                 <td>

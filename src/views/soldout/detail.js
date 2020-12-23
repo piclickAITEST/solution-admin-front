@@ -513,7 +513,7 @@ function SoldOutDetail({ match, location }) {
       <div>
         <CCard>
           <CCardHeader>
-            <Link to="/soldout_new">
+            <Link to="/soldout">
               <CButton>
                 <CIcon name="cil-chevron-left" size="lg" />
               </CButton>
@@ -525,8 +525,12 @@ function SoldOutDetail({ match, location }) {
             <CFormGroup row>
               {paymentMethod === "cash" && csStatus === "R" ? (
                 <>
-                  <CCol lg="2">
-                    <CSelect onChange={csSelectChange} value={csStatus}>
+                  <CCol sm="12" lg="auto" style={{ marginTop: "5px" }}>
+                    <CSelect
+                      onChange={csSelectChange}
+                      value={csStatus}
+                      size="sm"
+                    >
                       <option value="*" disabled>
                         판매중지
                       </option>
@@ -536,9 +540,13 @@ function SoldOutDetail({ match, location }) {
                       <option value="O">재입고</option>
                     </CSelect>
                   </CCol>
-                  <CCol lg="3">
+                  <CCol sm="12" lg="auto" style={{ marginTop: "5px" }}>
                     <CInputGroup>
-                      <CSelect value={bankCode} onChange={bankCodeOnChange}>
+                      <CSelect
+                        value={bankCode}
+                        onChange={bankCodeOnChange}
+                        size="sm"
+                      >
                         {bankList &&
                           bankList.map((bank) => {
                             return (
@@ -553,32 +561,43 @@ function SoldOutDetail({ match, location }) {
                         value={bankAccount}
                         onChange={onInputChange}
                         placeholder="계좌번호"
+                        size="sm"
                       />
                     </CInputGroup>
                   </CCol>
-                  <CCol lg="2">
+                  <CCol xs="12" lg="auto" style={{ marginTop: "5px" }}>
                     <CInputGroup>
                       <CInput
                         name="bankUserName"
                         placeholder="예금주"
                         value={bankUserName}
                         onChange={onInputChange}
+                        size="sm"
                       ></CInput>
                       <CButton
                         color="primary"
                         onClick={postCsStatus}
                         disabled={csStatus === "*"}
+                        size="sm"
                       >
-                        CS상태 변경
+                        <CIcon
+                          size="sm"
+                          name="cil-check-alt"
+                          style={{ margin: 0, pading: 0 }}
+                        />
                       </CButton>
                     </CInputGroup>
                   </CCol>
                 </>
               ) : csStatus === "E" ? (
                 <>
-                  <CCol lg="2">
+                  <CCol sm="12" lg="auto" style={{ marginTop: "5px" }}>
                     <CInputGroup>
-                      <CSelect onChange={csSelectChange} value={csStatus}>
+                      <CSelect
+                        onChange={csSelectChange}
+                        value={csStatus}
+                        size="sm"
+                      >
                         <option value="*" disabled>
                           판매중지
                         </option>
@@ -589,9 +608,13 @@ function SoldOutDetail({ match, location }) {
                       </CSelect>
                     </CInputGroup>
                   </CCol>
-                  <CCol lg="3">
+                  <CCol sm="12" lg="auto" style={{ marginTop: "5px" }}>
                     <CInputGroup>
-                      <CSelect value={bankCode} onChange={bankCodeOnChange}>
+                      <CSelect
+                        value={bankCode}
+                        onChange={bankCodeOnChange}
+                        size="sm"
+                      >
                         {bankList &&
                           bankList.map((bank) => {
                             return (
@@ -606,67 +629,82 @@ function SoldOutDetail({ match, location }) {
                         value={bankAccount}
                         onChange={onInputChange}
                         placeholder="계좌번호"
+                        size="sm"
                       />
                     </CInputGroup>
                   </CCol>
-                  <CCol lg="2">
+                  <CCol sm="12" lg="auto" style={{ marginTop: "5px" }}>
                     <CInputGroup>
                       <CInput
                         name="bankUserName"
                         placeholder="예금주"
                         value={bankUserName}
                         onChange={onInputChange}
-                      ></CInput>
+                        size="sm"
+                      />
                     </CInputGroup>
                   </CCol>
-                  <CCol>
+                  <CCol sm="12" lg="auto" style={{ marginTop: "5px" }}>
                     <CInputGroup>
                       <CInput
                         placeholder="상품명"
                         name="excName"
                         value={excName}
                         onChange={onInputChange}
+                        size="sm"
                       />
                     </CInputGroup>
                   </CCol>
-                  <CCol>
+                  <CCol sm="12" lg="2" style={{ marginTop: "5px" }}>
                     <CInputGroup>
                       <CInput
                         placeholder="옵션1"
                         name="excOpt1"
                         value={excOpt1}
                         onChange={onInputChange}
+                        size="sm"
                       />
                       <CInput
                         placeholder="옵션2"
                         name="excOpt2"
                         value={excOpt2}
                         onChange={onInputChange}
+                        size="sm"
                       />
                     </CInputGroup>
                   </CCol>
-                  <CCol>
+                  <CCol sm="12" lg="auto" style={{ marginTop: "5px" }}>
                     <CInputGroup>
                       <CInput
                         placeholder="가격"
                         name="excPrice"
                         value={excPrice}
                         onChange={onInputChange}
+                        size="sm"
                       />
                       <CButton
                         color="primary"
                         onClick={postCsStatus}
                         disabled={csStatus === "*"}
+                        size="sm"
                       >
-                        CS상태 변경
+                        <CIcon
+                          size="sm"
+                          name="cil-check-alt"
+                          style={{ margin: 0, pading: 0 }}
+                        />
                       </CButton>
                     </CInputGroup>
                   </CCol>
                 </>
               ) : (
-                <CCol lg="3">
+                <CCol sm="12" lg="auto" style={{ marginTop: "5px" }}>
                   <CInputGroup>
-                    <CSelect onChange={csSelectChange} value={csStatus}>
+                    <CSelect
+                      onChange={csSelectChange}
+                      value={csStatus}
+                      size="sm"
+                    >
                       <option value="*" disabled>
                         판매중지
                       </option>
@@ -679,35 +717,39 @@ function SoldOutDetail({ match, location }) {
                       color="primary"
                       onClick={postCsStatus}
                       disabled={csStatus === "*"}
+                      size="sm"
                     >
-                      CS상태 변경
+                      <CIcon
+                        size="sm"
+                        name="cil-check-alt"
+                        style={{ margin: 0, pading: 0 }}
+                      />
                     </CButton>
                   </CInputGroup>
                 </CCol>
               )}
             </CFormGroup>
             <CFormGroup row>
-              <CCol>
+              <CCol sm="12" lg="auto" style={{ marginTop: "5px" }}>
                 <CInputGroup>
                   <CButton
                     color="secondary"
                     onClick={previewToggle}
                     style={{ marginRight: "5px" }}
+                    size="sm"
                   >
                     전송된 품절 추천 페이지
                   </CButton>
-                  <CButton color="secondary" onClick={msgModalToggle}>
+                  <CButton color="secondary" onClick={msgModalToggle} size="sm">
                     메시지 내용
                   </CButton>
                 </CInputGroup>
               </CCol>
-              <h6
-                style={{ color: "#999", textAlign: "right", fontSize: "12px" }}
-              >
-                문자 중복 전송을 방지하기 위해 CS상태를 "판매중지"로 변경 불가능
-                하며, 다른 선택지가 선택되면 버튼이 활성화 됩니다.
-              </h6>
             </CFormGroup>
+            <h6 style={{ color: "#999", textAlign: "right", fontSize: "12px" }}>
+              문자 중복 전송을 방지하기 위해 CS상태를 "판매중지"로 변경 불가능
+              하며, 다른 선택지가 선택되면 버튼이 활성화 됩니다.
+            </h6>
           </CCardBody>
         </CCard>
         <CCard>
