@@ -316,7 +316,7 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
-                    background: idx === 0 ? "#cacfd6" : "",
+                    background: idx === 0 ? "#e4e4e4" : "",
                   }}
                 >
                   {item.date === "합계" ? "합계" : numberToDate(item.date)}
@@ -330,7 +330,7 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
-                    background: idx === 0 ? "#cacfd6" : "",
+                    background: idx === 0 ? "#e4e4e4" : "",
                   }}
                 >
                   {changeToComma(item.order_count)}
@@ -344,7 +344,7 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
-                    background: idx === 0 ? "#cacfd6" : "",
+                    background: idx === 0 ? "#e4e4e4" : "",
                   }}
                 >
                   {changeToComma(item.soldout_count)}
@@ -358,7 +358,7 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
-                    background: idx === 0 ? "#cacfd6" : "",
+                    background: idx === 0 ? "#e4e4e4" : "",
                   }}
                 >
                   {changeToRate(item.soldout_rate)}
@@ -372,7 +372,7 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
-                    background: idx === 0 ? "#cacfd6" : "",
+                    background: idx === 0 ? "#e4e4e4" : "",
                   }}
                 >
                   {changeToComma(item.message_sent_count)}
@@ -386,7 +386,7 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
-                    background: idx === 0 ? "#cacfd6" : "",
+                    background: idx === 0 ? "#e4e4e4" : "",
                   }}
                 >
                   {changeToComma(item.user_count)}
@@ -400,7 +400,7 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
-                    background: idx === 0 ? "#cacfd6" : "",
+                    background: idx === 0 ? "#e4e4e4" : "",
                   }}
                 >
                   {changeToComma(item.unknown_user_count)}
@@ -414,7 +414,7 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
-                    background: idx === 0 ? "#cacfd6" : "",
+                    background: idx === 0 ? "#e4e4e4" : "",
                   }}
                 >
                   {changeToComma(item.reco_view_count)}
@@ -428,7 +428,7 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
-                    background: idx === 0 ? "#cacfd6" : "",
+                    background: idx === 0 ? "#e4e4e4" : "",
                   }}
                 >
                   {changeToComma(item.exchange_conv_count)}
@@ -442,7 +442,7 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
-                    background: idx === 0 ? "#cacfd6" : "",
+                    background: idx === 0 ? "#e4e4e4" : "",
                   }}
                 >
                   {changeToComma(item.exchange_conv_sum)}
@@ -456,7 +456,7 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
-                    background: idx === 0 ? "#cacfd6" : "",
+                    background: idx === 0 ? "#e4e4e4" : "",
                   }}
                 >
                   {changeToComma(item.save_conv_count)}
@@ -470,7 +470,7 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
-                    background: idx === 0 ? "#cacfd6" : "",
+                    background: idx === 0 ? "#e4e4e4" : "",
                   }}
                 >
                   {changeToComma(item.save_conv_sum)}
@@ -484,7 +484,7 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
-                    background: idx === 0 ? "#cacfd6" : "",
+                    background: idx === 0 ? "#e4e4e4" : "",
                   }}
                 >
                   {changeToComma(item.lazy_save_count)}
@@ -498,7 +498,7 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
-                    background: idx === 0 ? "#cacfd6" : "",
+                    background: idx === 0 ? "#e4e4e4" : "",
                   }}
                 >
                   {changeToComma(item.lazy_save_sum)}
@@ -512,7 +512,7 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
-                    background: idx === 0 ? "#cacfd6" : "",
+                    background: idx === 0 ? "#e4e4e4" : "",
                   }}
                 >
                   {changeToComma(item.refund_count)}
@@ -526,7 +526,7 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
-                    background: idx === 0 ? "#cacfd6" : "",
+                    background: idx === 0 ? "#e4e4e4" : "",
                   }}
                 >
                   {changeToComma(item.refund_sum)}
@@ -540,7 +540,7 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
-                    background: idx === 0 ? "#cacfd6" : "",
+                    background: idx === 0 ? "#e4e4e4" : "",
                   }}
                 >
                   {changeToRate(item.exchange_conv_rate)}
@@ -554,7 +554,7 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
-                    background: idx === 0 ? "#cacfd6" : "",
+                    background: idx === 0 ? "#e4e4e4" : "",
                   }}
                 >
                   {changeToRate(item.save_conv_rate)}
@@ -568,7 +568,7 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
-                    background: idx === 0 ? "#cacfd6" : "",
+                    background: idx === 0 ? "#e4e4e4" : "",
                   }}
                 >
                   {changeToRate(item.refund_rate)}
