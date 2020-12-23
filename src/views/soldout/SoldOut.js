@@ -417,7 +417,7 @@ const SoldOut = () => {
   };
 
   const previewToggle = (mallID, productNo, orderID) => {
-    var url = `https://sol.piclick.kr/soldOut/?mallID=${mallID}&product_no=${productNo}&order_id=${orderID}`;
+    var url = `https://sol.piclick.kr/soldOut/?mallID=${mallID}&product_no=${productNo}&order_id=${orderID}&is_admin=True`;
     window.open(
       url,
       "_blank",

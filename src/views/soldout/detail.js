@@ -43,8 +43,7 @@ function SoldOutDetail({ match, location }) {
   const [bankUserName, setBankUserName] = useState("");
   const [excPrice, setExcPrice] = useState("");
   const [excName, setExcName] = useState("");
-  const [excOpt1, setExcOpt1] = useState("");
-  const [excOpt2, setExcOpt2] = useState("");
+  const [excOpt, setExcOpt] = useState("");
   const [msg, setMsg] = useState("");
 
   // component unmount 시 state 초기화
@@ -62,8 +61,7 @@ function SoldOutDetail({ match, location }) {
     setBankUserName("");
     setExcPrice("");
     setExcName("");
-    setExcOpt1("");
-    setExcOpt2("");
+    setExcOpt("");
     setMsg("");
   };
 
@@ -138,7 +136,13 @@ function SoldOutDetail({ match, location }) {
     }
 
     getDetail(token);
-    return () => clearState();
+    const getEveryTimes = setInterval(() => {
+      getDetail(token);
+    }, 60000 * 10);
+    return () => {
+      clearInterval(getEveryTimes);
+      clearState();
+    };
   }, [token, getDetail]);
 
   // CS상태 최초 Select 변경
@@ -267,7 +271,7 @@ function SoldOutDetail({ match, location }) {
 
         axios({
           method: "get",
-          url: `https://sol.piclick.kr/soldOut/refundOrder?mallID=${mallID}&product_no=${productNo}&order_id=${orderID}`,
+          url: `https://sol.piclick.kr/soldOut/refundOrder?mallID=${mallID}&product_no=${productNo}&order_id=${orderID}&is_admin=True`,
         })
           .then((res) => {
             if (res.data !== undefined) {
@@ -375,8 +379,7 @@ function SoldOutDetail({ match, location }) {
             return {
               action_code: csStatus,
               product_name: excName, // 새로운 교환품 이름
-              product_option1: excOpt1, // 새로운 교환품 옵션 1
-              product_option2: excOpt2, // 새로운 교환품 옵션2
+              product_option1: excOpt, // 새로운 교환품 옵션
               price: excPrice, // 새로운 교환품 가격
               idx: index,
             };
@@ -384,8 +387,7 @@ function SoldOutDetail({ match, location }) {
             return {
               action_code: csStatus,
               product_name: excName, // 새로운 교환품 이름
-              product_option1: excOpt1, // 새로운 교환품 옵션 1
-              product_option2: excOpt2, // 새로운 교환품 옵션2
+              product_option1: excOpt, // 새로운 교환품 옵션
               price: excPrice, // 새로운 교환품 가격
               bank_code_std: bankCode,
               account_num: bankAccount,
@@ -434,10 +436,8 @@ function SoldOutDetail({ match, location }) {
           setBankAccount(value);
         } else if (name === "excPrice") {
           setExcPrice(value);
-        } else if (name === "excOpt1") {
-          setExcOpt1(value);
-        } else if (name === "excOpt2") {
-          setExcOpt2(value);
+        } else if (name === "excOpt") {
+          setExcOpt(value);
         }
       } else {
         if (name === "bankAccount") {
@@ -446,10 +446,8 @@ function SoldOutDetail({ match, location }) {
           setBankUserName(value);
         } else if (name === "excName") {
           setExcName(value);
-        } else if (name === "excOpt1") {
-          setExcOpt1(value);
-        } else if (name === "excOpt2") {
-          setExcOpt2(value);
+        } else if (name === "excOpt") {
+          setExcOpt(value);
         } else {
           setBankAccount("");
           setExcPrice("");
@@ -493,8 +491,7 @@ function SoldOutDetail({ match, location }) {
       { key: "action_date", label: "상태 갱신 일자" },
       { key: "action", label: "처리상태" },
       { key: "product_name", label: "교환 상품명" },
-      { key: "product_option1", label: "교환 상품 옵션1" },
-      { key: "product_option2", label: "교환 상품 옵션2" },
+      { key: "product_option1", label: "교환 상품 옵션" },
       { key: "price", label: "교환 상품 가격" },
       { key: "bank_name", label: "은행명" },
       { key: "account_num", label: "계좌번호" },
@@ -654,16 +651,9 @@ function SoldOutDetail({ match, location }) {
                   <CCol sm="12" lg="2" style={{ marginTop: "5px" }}>
                     <CInputGroup>
                       <CInput
-                        placeholder="옵션1"
-                        name="excOpt1"
-                        value={excOpt1}
-                        onChange={onInputChange}
-                        size="sm"
-                      />
-                      <CInput
-                        placeholder="옵션2"
-                        name="excOpt2"
-                        value={excOpt2}
+                        placeholder="옵션"
+                        name="excOpt"
+                        value={excOpt}
                         onChange={onInputChange}
                         size="sm"
                       />
@@ -752,11 +742,6 @@ function SoldOutDetail({ match, location }) {
                 product_option1: (item) => (
                   <td>
                     {item.product_option1 !== null ? item.product_option1 : ""}
-                  </td>
-                ),
-                product_option2: (item) => (
-                  <td>
-                    {item.product_option2 !== null ? item.product_option2 : ""}
                   </td>
                 ),
                 price: (item) => (
