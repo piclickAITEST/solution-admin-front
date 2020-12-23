@@ -308,7 +308,7 @@ const SoldOutReport = () => {
             outlined
             responsive
             scopedSlots={{
-              date: (item) => (
+              date: (item, idx) => (
                 <td
                   style={{
                     color: getDays(
@@ -316,12 +316,13 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
+                    background: idx === 0 ? "#cacfd6" : "",
                   }}
                 >
                   {item.date === "합계" ? "합계" : numberToDate(item.date)}
                 </td>
               ),
-              order_count: (item) => (
+              order_count: (item, idx) => (
                 <td
                   style={{
                     color: getDays(
@@ -329,12 +330,13 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
+                    background: idx === 0 ? "#cacfd6" : "",
                   }}
                 >
                   {changeToComma(item.order_count)}
                 </td>
               ),
-              soldout_count: (item) => (
+              soldout_count: (item, idx) => (
                 <td
                   style={{
                     color: getDays(
@@ -342,12 +344,13 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
+                    background: idx === 0 ? "#cacfd6" : "",
                   }}
                 >
                   {changeToComma(item.soldout_count)}
                 </td>
               ),
-              soldout_rate: (item) => (
+              soldout_rate: (item, idx) => (
                 <td
                   style={{
                     color: getDays(
@@ -355,12 +358,13 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
+                    background: idx === 0 ? "#cacfd6" : "",
                   }}
                 >
                   {changeToRate(item.soldout_rate)}
                 </td>
               ),
-              message_sent_count: (item) => (
+              message_sent_count: (item, idx) => (
                 <td
                   style={{
                     color: getDays(
@@ -368,12 +372,13 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
+                    background: idx === 0 ? "#cacfd6" : "",
                   }}
                 >
                   {changeToComma(item.message_sent_count)}
                 </td>
               ),
-              user_count: (item) => (
+              user_count: (item, idx) => (
                 <td
                   style={{
                     color: getDays(
@@ -381,12 +386,13 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
+                    background: idx === 0 ? "#cacfd6" : "",
                   }}
                 >
                   {changeToComma(item.user_count)}
                 </td>
               ),
-              unknown_user_count: (item) => (
+              unknown_user_count: (item, idx) => (
                 <td
                   style={{
                     color: getDays(
@@ -394,12 +400,13 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
+                    background: idx === 0 ? "#cacfd6" : "",
                   }}
                 >
                   {changeToComma(item.unknown_user_count)}
                 </td>
               ),
-              reco_view_count: (item) => (
+              reco_view_count: (item, idx) => (
                 <td
                   style={{
                     color: getDays(
@@ -407,12 +414,13 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
+                    background: idx === 0 ? "#cacfd6" : "",
                   }}
                 >
                   {changeToComma(item.reco_view_count)}
                 </td>
               ),
-              exchange_conv_count: (item) => (
+              exchange_conv_count: (item, idx) => (
                 <td
                   style={{
                     color: getDays(
@@ -420,12 +428,13 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
+                    background: idx === 0 ? "#cacfd6" : "",
                   }}
                 >
                   {changeToComma(item.exchange_conv_count)}
                 </td>
               ),
-              exchange_conv_sum: (item) => (
+              exchange_conv_sum: (item, idx) => (
                 <td
                   style={{
                     color: getDays(
@@ -433,12 +442,13 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
+                    background: idx === 0 ? "#cacfd6" : "",
                   }}
                 >
                   {changeToComma(item.exchange_conv_sum)}
                 </td>
               ),
-              save_conv_count: (item) => (
+              save_conv_count: (item, idx) => (
                 <td
                   style={{
                     color: getDays(
@@ -446,12 +456,13 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
+                    background: idx === 0 ? "#cacfd6" : "",
                   }}
                 >
                   {changeToComma(item.save_conv_count)}
                 </td>
               ),
-              save_conv_sum: (item) => (
+              save_conv_sum: (item, idx) => (
                 <td
                   style={{
                     color: getDays(
@@ -459,12 +470,13 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
+                    background: idx === 0 ? "#cacfd6" : "",
                   }}
                 >
                   {changeToComma(item.save_conv_sum)}
                 </td>
               ),
-              lazy_save_count: (item) => (
+              lazy_save_count: (item, idx) => (
                 <td
                   style={{
                     color: getDays(
@@ -472,12 +484,13 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
+                    background: idx === 0 ? "#cacfd6" : "",
                   }}
                 >
                   {changeToComma(item.lazy_save_count)}
                 </td>
               ),
-              lazy_save_sum: (item) => (
+              lazy_save_sum: (item, idx) => (
                 <td
                   style={{
                     color: getDays(
@@ -485,12 +498,13 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
+                    background: idx === 0 ? "#cacfd6" : "",
                   }}
                 >
                   {changeToComma(item.lazy_save_sum)}
                 </td>
               ),
-              refund_count: (item) => (
+              refund_count: (item, idx) => (
                 <td
                   style={{
                     color: getDays(
@@ -498,12 +512,13 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
+                    background: idx === 0 ? "#cacfd6" : "",
                   }}
                 >
                   {changeToComma(item.refund_count)}
                 </td>
               ),
-              refund_sum: (item) => (
+              refund_sum: (item, idx) => (
                 <td
                   style={{
                     color: getDays(
@@ -511,12 +526,13 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
+                    background: idx === 0 ? "#cacfd6" : "",
                   }}
                 >
                   {changeToComma(item.refund_sum)}
                 </td>
               ),
-              exchange_conv_rate: (item) => (
+              exchange_conv_rate: (item, idx) => (
                 <td
                   style={{
                     color: getDays(
@@ -524,12 +540,13 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
+                    background: idx === 0 ? "#cacfd6" : "",
                   }}
                 >
                   {changeToRate(item.exchange_conv_rate)}
                 </td>
               ),
-              save_conv_rate: (item) => (
+              save_conv_rate: (item, idx) => (
                 <td
                   style={{
                     color: getDays(
@@ -537,12 +554,13 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
+                    background: idx === 0 ? "#cacfd6" : "",
                   }}
                 >
                   {changeToRate(item.save_conv_rate)}
                 </td>
               ),
-              refund_rate: (item) => (
+              refund_rate: (item, idx) => (
                 <td
                   style={{
                     color: getDays(
@@ -550,6 +568,7 @@ const SoldOutReport = () => {
                         item.date === "합계" ? "" : numberToDate(item.date)
                       ).day()
                     ),
+                    background: idx === 0 ? "#cacfd6" : "",
                   }}
                 >
                   {changeToRate(item.refund_rate)}
