@@ -219,6 +219,31 @@ const SoldOut = () => {
     if (name === "fromDate") {
       setFromDate(value);
       if (toDate !== "") {
+        // 날짜에 따라 선택범위 버튼 자동선택
+        if (
+          value === moment().format("YYYY-MM-DD") &&
+          toDate === moment().format("YYYY-MM-DD")
+        ) {
+          setDateType("오늘");
+        } else if (
+          value === moment().subtract(1, "days").format("YYYY-MM-DD") &&
+          toDate === moment().subtract(1, "days").format("YYYY-MM-DD")
+        ) {
+          setDateType("어제");
+        } else if (
+          value === moment().subtract(1, "weeks").format("YYYY-MM-DD") &&
+          toDate === moment().format("YYYY-MM-DD")
+        ) {
+          setDateType("1주");
+        } else if (
+          value === moment().subtract(1, "months").format("YYYY-MM-DD") &&
+          toDate === moment().format("YYYY-MM-DD")
+        ) {
+          setDateType("1개월");
+        } else {
+          setDateType("");
+        }
+
         getSoldOut(
           `?from_date=${moment(value).format("YYYYMMDD")}&to_date=${moment(
             toDate
@@ -229,6 +254,31 @@ const SoldOut = () => {
     } else if (name === "toDate") {
       setToDate(value);
       if (fromDate !== "") {
+        // 날짜에 따라 선택범위 버튼 자동선택
+        if (
+          fromDate === moment().format("YYYY-MM-DD") &&
+          value === moment().format("YYYY-MM-DD")
+        ) {
+          setDateType("오늘");
+        } else if (
+          fromDate === moment().subtract(1, "days").format("YYYY-MM-DD") &&
+          value === moment().subtract(1, "days").format("YYYY-MM-DD")
+        ) {
+          setDateType("어제");
+        } else if (
+          fromDate === moment().subtract(1, "weeks").format("YYYY-MM-DD") &&
+          value === moment().format("YYYY-MM-DD")
+        ) {
+          setDateType("1주");
+        } else if (
+          fromDate === moment().subtract(1, "months").format("YYYY-MM-DD") &&
+          value === moment().format("YYYY-MM-DD")
+        ) {
+          setDateType("1개월");
+        } else {
+          setDateType("");
+        }
+
         getSoldOut(
           `?from_date=${moment(fromDate).format("YYYYMMDD")}&to_date=${moment(
             value
@@ -372,6 +422,14 @@ const SoldOut = () => {
     },
   ];
 
+  const resetFilter = () => {
+    setFromDate("");
+    setToDate("");
+    setDateType("");
+    setSearchType("soldout");
+    getSoldOut("", token);
+  };
+
   const previewToggle = (mallID, productNo, orderID) => {
     var url = `https://sol.piclick.kr/soldOut/?mallID=${mallID}&product_no=${productNo}&order_id=${orderID}`;
     window.open(
@@ -451,13 +509,7 @@ const SoldOut = () => {
                 <CButton
                   color="secondary"
                   style={{ marginLeft: "5px" }}
-                  onClick={() => {
-                    setFromDate("");
-                    setToDate("");
-                    setDateType("");
-                    setSearchType("soldout");
-                    getSoldOut("", token);
-                  }}
+                  onClick={resetFilter}
                 >
                   검색 필터 초기화
                 </CButton>
