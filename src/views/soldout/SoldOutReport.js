@@ -23,17 +23,18 @@ const SoldOutReport = () => {
   const [reports, setReports] = useState([]);
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
-  const [dateType, setDateType] = useState("");
+  const [dateType, setDateType] = useState("일자별 통계");
+  const reg = /(\d{4})(\d{2})(\d{2})/;
 
   /* 필터 제작 전 임시 일일 값 */
 
-  const cleearState = () => {
+  const clearState = () => {
     setLoading(true);
     setRedirect(false);
     setReports([]);
     setFromDate("");
     setToDate("");
-    setDateType("");
+    setDateType("일자별 통계");
   };
 
   function numberWithCommas(x) {
@@ -41,8 +42,11 @@ const SoldOutReport = () => {
   }
 
   function numberToDate(x) {
+    if (x === undefined) return;
     if (x === "합계") return "합계";
-    return x.toString().replace(/(\d{4})(\d{2})(\d{2})/, "$1-$2-$3");
+    if (reg.test(x))
+      return x.toString().replace(/(\d{4})(\d{2})(\d{2})/, "$1-$2-$3");
+    return x;
   }
 
   const getReport = (args, token) => {
@@ -53,15 +57,14 @@ const SoldOutReport = () => {
 
     axios({
       method: "get",
-      url: `https://sadmin.piclick.kr/report/soldout${args}`,
+      url: `https://sadmin.piclick.kr/report/soldout2${args}`,
       headers: {
         Authorization: `JWT ${token}`,
       },
     })
       .then((res) => {
-        if (res.data === undefined || res.data === null) {
+        if (res.data === undefined || res.data.message === "결과없음") {
           setReports([]);
-          return;
         } else {
           setReports(res.data);
         }
@@ -82,17 +85,32 @@ const SoldOutReport = () => {
   };
 
   useEffect(() => {
+    setFromDate(moment().subtract(1, "months").format("YYYY-MM-DD"));
+    setToDate(moment().format("YYYY-MM-DD"));
+  }, []);
+
+  useEffect(() => {
     if (token === null || token === undefined) {
       setRedirect(true);
     }
-    getReport("", token);
+    getReport(
+      `?from_date=${moment()
+        .subtract(1, "months")
+        .format("YYYYMMDD")}&to_date=${moment().format("YYYYMMDD")}`,
+      token
+    );
     const getEveryTimes = setInterval(() => {
-      getReport("", token);
+      getReport(
+        `?from_date=${moment()
+          .subtract(1, "months")
+          .format("YYYYMMDD")}&to_date=${moment().format("YYYYMMDD")}`,
+        token
+      );
     }, 60000 * 10);
 
     return () => {
       clearInterval(getEveryTimes);
-      cleearState();
+      clearState();
     };
   }, [token]);
 
@@ -128,7 +146,7 @@ const SoldOutReport = () => {
     { key: "exchange_conv_sum", label: "교환전환\n금액(원)" },
     { key: "save_conv_count", label: "적립전환\n상품 수" },
     { key: "save_conv_sum", label: "적립전환\n금액(원)" },
-    { key: "lazy_save_count", label: "지연 적립 수" },
+    // { key: "lazy_save_count", label: "지연 적립 수" },
     { key: "refund_count", label: "환불 상품수" },
     { key: "refund_sum", label: "환불 금액" },
     { key: "exchange_conv_rate", label: "교환 전환율" },
@@ -148,57 +166,76 @@ const SoldOutReport = () => {
     event.persist();
     setDateType(event.target.innerText);
     switch (event.target.innerText) {
-      case "오늘":
-        setFromDate(moment().format("YYYY-MM-DD"));
-        setToDate(moment().format("YYYY-MM-DD"));
+      case "일자별 통계":
         getReport(
-          `?from_date=${moment().format("YYYYMMDD")}&to_date=${moment().format(
-            "YYYYMMDD"
-          )}`,
+          `?from_date=${moment(fromDate).format("YYYYMMDD")}&to_date=${moment(
+            toDate
+          ).format("YYYYMMDD")}`,
           token
         );
         break;
-      case "어제":
-        setFromDate(moment().subtract(1, "days").format("YYYY-MM-DD"));
-        setToDate(moment().subtract(1, "days").format("YYYY-MM-DD"));
+      case "주별 통계":
         getReport(
-          `?from_date=${moment()
-            .subtract(1, "days")
-            .format("YYYYMMDD")}&to_date=${moment()
-            .subtract(1, "days")
-            .format("YYYYMMDD")}`,
+          `?from_date=${moment(fromDate).format("YYYYMMDD")}&to_date=${moment(
+            toDate
+          ).format("YYYYMMDD")}&report_type=week`,
           token
         );
         break;
-      case "1주":
-        setFromDate(moment().subtract(1, "weeks").format("YYYY-MM-DD"));
-        setToDate(moment().format("YYYY-MM-DD"));
+      case "월별 통계":
         getReport(
-          `?from_date=${moment()
-            .subtract(1, "weeks")
-            .format("YYYYMMDD")}&to_date=${moment().format("YYYYMMDD")}`,
-          token
-        );
-        break;
-      case "1개월":
-        setFromDate(moment().subtract(1, "months").format("YYYY-MM-DD"));
-        setToDate(moment().format("YYYY-MM-DD"));
-        getReport(
-          `?from_date=${moment()
-            .subtract(1, "months")
-            .format("YYYYMMDD")}&to_date=${moment().format("YYYYMMDD")}`,
+          `?from_date=${moment(fromDate).format("YYYYMMDD")}&to_date=${moment(
+            toDate
+          ).format("YYYYMMDD")}&report_type=month`,
           token
         );
         break;
       default:
         break;
-    }
-
-    if (dateType === event.target.innerText) {
-      setFromDate("");
-      setToDate("");
-      setDateType("");
-      getReport("", token);
+      // case "오늘":
+      //   setFromDate(moment().format("YYYY-MM-DD"));
+      //   setToDate(moment().format("YYYY-MM-DD"));
+      //   getReport(
+      //     `?from_date=${moment().format("YYYYMMDD")}&to_date=${moment().format(
+      //       "YYYYMMDD"
+      //     )}`,
+      //     token
+      //   );
+      //   break;
+      // case "어제":
+      //   setFromDate(moment().subtract(1, "days").format("YYYY-MM-DD"));
+      //   setToDate(moment().subtract(1, "days").format("YYYY-MM-DD"));
+      //   getReport(
+      //     `?from_date=${moment()
+      //       .subtract(1, "days")
+      //       .format("YYYYMMDD")}&to_date=${moment()
+      //       .subtract(1, "days")
+      //       .format("YYYYMMDD")}`,
+      //     token
+      //   );
+      //   break;
+      // case "1주":
+      //   setFromDate(moment().subtract(1, "weeks").format("YYYY-MM-DD"));
+      //   setToDate(moment().format("YYYY-MM-DD"));
+      //   getReport(
+      //     `?from_date=${moment()
+      //       .subtract(1, "weeks")
+      //       .format("YYYYMMDD")}&to_date=${moment().format("YYYYMMDD")}`,
+      //     token
+      //   );
+      //   break;
+      // case "1개월":
+      //   setFromDate(moment().subtract(1, "months").format("YYYY-MM-DD"));
+      //   setToDate(moment().format("YYYY-MM-DD"));
+      //   getReport(
+      //     `?from_date=${moment()
+      //       .subtract(1, "months")
+      //       .format("YYYYMMDD")}&to_date=${moment().format("YYYYMMDD")}`,
+      //     token
+      //   );
+      //   break;
+      // default:
+      //   break;
     }
   };
 
@@ -264,7 +301,19 @@ const SoldOutReport = () => {
               <CLabel>날짜 선택범위</CLabel>
               <CInputGroup>
                 <CButtonGroup>
-                  {["오늘", "어제", "1주", "1개월"].map((value) => (
+                  {/* {["오늘", "어제", "1주", "1개월"].map((value) => (
+                    <CButton
+                      color="outline-secondary"
+                      key={value}
+                      className="mx-0"
+                      onClick={changeDateType}
+                      active={value === dateType}
+                      size="sm"
+                    >
+                      {value}
+                    </CButton>
+                  ))} */}
+                  {["일자별 통계", "주별 통계", "월별 통계"].map((value) => (
                     <CButton
                       color="outline-secondary"
                       key={value}
@@ -277,7 +326,7 @@ const SoldOutReport = () => {
                     </CButton>
                   ))}
                 </CButtonGroup>
-                <CButton
+                {/* <CButton
                   color="secondary"
                   style={{ marginLeft: "5px" }}
                   onClick={() => {
@@ -288,7 +337,27 @@ const SoldOutReport = () => {
                   }}
                   size="sm"
                 >
-                 날짜선택 초기화
+                  날짜선택 초기화
+                </CButton> */}
+                <CButton
+                  color="secondary"
+                  style={{ marginLeft: "5px" }}
+                  onClick={() => {
+                    setFromDate(
+                      moment().subtract(1, "months").format("YYYY-MM-DD")
+                    );
+                    setToDate(moment().format("YYYY-MM-DD"));
+                    setDateType("일자별 통계");
+                    getReport(
+                      `?from_date=${moment(fromDate).format(
+                        "YYYYMMDD"
+                      )}&to_date=${moment(toDate).format("YYYYMMDD")}`,
+                      token
+                    );
+                  }}
+                  size="sm"
+                >
+                  날짜선택 초기화
                 </CButton>
               </CInputGroup>
             </CCol>
@@ -315,13 +384,13 @@ const SoldOutReport = () => {
                   style={{
                     color: getDays(
                       moment(
-                        item.date === "합계" ? "" : numberToDate(item.date)
+                        reg.test(item.date) ? numberToDate(item.date) : ""
                       ).day()
                     ),
                     background: idx === 0 ? "#e4e4e4" : "",
                   }}
                 >
-                  {item.date === "합계" ? "합계" : numberToDate(item.date)}
+                  {numberToDate(item.date)}
                 </td>
               ),
               order_count: (item, idx) => (
@@ -329,7 +398,7 @@ const SoldOutReport = () => {
                   style={{
                     color: getDays(
                       moment(
-                        item.date === "합계" ? "" : numberToDate(item.date)
+                        reg.test(item.date) ? numberToDate(item.date) : ""
                       ).day()
                     ),
                     background: idx === 0 ? "#e4e4e4" : "",
@@ -343,7 +412,7 @@ const SoldOutReport = () => {
                   style={{
                     color: getDays(
                       moment(
-                        item.date === "합계" ? "" : numberToDate(item.date)
+                        reg.test(item.date) ? numberToDate(item.date) : ""
                       ).day()
                     ),
                     background: idx === 0 ? "#e4e4e4" : "",
@@ -357,7 +426,7 @@ const SoldOutReport = () => {
                   style={{
                     color: getDays(
                       moment(
-                        item.date === "합계" ? "" : numberToDate(item.date)
+                        reg.test(item.date) ? numberToDate(item.date) : ""
                       ).day()
                     ),
                     background: idx === 0 ? "#e4e4e4" : "",
@@ -371,7 +440,7 @@ const SoldOutReport = () => {
                   style={{
                     color: getDays(
                       moment(
-                        item.date === "합계" ? "" : numberToDate(item.date)
+                        reg.test(item.date) ? numberToDate(item.date) : ""
                       ).day()
                     ),
                     background: idx === 0 ? "#e4e4e4" : "",
@@ -385,7 +454,7 @@ const SoldOutReport = () => {
                   style={{
                     color: getDays(
                       moment(
-                        item.date === "합계" ? "" : numberToDate(item.date)
+                        reg.test(item.date) ? numberToDate(item.date) : ""
                       ).day()
                     ),
                     background: idx === 0 ? "#e4e4e4" : "",
@@ -399,7 +468,7 @@ const SoldOutReport = () => {
                   style={{
                     color: getDays(
                       moment(
-                        item.date === "합계" ? "" : numberToDate(item.date)
+                        reg.test(item.date) ? numberToDate(item.date) : ""
                       ).day()
                     ),
                     background: idx === 0 ? "#e4e4e4" : "",
@@ -413,7 +482,7 @@ const SoldOutReport = () => {
                   style={{
                     color: getDays(
                       moment(
-                        item.date === "합계" ? "" : numberToDate(item.date)
+                        reg.test(item.date) ? numberToDate(item.date) : ""
                       ).day()
                     ),
                     background: idx === 0 ? "#e4e4e4" : "",
@@ -427,7 +496,7 @@ const SoldOutReport = () => {
                   style={{
                     color: getDays(
                       moment(
-                        item.date === "합계" ? "" : numberToDate(item.date)
+                        reg.test(item.date) ? numberToDate(item.date) : ""
                       ).day()
                     ),
                     background: idx === 0 ? "#e4e4e4" : "",
@@ -441,7 +510,7 @@ const SoldOutReport = () => {
                   style={{
                     color: getDays(
                       moment(
-                        item.date === "합계" ? "" : numberToDate(item.date)
+                        reg.test(item.date) ? numberToDate(item.date) : ""
                       ).day()
                     ),
                     background: idx === 0 ? "#e4e4e4" : "",
@@ -455,7 +524,7 @@ const SoldOutReport = () => {
                   style={{
                     color: getDays(
                       moment(
-                        item.date === "합계" ? "" : numberToDate(item.date)
+                        reg.test(item.date) ? numberToDate(item.date) : ""
                       ).day()
                     ),
                     background: idx === 0 ? "#e4e4e4" : "",
@@ -469,7 +538,7 @@ const SoldOutReport = () => {
                   style={{
                     color: getDays(
                       moment(
-                        item.date === "합계" ? "" : numberToDate(item.date)
+                        reg.test(item.date) ? numberToDate(item.date) : ""
                       ).day()
                     ),
                     background: idx === 0 ? "#e4e4e4" : "",
@@ -478,40 +547,40 @@ const SoldOutReport = () => {
                   {changeToComma(item.save_conv_sum)}
                 </td>
               ),
-              lazy_save_count: (item, idx) => (
-                <td
-                  style={{
-                    color: getDays(
-                      moment(
-                        item.date === "합계" ? "" : numberToDate(item.date)
-                      ).day()
-                    ),
-                    background: idx === 0 ? "#e4e4e4" : "",
-                  }}
-                >
-                  {changeToComma(item.lazy_save_count)}
-                </td>
-              ),
-              lazy_save_sum: (item, idx) => (
-                <td
-                  style={{
-                    color: getDays(
-                      moment(
-                        item.date === "합계" ? "" : numberToDate(item.date)
-                      ).day()
-                    ),
-                    background: idx === 0 ? "#e4e4e4" : "",
-                  }}
-                >
-                  {changeToComma(item.lazy_save_sum)}
-                </td>
-              ),
+              // lazy_save_count: (item, idx) => (
+              //   <td
+              //     style={{
+              //       color: getDays(
+              //         moment(
+              //           item.date === "합계" ? "" : numberToDate(item.date)
+              //         ).day()
+              //       ),
+              //       background: idx === 0 ? "#e4e4e4" : "",
+              //     }}
+              //   >
+              //     {changeToComma(item.lazy_save_count)}
+              //   </td>
+              // ),
+              // lazy_save_sum: (item, idx) => (
+              //   <td
+              //     style={{
+              //       color: getDays(
+              //         moment(
+              //           item.date === "합계" ? "" : numberToDate(item.date)
+              //         ).day()
+              //       ),
+              //       background: idx === 0 ? "#e4e4e4" : "",
+              //     }}
+              //   >
+              //     {changeToComma(item.lazy_save_sum)}
+              //   </td>
+              // ),
               refund_count: (item, idx) => (
                 <td
                   style={{
                     color: getDays(
                       moment(
-                        item.date === "합계" ? "" : numberToDate(item.date)
+                        reg.test(item.date) ? numberToDate(item.date) : ""
                       ).day()
                     ),
                     background: idx === 0 ? "#e4e4e4" : "",
@@ -525,7 +594,7 @@ const SoldOutReport = () => {
                   style={{
                     color: getDays(
                       moment(
-                        item.date === "합계" ? "" : numberToDate(item.date)
+                        reg.test(item.date) ? numberToDate(item.date) : ""
                       ).day()
                     ),
                     background: idx === 0 ? "#e4e4e4" : "",
@@ -539,7 +608,7 @@ const SoldOutReport = () => {
                   style={{
                     color: getDays(
                       moment(
-                        item.date === "합계" ? "" : numberToDate(item.date)
+                        reg.test(item.date) ? numberToDate(item.date) : ""
                       ).day()
                     ),
                     background: idx === 0 ? "#e4e4e4" : "",
@@ -553,7 +622,7 @@ const SoldOutReport = () => {
                   style={{
                     color: getDays(
                       moment(
-                        item.date === "합계" ? "" : numberToDate(item.date)
+                        reg.test(item.date) ? numberToDate(item.date) : ""
                       ).day()
                     ),
                     background: idx === 0 ? "#e4e4e4" : "",
@@ -567,7 +636,7 @@ const SoldOutReport = () => {
                   style={{
                     color: getDays(
                       moment(
-                        item.date === "합계" ? "" : numberToDate(item.date)
+                        reg.test(item.date) ? numberToDate(item.date) : ""
                       ).day()
                     ),
                     background: idx === 0 ? "#e4e4e4" : "",
