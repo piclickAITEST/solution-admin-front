@@ -381,53 +381,11 @@ const SoldOut = () => {
     );
   };
 
-<<<<<<< HEAD
-  const searchValueChange = (event) => {
-    const {
-      target: { value },
-    } = event;
-
-    setSearchValue(value);
-  };
-
-  const sendMessage = async (event) => {
-    const eventIdx = event.target.value;
-    const token = sessionStorage.getItem("userToken");
-
-    const res = await axios.get(
-      `https://sadmin.piclick.kr/soldout/sms?idx=${eventIdx}`,
-	    {
-		    headers: {
-			    Authorization: `JWT ${token}`
-		    }
-	    }
-    );
-    res.data.results.map((result) => {
-      if (result.result_code === "1") {
-        const action = document.querySelector(`#action-${eventIdx}`);
-        const button = document.querySelector(`#button-${eventIdx}`);
-
-        action.innerText = "메세지전송";
-        button.setAttribute("disabled", "");
-        return alert("메시지가 전송되었습니다.");
-      } else {
-        return alert("메시지 전송에 실패하였습니다.");
-      }
-    });
-  };
-
-  if (redirect) {
-    return <Redirect from="*" to="/login" />;
-  }
-
-  return (
-=======
   return loading ? (
     <div className="d-flex justify-content-center align-items-center">
       <CSpinner color="primary" style={{ width: "4rem", height: "4rem" }} />
     </div>
   ) : (
->>>>>>> e933b8b3a31954229a614e0327bf047698be1845
     <>
       <CCard>
         <CCardBody>
@@ -515,118 +473,6 @@ const SoldOut = () => {
       </CCard>
       <CCard>
         <CCardBody>
-<<<<<<< HEAD
-          <table className="table table-hover table-outline mb-0 d-none d-sm-table">
-            <thead className="thead-light">
-              <tr>
-                <th className="text-center">
-                  주문일자
-                  <br />
-                  품절일자
-                </th>
-                <th className="text-center">주문번호</th>
-                <th className="text-center">상품명</th>
-                <th className="text-center">옵션1</th>
-                <th className="text-center">옵션2</th>
-                <th className="text-center">이미지</th>
-                <th className="text-center">수량</th>
-                <th className="text-center">금액</th>
-                <th className="text-center">
-                  주문자
-                  <br />
-                  수령자
-                </th>
-                <th className="text-center">
-                  주문자 휴대폰
-                  <br />
-                  주문자 전화번호
-                </th>
-                <th className="text-center">CS 상태</th>
-                <th className="text-center"></th>
-              </tr>
-            </thead>
-            <tbody>
-              {products.map((product) => {
-                const {
-                  action,
-                  idx,
-                  list_image,
-                  option1,
-                  option2,
-                  order_date,
-                  order_id,
-                  phone,
-                  price,
-                  product_name,
-                  qty,
-                  user_name,
-                  product_id,
-                  soldout_date,
-                } = product;
-
-                return (
-                  <tr key={idx}>
-                    <td className="text-center">
-                      {order_date}
-                      <br />
-                      {soldout_date}
-                    </td>
-
-                    <td className="text-center">{order_id}</td>
-                    <td className="text-center">{product_name}</td>
-                    <td className="text-center">
-                      {option1}
-                    </td>
-                    <td className="text-center">
-                     {option2}
-                    </td>
-                    <td className="text-center">
-                      <img
-                        src={list_image}
-                        alt={product_name}
-                        style={{ width: "65px" }}
-                      />
-                    </td>
-                    <td className="text-center">{qty}</td>
-                    <td className="text-center">{numberWithCommas(price)}원</td>
-                    <td className="text-center">{user_name}</td>
-                    <td className="text-center">{numberWithPhone(phone)}</td>
-                    <td className="text-center action" id={`action-${idx}`}>
-                      {action}
-                      <br />
-                      <CButton
-                        onClick={() => {
-                          toggleEdit(order_id);
-                        }}
-                        color="secondary"
-                      >
-                        상태수정
-                      </CButton>
-                    </td>
-                    <td className="text-center">
-                      <CButton
-                        onClick={() => {
-                          onPreviewClick(product_id, order_id);
-                        }}
-                      >
-                        미리보기
-                      </CButton>
-                      <CButton
-                        color="primary"
-                        disabled={action !== "품절대상"}
-                        onClick={sendMessage}
-                        value={`${idx}`}
-                        id={`button-${idx}`}
-                      >
-                        전송
-                      </CButton>
-                    </td>
-                  </tr>
-                );
-              })}
-            </tbody>
-          </table>
-=======
           <CDataTable
             items={products}
             fields={fields}
@@ -718,7 +564,6 @@ const SoldOut = () => {
               ),
             }}
           />
->>>>>>> e933b8b3a31954229a614e0327bf047698be1845
         </CCardBody>
       </CCard>
       <CModal show={sendModal} onClose={sendToggle}>
