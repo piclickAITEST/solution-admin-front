@@ -37,8 +37,6 @@ const Login = () => {
   };
 
   const loginSubmit = (event) => {
-    event.preventDefault();
-
     axios({
       method: "post",
       url: "https://sadmin.piclick.kr/auth",
@@ -49,13 +47,37 @@ const Login = () => {
     })
       .then((res) => {
         sessionStorage.setItem("userToken", res.data.access_token);
+        sessionStorage.setItem("userName", id);
+        axios({
+          method: "post",
+          url: "https://sadmin.piclick.kr/log/soldout/login",
+          data: {
+            cs_id: id,
+            action_code: "CS_LOGIN_SUCCESS",
+          },
+        });
         setIsInvalid(false);
         setIsLogin(true);
       })
       .catch(() => {
+        axios({
+          method: "post",
+          url: "https://sadmin.piclick.kr/log/soldout/login",
+          data: {
+            cs_id: id,
+            action_code: "CS_LOGIN_FAIL",
+          },
+        });
         setIsInvalid(true);
         setIsLogin(false);
       });
+  };
+
+  const onInputPress = (event) => {
+    const { keyCode } = event;
+    if (keyCode === 13) {
+      loginSubmit();
+    }
   };
 
   if (isLogin === true) {
@@ -66,7 +88,7 @@ const Login = () => {
     <div className="c-app c-default-layout flex-row align-items-center">
       <CContainer>
         <CRow className="justify-content-center">
-          <CCol md="4">
+          <CCol lg="4">
             <CCard className="p-4">
               <CCardBody>
                 <CForm
@@ -91,6 +113,7 @@ const Login = () => {
                       </CInputGroupText>
                     </CInputGroupPrepend>
                     <CInput
+                      onKeyDown={onInputPress}
                       type="text"
                       name="id"
                       placeholder="ID"
@@ -107,6 +130,7 @@ const Login = () => {
                       </CInputGroupText>
                     </CInputGroupPrepend>
                     <CInput
+                      onKeyDown={onInputPress}
                       type="password"
                       name="password"
                       placeholder="비밀번호"

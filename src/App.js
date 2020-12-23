@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { HashRouter, Route, Switch, Redirect } from "react-router-dom";
+import React from "react";
+import { HashRouter, Route, Switch } from "react-router-dom";
 import "./scss/style.scss";
 
 const loading = (
@@ -15,27 +15,29 @@ const TheLayout = React.lazy(() => import("./containers/TheLayout"));
 const Login = React.lazy(() => import("./views/pages/login/Login"));
 const Page404 = React.lazy(() => import("./views/pages/page404/Page404"));
 const Page500 = React.lazy(() => import("./views/pages/page500/Page500"));
+
 function App() {
-  const [isLogin, setIsLogin] = useState(false);
+  // const [isLogin, setIsLogin] = useState(false);
 
-  const clear = () => {
-    setIsLogin(false);
-  };
-  const getSession = () => {
-    const session = sessionStorage.getItem("userToken");
+  // const clear = () => {
+  //   setIsLogin(false);
+  // };
+  // const getSession = () => {
+  //   const session = sessionStorage.getItem("userToken");
 
-    if (session !== null) {
-      setIsLogin(true);
-    } else {
-      setIsLogin(false);
-    }
-  };
+  //   if (session !== null) {
+  //     setIsLogin(true);
+  //   } else {
+  //     setIsLogin(false);
+  //   }
+  // };
 
-  useEffect(() => {
-    getSession();
+  // useEffect(() => {
+  //   getSession();
 
-    return () => clear;
-  });
+  //   return () => clear;
+  // });
+
   return (
     <HashRouter>
       <React.Suspense fallback={loading}>
@@ -64,7 +66,7 @@ function App() {
             render={(props) => <TheLayout {...props} />}
           />
         </Switch>
-        {isLogin ? <Redirect to="/" /> : <Redirect to="/login" />}
+        {/* {isLogin ? <Redirect from="login" to="/" /> : <Redirect to="/login" />} */}
       </React.Suspense>
     </HashRouter>
   );
