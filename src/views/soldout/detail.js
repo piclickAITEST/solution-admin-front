@@ -449,8 +449,12 @@ function SoldOutDetail({ match, location }) {
         } else if (name === "excOpt") {
           setExcOpt(value);
         } else {
-          setBankAccount("");
-          setExcPrice("");
+          if (value.length >= 1) {
+            return;
+          } else {
+            setBankAccount("");
+            setExcPrice("");
+          }
         }
       }
     };
