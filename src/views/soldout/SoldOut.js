@@ -542,7 +542,7 @@ const SoldOut = () => {
             scopedSlots={{
               list_image: (item) => (
                 <td>
-                  <a href={item.product_url}>
+                  <a href={item.product_url} target="_blank" rel="noreferrer">
                     <img src={item.list_image} alt="" width="65px" />
                   </a>
                 </td>
