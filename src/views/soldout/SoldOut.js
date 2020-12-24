@@ -375,6 +375,7 @@ const SoldOut = () => {
     { key: "product_name", label: "상품명", sorter: false },
     { key: "option1", label: "옵션1", sorter: false },
     { key: "option2", label: "옵션2", sorter: false },
+    { key: "option3", label: "옵션3", sorter: false },
     { key: "list_image", label: "이미지", sorter: false, filter: false },
     {
       key: "qty",
