@@ -142,8 +142,8 @@ const SoldOut = () => {
           `?from_date=${moment()
             .subtract(1, "days")
             .format("YYYYMMDD")}&to_date=${moment()
-            .subtract(1, "days")
-            .format("YYYYMMDD")}&date_type=${searchType}`,
+              .subtract(1, "days")
+              .format("YYYYMMDD")}&date_type=${searchType}`,
           token
         );
         break;
@@ -154,8 +154,8 @@ const SoldOut = () => {
           `?from_date=${moment()
             .subtract(1, "weeks")
             .format("YYYYMMDD")}&to_date=${moment().format(
-            "YYYYMMDD"
-          )}&date_type=${searchType}`,
+              "YYYYMMDD"
+            )}&date_type=${searchType}`,
           token
         );
         break;
@@ -166,8 +166,8 @@ const SoldOut = () => {
           `?from_date=${moment()
             .subtract(1, "months")
             .format("YYYYMMDD")}&to_date=${moment().format(
-            "YYYYMMDD"
-          )}&date_type=${searchType}`,
+              "YYYYMMDD"
+            )}&date_type=${searchType}`,
           token
         );
         break;
@@ -354,14 +354,14 @@ const SoldOut = () => {
       key: "order_date",
       label: "주문일자",
       _style: {
-        width: "10%",
+        width: "7%",
       },
     },
     {
       key: "soldout_date",
       label: "품절일자",
       _style: {
-        width: "10%",
+        width: "7%",
       },
     },
     {
@@ -373,9 +373,21 @@ const SoldOut = () => {
       },
     },
     { key: "product_name", label: "상품명", sorter: false },
-    { key: "option1", label: "옵션1", sorter: false },
-    { key: "option2", label: "옵션2", sorter: false },
-    { key: "option3", label: "옵션3", sorter: false },
+    {
+      key: "option1", label: "옵션1", sorter: false, _style: {
+        width: "10%",
+      }
+    },
+    {
+      key: "option2", label: "옵션2", sorter: false, _style: {
+        width: "10%",
+      }
+    },
+    {
+      key: "option3", label: "옵션3", sorter: false, _style: {
+        width: "10%",
+      }
+    },
     { key: "list_image", label: "이미지", sorter: false, filter: false },
     {
       key: "qty",
@@ -431,212 +443,212 @@ const SoldOut = () => {
       <CSpinner color="primary" style={{ width: "4rem", height: "4rem" }} />
     </div>
   ) : (
-    <>
-      <CCard>
-        <CCardBody>
-          <CFormGroup row>
-            <CCol sm="12" lg="auto" style={{ marginTop: "5px" }}>
-              <CLabel>시작일/종료일</CLabel>
-              <CInputGroup>
-                <CInput
-                  type="date"
-                  id="fromDate"
-                  name="fromDate"
-                  value={fromDate}
-                  onChange={onChangeDate}
-                  size="sm"
-                />
-                <CInput
-                  type="date"
-                  id="toDate"
-                  name="toDate"
-                  value={toDate}
-                  onChange={onChangeDate}
-                  size="sm"
-                />
-              </CInputGroup>
-            </CCol>
-            <CCol sm="auto" style={{ marginTop: "5px" }}>
-              <CLabel>날짜 선택범위</CLabel>
-              <CInputGroup>
-                <CButtonGroup>
-                  {["오늘", "어제", "1주", "1개월"].map((value) => (
-                    <CButton
-                      color="outline-secondary"
-                      key={value}
-                      className="mx-0"
-                      active={value === dateType}
-                      onClick={changeDateType}
-                      size="sm"
-                    >
-                      {value}
-                    </CButton>
-                  ))}
-                </CButtonGroup>
-              </CInputGroup>
-            </CCol>
-            <CCol sm="auto" style={{ marginTop: "5px" }}>
-              <CLabel>날짜 선택기준</CLabel>
-              <CInputGroup>
-                <CButtonGroup>
-                  {[
-                    ["품절일자", "soldout"],
-                    ["주문일자", "order"],
-                  ].map((value) => (
-                    <CButton
-                      color="outline-secondary"
-                      key={value[1]}
-                      name={value[0]}
-                      className="mx-0"
-                      active={value[1] === searchType}
-                      value={value[1]}
-                      onClick={changeSearchType}
-                      size="sm"
-                    >
-                      {value[0]}
-                    </CButton>
-                  ))}
-                </CButtonGroup>
-                <CButton
-                  color="secondary"
-                  style={{ marginLeft: "5px" }}
-                  onClick={resetFilter}
-                  size="sm"
-                >
-                  날짜선택 초기화
+      <>
+        <CCard>
+          <CCardBody>
+            <CFormGroup row>
+              <CCol sm="12" lg="auto" style={{ marginTop: "5px" }}>
+                <CLabel>시작일/종료일</CLabel>
+                <CInputGroup>
+                  <CInput
+                    type="date"
+                    id="fromDate"
+                    name="fromDate"
+                    value={fromDate}
+                    onChange={onChangeDate}
+                    size="sm"
+                  />
+                  <CInput
+                    type="date"
+                    id="toDate"
+                    name="toDate"
+                    value={toDate}
+                    onChange={onChangeDate}
+                    size="sm"
+                  />
+                </CInputGroup>
+              </CCol>
+              <CCol sm="auto" style={{ marginTop: "5px" }}>
+                <CLabel>날짜 선택범위</CLabel>
+                <CInputGroup>
+                  <CButtonGroup>
+                    {["오늘", "어제", "1주", "1개월"].map((value) => (
+                      <CButton
+                        color="outline-secondary"
+                        key={value}
+                        className="mx-0"
+                        active={value === dateType}
+                        onClick={changeDateType}
+                        size="sm"
+                      >
+                        {value}
+                      </CButton>
+                    ))}
+                  </CButtonGroup>
+                </CInputGroup>
+              </CCol>
+              <CCol sm="auto" style={{ marginTop: "5px" }}>
+                <CLabel>날짜 선택기준</CLabel>
+                <CInputGroup>
+                  <CButtonGroup>
+                    {[
+                      ["품절일자", "soldout"],
+                      ["주문일자", "order"],
+                    ].map((value) => (
+                      <CButton
+                        color="outline-secondary"
+                        key={value[1]}
+                        name={value[0]}
+                        className="mx-0"
+                        active={value[1] === searchType}
+                        value={value[1]}
+                        onClick={changeSearchType}
+                        size="sm"
+                      >
+                        {value[0]}
+                      </CButton>
+                    ))}
+                  </CButtonGroup>
+                  <CButton
+                    color="secondary"
+                    style={{ marginLeft: "5px" }}
+                    onClick={resetFilter}
+                    size="sm"
+                  >
+                    날짜선택 초기화
                 </CButton>
-              </CInputGroup>
-            </CCol>
-          </CFormGroup>
-          <h6 style={{ color: "#999", textAlign: "right", fontSize: "12px" }}>
-            품절 데이터는 10분마다 업데이트됩니다.
+                </CInputGroup>
+              </CCol>
+            </CFormGroup>
+            <h6 style={{ color: "#999", textAlign: "right", fontSize: "12px" }}>
+              품절 데이터는 10분마다 업데이트됩니다.
             <br />
             주문번호 클릭 시 해당 상품의 상세 페이지로 접근합니다.
           </h6>
-        </CCardBody>
-      </CCard>
-      <CCard>
-        <CCardBody>
-          <CDataTable
-            items={products}
-            fields={fields}
-            itemsPerPageSelect={{
-              label: "표시 할 갯수",
-            }}
-            itemsPerPage={10}
-            noItemsView={{
-              noResults: "검색결과가 없습니다",
-              noItems: "데이터가 존재하지 않습니다.",
-            }}
-            pagination={{
-              size: "sm",
-            }}
-            sorter
-            tableFilter={{
-              label: "검색",
-              placeholder: "검색어 입력",
-            }}
-            outlined
-            responsive
-            hover
-            cleaner
-            scopedSlots={{
-              list_image: (item) => (
-                <td>
-                  <a href={item.product_url} target="_blank" rel="noreferrer">
-                    <img src={item.list_image} alt="" width="65px" />
-                  </a>
-                </td>
-              ),
-              price: (item) => <td>{numberWithCommas(item.price)}</td>,
-              phone: (item) => <td>{numberWithPhone(item.phone)}</td>,
-              detail: (item) => (
-                <td>
-                  <CButton
-                    color="secondary"
-                    shape="square"
-                    size="sm"
-                    onClick={() => {
-                      previewToggle(
-                        item.mall_id,
-                        item.product_id,
-                        item.order_id
-                      );
-                    }}
-                  >
-                    미리보기
+          </CCardBody>
+        </CCard>
+        <CCard>
+          <CCardBody>
+            <CDataTable
+              items={products}
+              fields={fields}
+              itemsPerPageSelect={{
+                label: "표시 할 갯수",
+              }}
+              itemsPerPage={10}
+              noItemsView={{
+                noResults: "검색결과가 없습니다",
+                noItems: "데이터가 존재하지 않습니다.",
+              }}
+              pagination={{
+                size: "sm",
+              }}
+              sorter
+              tableFilter={{
+                label: "검색",
+                placeholder: "검색어 입력",
+              }}
+              outlined
+              responsive
+              hover
+              cleaner
+              scopedSlots={{
+                list_image: (item) => (
+                  <td>
+                    <a href={item.product_url} target="_blank" rel="noreferrer">
+                      <img src={item.list_image} alt="" width="65px" />
+                    </a>
+                  </td>
+                ),
+                price: (item) => <td>{numberWithCommas(item.price)}</td>,
+                phone: (item) => <td>{numberWithPhone(item.phone)}</td>,
+                detail: (item) => (
+                  <td>
+                    <CButton
+                      color="secondary"
+                      shape="square"
+                      size="sm"
+                      onClick={() => {
+                        previewToggle(
+                          item.mall_id,
+                          item.product_id,
+                          item.order_id
+                        );
+                      }}
+                    >
+                      미리보기
                   </CButton>
-                </td>
-              ),
-              message: (item) => (
-                <td>
-                  <CButton
-                    color={item.action === "재입고" ? "secondary" : "primary"}
-                    shape="square"
-                    size="sm"
-                    disabled={item.action !== "판매중지"}
-                    onClick={() => sendToggle(item.idx)}
-                    id={`button-${item.idx}`}
-                  >
-                    전송
+                  </td>
+                ),
+                message: (item) => (
+                  <td>
+                    <CButton
+                      color={item.action === "재입고" ? "secondary" : "primary"}
+                      shape="square"
+                      size="sm"
+                      disabled={item.action !== "판매중지"}
+                      onClick={() => sendToggle(item.idx)}
+                      id={`button-${item.idx}`}
+                    >
+                      전송
                   </CButton>
-                </td>
-              ),
-              order_id: (item) => (
-                <td>
-                  <Link
-                    to={{
-                      pathname: `/soldout/${item.idx}/${item.order_id}`,
-                      productInfo: {
-                        price: item.price,
-                        mall_id: item.mall_id,
-                        product_no: item.product_id,
-                        order_id: item.order_id,
-                        payment_method: item.payment_method,
-                        bizName: item.bizName,
-                        user_name: item.user_name,
-                        product_name: item.product_name,
-                        order_date: item.order_date,
-                        option1: item.option1,
-                        option2: item.option2,
-                        qty: item.qty,
-                        origin_action: item.action,
-                      },
-                    }}
-                  >
-                    {item.order_id}
-                  </Link>
-                </td>
-              ),
-            }}
-          />
-        </CCardBody>
-      </CCard>
-      <CModal show={sendModal} onClose={sendToggle}>
-        <CModalHeader>메시지 전송</CModalHeader>
-        <CModalBody>메시지를 전송하시겠습니까?</CModalBody>
-        <CModalFooter>
-          <CButton onClick={sendToggle} color="secondary">
-            닫기
+                  </td>
+                ),
+                order_id: (item) => (
+                  <td>
+                    <Link
+                      to={{
+                        pathname: `/soldout/${item.idx}/${item.order_id}`,
+                        productInfo: {
+                          price: item.price,
+                          mall_id: item.mall_id,
+                          product_no: item.product_id,
+                          order_id: item.order_id,
+                          payment_method: item.payment_method,
+                          bizName: item.bizName,
+                          user_name: item.user_name,
+                          product_name: item.product_name,
+                          order_date: item.order_date,
+                          option1: item.option1,
+                          option2: item.option2,
+                          qty: item.qty,
+                          origin_action: item.action,
+                        },
+                      }}
+                    >
+                      {item.order_id}
+                    </Link>
+                  </td>
+                ),
+              }}
+            />
+          </CCardBody>
+        </CCard>
+        <CModal show={sendModal} onClose={sendToggle}>
+          <CModalHeader>메시지 전송</CModalHeader>
+          <CModalBody>메시지를 전송하시겠습니까?</CModalBody>
+          <CModalFooter>
+            <CButton onClick={sendToggle} color="secondary">
+              닫기
           </CButton>
-          <CButton
-            onClick={() => {
-              sendMessage(token);
-            }}
-            color="primary"
-          >
-            전송
+            <CButton
+              onClick={() => {
+                sendMessage(token);
+              }}
+              color="primary"
+            >
+              전송
           </CButton>
-        </CModalFooter>
-      </CModal>
-      <CToaster position="top-right">
-        <CToast show={msgToastToggle} autohide={3000}>
-          <CToastHeader closeButton={false}>메시지 전송</CToastHeader>
-          <CToastBody>{msgToastLog}</CToastBody>
-        </CToast>
-      </CToaster>
-    </>
-  );
+          </CModalFooter>
+        </CModal>
+        <CToaster position="top-right">
+          <CToast show={msgToastToggle} autohide={3000}>
+            <CToastHeader closeButton={false}>메시지 전송</CToastHeader>
+            <CToastBody>{msgToastLog}</CToastBody>
+          </CToast>
+        </CToaster>
+      </>
+    );
 };
 
 export default SoldOut;
