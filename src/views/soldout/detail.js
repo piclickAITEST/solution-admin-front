@@ -468,7 +468,7 @@ function SoldOutDetail({ match, location }) {
     };
 
     const previewToggle = () => {
-      var url = `https://sol.piclick.kr/soldOut/?mallID=rlackdals1&product_no=${productNo}&order_id=${orderID}`;
+      var url = `https://sol.piclick.kr/soldOut/?mallID=${mallID}&product_no=${productNo}&order_id=${orderID}`;
       window.open(
         url,
         "_blank",
