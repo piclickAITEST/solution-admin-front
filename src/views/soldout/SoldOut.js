@@ -541,8 +541,9 @@ const SoldOut = () => {
                 noItems: "데이터가 존재하지 않습니다.",
               }}
               pagination={{
-                size: "sm",
+
               }}
+              center
               sorter
               tableFilter={{
                 label: "검색",
@@ -566,7 +567,6 @@ const SoldOut = () => {
                   <td>
                     <CButton
                       color="secondary"
-                      shape="square"
                       size="sm"
                       onClick={() => {
                         previewToggle(
@@ -583,8 +583,7 @@ const SoldOut = () => {
                 message: (item) => (
                   <td>
                     <CButton
-                      color={item.action === "재입고" ? "secondary" : "primary"}
-                      shape="square"
+                      color={item.action === "재입고" ? "secondary" : "info"}
                       size="sm"
                       disabled={item.action !== "판매중지"}
                       onClick={() => sendToggle(item.idx)}
