@@ -1,18 +1,29 @@
 // Here you can add other styles
-.table th, .table td {
-    padding: 0.25rem;
-    vertical-align: middle;
-    text-align: center;
+.table th,
+.table td {
+  padding: 0.25rem;
+  vertical-align: middle;
+  text-align: center;
+  font-size: 12px;
 }
 
-td { 
-    border: 1px solid #d8dbe0;
+td {
+  border: 1px solid #d8dbe0;
 }
 
-.table thead th { 
-    border: 1px solid #9a9da1;
-    border-bottom: 1px solid #9a9da1;
-    border-top: 1px solid #9a9da1;
-    background: #d8dbe0;
-    white-space: pre-wrap;
+.table thead th {
+  border: 1px solid #9a9da1;
+  border-bottom: 1px solid #9a9da1;
+  border-top: 1px solid #9a9da1;
+  background: #d8dbe0;
+  white-space: pre-wrap;
+}
+
+.pr-4,
+.px-4 {
+  padding-right: 0 !important;
+}
+
+.form-control {
+  font-size: 0.775rem !important;
 }

@@ -354,14 +354,14 @@ const SoldOut = () => {
       key: "order_date",
       label: "주문일자",
       _style: {
-        width: "10%",
+        width: "7%",
       },
     },
     {
       key: "soldout_date",
       label: "품절일자",
       _style: {
-        width: "10%",
+        width: "7%",
       },
     },
     {
@@ -529,9 +529,8 @@ const SoldOut = () => {
               noResults: "검색결과가 없습니다",
               noItems: "데이터가 존재하지 않습니다.",
             }}
-            pagination={{
-              size: "sm",
-            }}
+            pagination={{}}
+            center
             sorter
             tableFilter={{
               label: "검색",
@@ -551,18 +550,10 @@ const SoldOut = () => {
               ),
               price: (item) => <td>{numberWithCommas(item.price)}</td>,
               phone: (item) => <td>{numberWithPhone(item.phone)}</td>,
-              option: (item) => (
-                <td>
-                  {item.option1} <br />
-                  {item.option2} <br />
-                  {item.option3}
-                </td>
-              ),
               detail: (item) => (
                 <td>
                   <CButton
                     color="secondary"
-                    shape="square"
                     size="sm"
                     onClick={() => {
                       previewToggle(
@@ -576,18 +567,17 @@ const SoldOut = () => {
                   </CButton>
                 </td>
               ),
-              action: (item) => (
+              option: (item) => (
                 <td>
-                  {item.action}
-                  <br />
-                  {item.status_text}
+                  {item.option1} <br />
+                  {item.option2} <br />
+                  {item.option3}
                 </td>
               ),
               message: (item) => (
                 <td>
                   <CButton
-                    color={item.action === "재입고" ? "secondary" : "primary"}
-                    shape="square"
+                    color={item.action === "재입고" ? "secondary" : "info"}
                     size="sm"
                     disabled={item.action !== "판매중지"}
                     onClick={() => sendToggle(item.idx)}
