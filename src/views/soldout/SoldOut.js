@@ -62,7 +62,7 @@ const SoldOut = () => {
 
     axios({
       method: "get",
-      url: `/soldout/${args}`,
+      url: `https://sadmin.piclick.kr/soldout/${args}`,
       headers: {
         Authorization: `JWT ${token}`,
       },

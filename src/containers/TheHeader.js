@@ -47,7 +47,7 @@ const TheHeader = () => {
   };
 
   const getUsername = async () => {
-    const res = await axios.get("/users/", {
+    const res = await axios.get("https://sadmin.piclick.kr/users/", {
       headers: {
         Authorization: `JWT ${sessionStorage.getItem("userToken")}`,
       },
