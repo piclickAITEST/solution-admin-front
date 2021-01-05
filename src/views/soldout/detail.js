@@ -105,7 +105,7 @@ function SoldOutDetail({ match, location }) {
     (token) => {
       axios({
         method: "get",
-        url: `/log/list?idx=${index}`,
+        url: `https://sadmin.piclick.kr/log/list?idx=${index}`,
         headers: {
           Authorization: `JWT ${token}`,
         },

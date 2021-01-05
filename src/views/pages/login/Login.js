@@ -39,7 +39,7 @@ const Login = () => {
   const loginSubmit = (event) => {
     axios({
       method: "post",
-      url: "/auth",
+      url: "https://sadmin.piclick.kr/auth",
       data: {
         username: id,
         password: password,
@@ -50,7 +50,7 @@ const Login = () => {
         sessionStorage.setItem("userName", id);
         axios({
           method: "post",
-          url: "/log/soldout/login",
+          url: "https://sadmin.piclick.kr/log/soldout/login",
           data: {
             cs_id: id,
             action_code: "CS_LOGIN_SUCCESS",
@@ -62,7 +62,7 @@ const Login = () => {
       .catch(() => {
         axios({
           method: "post",
-          url: "/log/soldout/login",
+          url: "https://sadmin.piclick.kr/log/soldout/login",
           data: {
             cs_id: id,
             action_code: "CS_LOGIN_FAIL",
