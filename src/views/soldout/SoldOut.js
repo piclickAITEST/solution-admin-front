@@ -62,7 +62,7 @@ const SoldOut = () => {
 
     axios({
       method: "get",
-      url: `https://sadmin.piclick.kr/soldout/${args}`,
+      url: `/soldout/${args}`,
       headers: {
         Authorization: `JWT ${token}`,
       },
@@ -373,9 +373,10 @@ const SoldOut = () => {
       },
     },
     { key: "product_name", label: "상품명", sorter: false },
-    { key: "option1", label: "옵션1", sorter: false },
-    { key: "option2", label: "옵션2", sorter: false },
-    { key: "option3", label: "옵션3", sorter: false },
+    // { key: "option1", label: "옵션1", sorter: false },
+    // { key: "option2", label: "옵션2", sorter: false },
+    // { key: "option3", label: "옵션3", sorter: false },
+    { key: "option", label: "옵션", sorter: false },
     { key: "list_image", label: "이미지", sorter: false, filter: false },
     {
       key: "qty",
@@ -550,6 +551,13 @@ const SoldOut = () => {
               ),
               price: (item) => <td>{numberWithCommas(item.price)}</td>,
               phone: (item) => <td>{numberWithPhone(item.phone)}</td>,
+              option: (item) => (
+                <td>
+                  {item.option1} <br />
+                  {item.option2} <br />
+                  {item.option3}
+                </td>
+              ),
               detail: (item) => (
                 <td>
                   <CButton
@@ -566,6 +574,13 @@ const SoldOut = () => {
                   >
                     미리보기
                   </CButton>
+                </td>
+              ),
+              action: (item) => (
+                <td>
+                  {item.action}
+                  <br />
+                  {item.status_text}
                 </td>
               ),
               message: (item) => (

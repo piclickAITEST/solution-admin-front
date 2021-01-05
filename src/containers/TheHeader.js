@@ -35,7 +35,7 @@ const TheHeader = () => {
   const logoutClick = () => {
     axios({
       method: "POST",
-      url: "https://sadmin.piclick.kr/log/soldout/logout",
+      url: "/log/soldout/logout",
       data: {
         cs_id: sessionStorage.getItem("userName"),
         action_code: "CS_LOGOUT",
@@ -47,7 +47,7 @@ const TheHeader = () => {
   };
 
   const getUsername = async () => {
-    const res = await axios.get("https://sadmin.piclick.kr/users/", {
+    const res = await axios.get("/users/", {
       headers: {
         Authorization: `JWT ${sessionStorage.getItem("userToken")}`,
       },

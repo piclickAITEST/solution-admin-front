@@ -73,7 +73,7 @@ function SoldOutDetail({ match, location }) {
     }
     axios({
       method: "get",
-      url: "https://sadmin.piclick.kr/soldout/banks",
+      url: "/soldout/banks",
       headers: {
         Authorization: `JWT ${token}`,
       },
@@ -105,7 +105,7 @@ function SoldOutDetail({ match, location }) {
     (token) => {
       axios({
         method: "get",
-        url: `https://sadmin.piclick.kr/log/list?idx=${index}`,
+        url: `/log/list?idx=${index}`,
         headers: {
           Authorization: `JWT ${token}`,
         },
@@ -228,7 +228,7 @@ function SoldOutDetail({ match, location }) {
                 //적립 상태변화, 로그 API 전송
                 axios({
                   method: "post",
-                  url: `https://sadmin.piclick.kr/soldout/action`,
+                  url: `/soldout/action`,
                   headers: {
                     Authorization: `JWT ${token}`,
                   },
@@ -302,7 +302,7 @@ function SoldOutDetail({ match, location }) {
                 // 환불 상태변화, 로그 API 전송
                 axios({
                   method: "post",
-                  url: `https://sadmin.piclick.kr/soldout/action`,
+                  url: `/soldout/action`,
                   headers: {
                     Authorization: `JWT ${token}`,
                   },
@@ -349,7 +349,7 @@ function SoldOutDetail({ match, location }) {
         };
         axios({
           method: "post",
-          url: `https://sadmin.piclick.kr/soldout/action`,
+          url: `/soldout/action`,
           headers: {
             Authorization: `JWT ${token}`,
           },
@@ -399,7 +399,7 @@ function SoldOutDetail({ match, location }) {
         // 교환 로그 API 전송
         axios({
           method: "post",
-          url: `https://sadmin.piclick.kr/soldout/action`,
+          url: `/soldout/action`,
           headers: {
             Authorization: `JWT ${token}`,
           },
@@ -480,7 +480,7 @@ function SoldOutDetail({ match, location }) {
       setMsgModal(!msgModal);
       axios({
         method: "get",
-        url: `https://sadmin.piclick.kr/soldout/sms/preview?idx=${index}`,
+        url: `/soldout/sms/preview?idx=${index}`,
         headers: {
           Authorization: `JWT ${token}`,
         },
