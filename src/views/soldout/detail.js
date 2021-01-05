@@ -73,7 +73,7 @@ function SoldOutDetail({ match, location }) {
     }
     axios({
       method: "get",
-      url: "/soldout/banks",
+      url: "https://sadmin.piclick.kr/soldout/banks",
       headers: {
         Authorization: `JWT ${token}`,
       },
@@ -228,7 +228,7 @@ function SoldOutDetail({ match, location }) {
                 //적립 상태변화, 로그 API 전송
                 axios({
                   method: "post",
-                  url: `/soldout/action`,
+                  url: `https://sadmin.piclick.kr/soldout/action`,
                   headers: {
                     Authorization: `JWT ${token}`,
                   },

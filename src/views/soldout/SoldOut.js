@@ -574,6 +574,13 @@ const SoldOut = () => {
                   {item.option3}
                 </td>
               ),
+              action: (item) => (
+                <td>
+                  {item.action}
+                  <br />
+                  {item.status_text}
+                </td>
+              ),
               message: (item) => (
                 <td>
                   <CButton
