@@ -35,7 +35,7 @@ const TheHeader = () => {
   const logoutClick = () => {
     axios({
       method: "POST",
-      url: "/log/soldout/logout",
+      url: "https://sadmin.piclick.kr/log/soldout/logout",
       data: {
         cs_id: sessionStorage.getItem("userName"),
         action_code: "CS_LOGOUT",
