@@ -569,9 +569,23 @@ const SoldOut = () => {
               ),
               option: (item) => (
                 <td>
-                  {item.option1} <br />
-                  {item.option2} <br />
-                  {item.option3}
+                  {item.option1}
+                  {item.option2 !== "" ? (
+                    <>
+                      <br />
+                      {item.option2}
+                    </>
+                  ) : (
+                    ""
+                  )}
+                  {item.option3 !== "" ? (
+                    <>
+                      <br />
+                      {item.option3}
+                    </>
+                  ) : (
+                    ""
+                  )}
                 </td>
               ),
               action: (item) => (
