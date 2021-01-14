@@ -24,10 +24,13 @@ const SoldOutReport = () => {
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [dateType, setDateType] = useState("일자별 통계");
+  const [modal, setModal] = useState("");
   const reg = /(\d{4})(\d{2})(\d{2})/;
 
-  /* 필터 제작 전 임시 일일 값 */
+  /* 모달 토글 */
+  // const
 
+  /* 필터 제작 전 임시 일일 값 */
   const clearState = () => {
     setLoading(true);
     setRedirect(false);
@@ -409,6 +412,10 @@ const SoldOutReport = () => {
               ),
               soldout_count: (item, idx) => (
                 <td
+                  onClick={() => {
+                    if (idx === 0) return;
+                    console.log("foo!");
+                  }}
                   style={{
                     color: getDays(
                       moment(
