@@ -35,21 +35,23 @@ const SoldOutReport = () => {
 
   /* 모달 토글 */
   const modalToggle = (date) => {
-    setModal(!modal);
-    setDate(date);
-    axios({
-      method: "get",
-      url: `https://sadmin.piclick.kr/soldout/?from_date=${date}&to_date=${date}&date_type=soldout&for_stat=T`,
-      headers: {
-        Authorization: `JWT ${token}`,
-      },
-    }).then((res) => {
-      if (res.data === undefined || res.data.message === "결과없음") {
-        setReportsPerDay([]);
-      } else {
-        setReportsPerDay(res.data.results);
-      }
-    });
+    if (dateType === "일자별 통계") {
+      setModal(!modal);
+      setDate(date);
+      axios({
+        method: "get",
+        url: `https://sadmin.piclick.kr/soldout/?from_date=${date}&to_date=${date}&date_type=soldout&for_stat=T`,
+        headers: {
+          Authorization: `JWT ${token}`,
+        },
+      }).then((res) => {
+        if (res.data === undefined || res.data.message === "결과없음") {
+          setReportsPerDay([]);
+        } else {
+          setReportsPerDay(res.data.results);
+        }
+      });
+    }
   };
 
   const modalToggleClear = () => {
@@ -685,7 +687,7 @@ const SoldOutReport = () => {
           />
         </CCardBody>
       </CCard>
-      {modal ? (
+      {modal && dateType === "일자별 통계" ? (
         <CModal show={modal} onClose={modalToggleClear}>
           <CModalHeader>{numberToDate(date)} 품절 상품</CModalHeader>
           <CModalBody style={{ overflowY: "scroll", maxHeight: "600px" }}>
