@@ -266,81 +266,104 @@ function SoldOutDetail({ match, location }) {
           });
       } else if (csStatus === "R") {
         if (paymentMethod === "cash") {
+          const refundData = {
+            action_code: csStatus,
+            mall_id: mallID,
+            order_id: orderID,
+            product_id: productNo,
+            status_message: "success",
+            idx: index,
+            modifier_id: userName,
+          };
           if (bankAccount === "" || bankUserName === "") return;
-        }
-
-        axios({
-          method: "get",
-          url: `https://sol.piclick.kr/soldOut/refundOrder?mallID=${mallID}&product_no=${productNo}&order_id=${orderID}&is_admin=True`,
-        })
-          .then((res) => {
-            if (res.data !== undefined) {
-              if (res.data.status === "T") {
-                const requestParam = () => {
-                  if (paymentMethod === "cash") {
-                    return {
-                      action_code: csStatus,
-                      price: productPrice,
-                      idx: index,
-                      status_msg: res.data.res.message,
-                      status_code: res.data.res.code,
-                      account_num: bankAccount,
-                      bank_code_std: bankCode,
-                      bank_user_name: bankUserName,
-                      // account_holder_info: countryCode,
-                    };
-                  } else {
-                    return {
-                      action_code: csStatus,
-                      price: productPrice,
-                      idx: index,
-                      status_msg: res.data.res.message,
-                      status_code: res.data.res.code,
-                    };
-                  }
-                };
-                // 환불 상태변화, 로그 API 전송
-                axios({
-                  method: "post",
-                  url: `/soldout/action`,
-                  headers: {
-                    Authorization: `JWT ${token}`,
-                  },
-                  data: requestParam(),
-                })
-                  .then((res) => {
-                    if (res.data !== undefined) {
-                      enableToast("상태 변경을 하였습니다.");
-                      getDetail(token);
-                    }
-                  })
-                  .catch((error) => {
-                    if (error.response === undefined) {
-                      enableToast("상태 변경 실패");
-                    } else {
-                      if (error.response.status === 401) {
-                        sessionStorage.removeItem("userToken");
-                        sessionStorage.removeItem("userName");
-                        setRedirect(true);
-                      }
-                    }
-                  });
-              } else {
-                enableToast("상태 변경 실패");
-              }
-            } else {
-              getDetail(token);
-            }
+          // 환불 상태변화, 로그 API 전송
+          axios({
+            method: "post",
+            url: `/soldout/action`,
+            headers: {
+              Authorization: `JWT ${token}`,
+            },
+            data: refundData,
           })
-          .catch((error) => {
-            enableToast("상태 변경 실패");
-            if (error.response.status === 401) {
-              sessionStorage.removeItem("userToken");
-              sessionStorage.removeItem("userName");
-              setRedirect(true);
-              return;
-            }
-          });
+            .then((res) => {
+              if (res.data !== undefined) {
+                enableToast("상태 변경을 하였습니다.");
+                getDetail(token);
+              }
+            })
+            .catch((error) => {
+              if (error.response === undefined) {
+                enableToast("상태 변경 실패");
+              } else {
+                if (error.response.status === 401) {
+                  sessionStorage.removeItem("userToken");
+                  sessionStorage.removeItem("userName");
+                  setRedirect(true);
+                }
+              }
+            });
+        } else {
+          axios({
+            method: "get",
+            url: `https://sol.piclick.kr/soldOut/refundOrder?mallID=${mallID}&product_no=${productNo}&order_id=${orderID}&is_admin=True`,
+          })
+            .then((res) => {
+              if (res.data !== undefined) {
+                if (res.data.status === "T") {
+                  const refundData = {
+                    action_code: csStatus,
+                    mall_id: mallID,
+                    order_id: orderID,
+                    product_id: productNo,
+                    status_message: res.data.res.message,
+                    status_code: res.data.res.code,
+                    idx: index,
+                    modifier_id: userName,
+                  };
+
+                  // 환불 상태변화, 로그 API 전송
+                  axios({
+                    method: "post",
+                    url: `/soldout/action`,
+                    headers: {
+                      Authorization: `JWT ${token}`,
+                    },
+                    data: refundData,
+                  })
+                    .then((res) => {
+                      if (res.data !== undefined) {
+                        enableToast("상태 변경을 하였습니다.");
+                        getDetail(token);
+                      }
+                    })
+                    .catch((error) => {
+                      if (error.response === undefined) {
+                        enableToast("상태 변경 실패");
+                      } else {
+                        if (error.response.status === 401) {
+                          sessionStorage.removeItem("userToken");
+                          sessionStorage.removeItem("userName");
+                          setRedirect(true);
+                        }
+                      }
+                    });
+                } else {
+                  enableToast("상태 변경 실패");
+                }
+              } else {
+                getDetail(token);
+              }
+            })
+            .catch((error) => {
+              enableToast("상태 변경 실패");
+              if (error.response.status === 401) {
+                sessionStorage.removeItem("userToken");
+                sessionStorage.removeItem("userName");
+                setRedirect(true);
+                return;
+              }
+            });
+        }
       } else if (csStatus === "O") {
         const requestParam = {
           action_code: csStatus,
