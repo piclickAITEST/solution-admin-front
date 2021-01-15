@@ -452,7 +452,8 @@ const SoldOutReport = () => {
                         reg.test(item.date) ? numberToDate(item.date) : ""
                       ).day()
                     ),
-                    cursor: idx > 0 ? "pointer" : "",
+                    cursor:
+                      idx > 0 && dateType === "일자별 통계" ? "pointer" : "",
                     background: idx === 0 ? "#e4e4e4" : "",
                   }}
                 >
