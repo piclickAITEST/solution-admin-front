@@ -480,7 +480,7 @@ function SoldOutDetail({ match, location }) {
       setMsgModal(!msgModal);
       axios({
         method: "get",
-        url: `/soldout/sms/preview?idx=${index}`,
+        url: `https://sadmin.piclick.kr/soldout/sms/preview?idx=${index}`,
         headers: {
           Authorization: `JWT ${token}`,
         },
@@ -538,7 +538,7 @@ function SoldOutDetail({ match, location }) {
                       <option value="E">교환</option>
                       <option value="R">환불</option>
                       <option value="S">적립</option>
-                      <option value="O">재입고</option>
+                      {/* <option value="O">재입고</option> */}
                     </CSelect>
                   </CCol>
                   <CCol sm="12" lg="auto" style={{ marginTop: "5px" }}>
@@ -601,7 +601,7 @@ function SoldOutDetail({ match, location }) {
                         <option value="E">교환</option>
                         <option value="R">환불</option>
                         <option value="S">적립</option>
-                        <option value="O">재입고</option>
+                        {/* <option value="O">재입고</option> */}
                       </CSelect>
                     </CInputGroup>
                   </CCol>
@@ -697,7 +697,7 @@ function SoldOutDetail({ match, location }) {
                       <option value="E">교환</option>
                       <option value="R">환불</option>
                       <option value="S">적립</option>
-                      <option value="O">재입고</option>
+                      {/* <option value="O">재입고</option> */}
                     </CSelect>
                     <CButton
                       color="primary"
