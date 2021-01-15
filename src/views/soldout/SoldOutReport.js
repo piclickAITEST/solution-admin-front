@@ -12,6 +12,10 @@ import {
   CInputGroup,
   CLabel,
   CSpinner,
+  CModal,
+  CModalHeader,
+  CModalBody,
+  CModalFooter,
 } from "@coreui/react";
 import { Redirect } from "react-router-dom";
 import moment from "moment";
@@ -21,14 +25,37 @@ const SoldOutReport = () => {
   const [loading, setLoading] = useState(true);
   const [redirect, setRedirect] = useState(false);
   const [reports, setReports] = useState([]);
+  const [reportsPerDay, setReportsPerDay] = useState([]);
   const [fromDate, setFromDate] = useState("");
   const [toDate, setToDate] = useState("");
   const [dateType, setDateType] = useState("일자별 통계");
-  const [modal, setModal] = useState("");
+  const [modal, setModal] = useState(false);
+  const [date, setDate] = useState("");
   const reg = /(\d{4})(\d{2})(\d{2})/;
 
   /* 모달 토글 */
-  // const
+  const modalToggle = (date) => {
+    setModal(!modal);
+    setDate(date);
+    axios({
+      method: "get",
+      url: `https://sadmin.piclick.kr/soldout/?from_date=${date}&to_date=${date}&date_type=soldout&for_stat=T`,
+      headers: {
+        Authorization: `JWT ${token}`,
+      },
+    }).then((res) => {
+      if (res.data === undefined || res.data.message === "결과없음") {
+        setReportsPerDay([]);
+      } else {
+        setReportsPerDay(res.data.results);
+      }
+    });
+  };
+
+  const modalToggleClear = () => {
+    setModal(!modal);
+    setReportsPerDay([]);
+  };
 
   /* 필터 제작 전 임시 일일 값 */
   const clearState = () => {
@@ -38,6 +65,7 @@ const SoldOutReport = () => {
     setFromDate("");
     setToDate("");
     setDateType("일자별 통계");
+    setModal(false);
   };
 
   function numberWithCommas(x) {
@@ -414,7 +442,7 @@ const SoldOutReport = () => {
                 <td
                   onClick={() => {
                     if (idx === 0) return;
-                    console.log("foo!");
+                    modalToggle(item.date);
                   }}
                   style={{
                     color: getDays(
@@ -422,6 +450,7 @@ const SoldOutReport = () => {
                         reg.test(item.date) ? numberToDate(item.date) : ""
                       ).day()
                     ),
+                    cursor: idx > 0 ? "pointer" : "",
                     background: idx === 0 ? "#e4e4e4" : "",
                   }}
                 >
@@ -656,6 +685,97 @@ const SoldOutReport = () => {
           />
         </CCardBody>
       </CCard>
+      {modal ? (
+        <CModal show={modal} onClose={modalToggleClear}>
+          <CModalHeader>{numberToDate(date)} 품절 상품</CModalHeader>
+          <CModalBody style={{ overflowY: "scroll", maxHeight: "600px" }}>
+            {reportsPerDay.length > 0
+              ? reportsPerDay.map((data) => {
+                  return (
+                    <div
+                      key={data.idx}
+                      style={{
+                        display: "flex",
+
+                        alignItems: "center",
+                        width: "100%",
+                        minHeight: "90px",
+                        position: "relative",
+                        marginBottom: "20px",
+                        boxShadow:
+                          "0 3px 3px -2px rgba(0, 0, 0, 0.2), 0 3px 4px 0 rgba(0, 0, 0, 0.14), 0 1px 8px 0 rgba(0, 0, 0, 0.12)",
+                        padding: "10px",
+                      }}
+                    >
+                      <img
+                        src={data.list_image}
+                        alt={data.idx}
+                        style={{
+                          width: "30%",
+                          height: "auto",
+                        }}
+                      />
+                      <div
+                        className="product-infos"
+                        style={{
+                          width: "100%",
+                          paddingLeft: "10px",
+                          flexDirection: "column",
+                          justifyContent: "space-between",
+                          display: "flex",
+                        }}
+                      >
+                        <div className="product-info">
+                          <div
+                            id="product_name"
+                            style={{ fontWeight: 600, fontSize: "14px" }}
+                          >
+                            {data.product_name}
+                          </div>
+                          <div
+                            id="product_price"
+                            style={{
+                              fontWeight: 600,
+                              fontSize: "16px",
+                              color: "#508bed",
+                            }}
+                          >
+                            {numberWithCommas(data.price)}
+                            <span style={{ fontSize: "12px", color: "black" }}>
+                              원
+                            </span>
+                          </div>
+                          <div id="product_option" style={{ fontSize: "12px" }}>
+                            {data.option1}
+                            {data.option2 !== "" ? (
+                              <>
+                                <br />
+                                {data.option2}
+                              </>
+                            ) : (
+                              ""
+                            )}
+                            {data.option3 !== "" ? (
+                              <>
+                                <br />
+                                {data.option3}
+                              </>
+                            ) : (
+                              ""
+                            )}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })
+              : "데이터 없음"}
+          </CModalBody>
+          <CModalFooter>
+            <CButton onClick={modalToggleClear}>닫기</CButton>
+          </CModalFooter>
+        </CModal>
+      ) : null}
     </div>
   );
 };
