@@ -372,7 +372,7 @@ function SoldOutDetail({ match, location }) {
         };
         axios({
           method: "post",
-          url: `/soldout/action`,
+          url: `https://sadmin.piclick.kr/soldout/action`,
           headers: {
             Authorization: `JWT ${token}`,
           },
