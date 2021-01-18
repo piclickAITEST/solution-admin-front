@@ -386,7 +386,7 @@ const SoldOut = () => {
       },
       sorter: false,
     },
-    { key: "price", label: "금액", sorter: false },
+    { key: "price", label: "결제 금액", sorter: false },
     { key: "user_name", label: "주문자", sorter: false },
     { key: "phone", label: "주문자 휴대폰", sorter: false },
     { key: "action", label: "CS상태", sorter: false },
