@@ -273,7 +273,7 @@ function SoldOutDetail({ match, location }) {
             product_id: productNo,
             status_message: "success",
             idx: index,
-            modifier_id: userName,
+            modifier_id: mallID,
           };
           if (bankAccount === "" || bankUserName === "") return;
           // 환불 상태변화, 로그 API 전송
@@ -318,7 +318,7 @@ function SoldOutDetail({ match, location }) {
                     status_message: res.data.res.message,
                     status_code: res.data.res.code,
                     idx: index,
-                    modifier_id: userName,
+                    modifier_id: mallID,
                   };
 
                   // 환불 상태변화, 로그 API 전송
