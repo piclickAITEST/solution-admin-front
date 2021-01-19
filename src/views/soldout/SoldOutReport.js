@@ -731,9 +731,26 @@ const SoldOutReport = () => {
                         <div className="product-info">
                           <div
                             id="product_name"
-                            style={{ fontWeight: 600, fontSize: "14px" }}
+                            style={{
+                              fontWeight: 600,
+                              fontSize: "14px",
+                              display: "flex",
+                              justifyContent: "space-between",
+                            }}
                           >
-                            {data.product_name}
+                            <p>{data.product_name}</p>
+                            <p>
+                              <span
+                                style={{
+                                  fontWeight: 600,
+                                  fontSize: "14px",
+                                  color: "#508bed",
+                                }}
+                              >
+                                {data.count}
+                              </span>
+                              개
+                            </p>
                           </div>
                           <div
                             id="product_price"
