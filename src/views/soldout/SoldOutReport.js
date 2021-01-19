@@ -298,21 +298,21 @@ const SoldOutReport = () => {
       if (toDate !== "") {
         if (dateType === "일자별 통계") {
           getReport(
-            `?from_date=${moment(fromDate).format("YYYYMMDD")}&to_date=${moment(
+            `?from_date=${moment(value).format("YYYYMMDD")}&to_date=${moment(
               toDate
             ).format("YYYYMMDD")}`,
             token
           );
         } else if (dateType === "주별 통계") {
           getReport(
-            `?from_date=${moment(fromDate).format("YYYYMMDD")}&to_date=${moment(
+            `?from_date=${moment(value).format("YYYYMMDD")}&to_date=${moment(
               toDate
             ).format("YYYYMMDD")}&report_type=week`,
             token
           );
         } else {
           getReport(
-            `?from_date=${moment(fromDate).format("YYYYMMDD")}&to_date=${moment(
+            `?from_date=${moment(value).format("YYYYMMDD")}&to_date=${moment(
               toDate
             ).format("YYYYMMDD")}&report_type=month`,
             token
@@ -325,21 +325,21 @@ const SoldOutReport = () => {
         if (dateType === "일자별 통계") {
           getReport(
             `?from_date=${moment(fromDate).format("YYYYMMDD")}&to_date=${moment(
-              toDate
+              value
             ).format("YYYYMMDD")}`,
             token
           );
         } else if (dateType === "주별 통계") {
           getReport(
             `?from_date=${moment(fromDate).format("YYYYMMDD")}&to_date=${moment(
-              toDate
+              value
             ).format("YYYYMMDD")}&report_type=week`,
             token
           );
         } else {
           getReport(
             `?from_date=${moment(fromDate).format("YYYYMMDD")}&to_date=${moment(
-              toDate
+              value
             ).format("YYYYMMDD")}&report_type=month`,
             token
           );
