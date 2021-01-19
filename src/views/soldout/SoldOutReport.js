@@ -34,24 +34,23 @@ const SoldOutReport = () => {
   const reg = /(\d{4})(\d{2})(\d{2})/;
 
   /* 모달 토글 */
-  const modalToggle = (date) => {
-    if (dateType === "일자별 통계") {
-      setModal(!modal);
-      setDate(date);
-      axios({
-        method: "get",
-        url: `https://sadmin.piclick.kr/soldout/?from_date=${date}&to_date=${date}&date_type=soldout&for_stat=T`,
-        headers: {
-          Authorization: `JWT ${token}`,
-        },
-      }).then((res) => {
-        if (res.data === undefined || res.data.message === "결과없음") {
-          setReportsPerDay([]);
-        } else {
-          setReportsPerDay(res.data.results);
-        }
-      });
-    }
+  const modalToggle = (fromDate, toDate, titleDate) => {
+    setModal(!modal);
+    setDate(titleDate);
+    console.log(fromDate, toDate);
+    axios({
+      method: "get",
+      url: `https://sadmin.piclick.kr/soldout/?from_date=${fromDate}&to_date=${toDate}&date_type=soldout&for_stat=T`,
+      headers: {
+        Authorization: `JWT ${token}`,
+      },
+    }).then((res) => {
+      if (res.data === undefined || res.data.message === "결과없음") {
+        setReportsPerDay([]);
+      } else {
+        setReportsPerDay(res.data.results);
+      }
+    });
   };
 
   const modalToggleClear = () => {
@@ -132,20 +131,37 @@ const SoldOutReport = () => {
         .format("YYYYMMDD")}&to_date=${moment().format("YYYYMMDD")}`,
       token
     );
-    const getEveryTimes = setInterval(() => {
-      getReport(
-        `?from_date=${moment()
-          .subtract(1, "months")
-          .format("YYYYMMDD")}&to_date=${moment().format("YYYYMMDD")}`,
-        token
-      );
-    }, 60000 * 10);
 
-    return () => {
-      clearInterval(getEveryTimes);
-      clearState();
-    };
+    return () => clearState();
   }, [token]);
+
+  useEffect(() => {
+    const getEveryTimes = setInterval(() => {
+      if (dateType === "일자별 통계") {
+        getReport(
+          `?from_date=${moment(fromDate).format("YYYYMMDD")}&to_date=${moment(
+            toDate
+          ).format("YYYYMMDD")}`,
+          token
+        );
+      } else if (dateType === "주별 통계") {
+        getReport(
+          `?from_date=${moment(fromDate).format("YYYYMMDD")}&to_date=${moment(
+            toDate
+          ).format("YYYYMMDD")}&report_type=week`,
+          token
+        );
+      } else {
+        getReport(
+          `?from_date=${moment(fromDate).format("YYYYMMDD")}&to_date=${moment(
+            toDate
+          ).format("YYYYMMDD")}&report_type=month`,
+          token
+        );
+      }
+    }, 60000 * 10);
+    return () => clearInterval(getEveryTimes);
+  }, [token, dateType, fromDate, toDate]);
 
   if (redirect === true) {
     sessionStorage.removeItem("userToken");
@@ -280,22 +296,54 @@ const SoldOutReport = () => {
     if (name === "fromDate") {
       setFromDate(value);
       if (toDate !== "") {
-        getReport(
-          `?from_date=${moment(value).format("YYYYMMDD")}&to_date=${moment(
-            toDate
-          ).format("YYYYMMDD")}`,
-          token
-        );
+        if (dateType === "일자별 통계") {
+          getReport(
+            `?from_date=${moment(fromDate).format("YYYYMMDD")}&to_date=${moment(
+              toDate
+            ).format("YYYYMMDD")}`,
+            token
+          );
+        } else if (dateType === "주별 통계") {
+          getReport(
+            `?from_date=${moment(fromDate).format("YYYYMMDD")}&to_date=${moment(
+              toDate
+            ).format("YYYYMMDD")}&report_type=week`,
+            token
+          );
+        } else {
+          getReport(
+            `?from_date=${moment(fromDate).format("YYYYMMDD")}&to_date=${moment(
+              toDate
+            ).format("YYYYMMDD")}&report_type=month`,
+            token
+          );
+        }
       }
     } else if (name === "toDate") {
       setToDate(value);
       if (fromDate !== "") {
-        getReport(
-          `?from_date=${moment(fromDate).format("YYYYMMDD")}&to_date=${moment(
-            value
-          ).format("YYYYMMDD")}`,
-          token
-        );
+        if (dateType === "일자별 통계") {
+          getReport(
+            `?from_date=${moment(fromDate).format("YYYYMMDD")}&to_date=${moment(
+              toDate
+            ).format("YYYYMMDD")}`,
+            token
+          );
+        } else if (dateType === "주별 통계") {
+          getReport(
+            `?from_date=${moment(fromDate).format("YYYYMMDD")}&to_date=${moment(
+              toDate
+            ).format("YYYYMMDD")}&report_type=week`,
+            token
+          );
+        } else {
+          getReport(
+            `?from_date=${moment(fromDate).format("YYYYMMDD")}&to_date=${moment(
+              toDate
+            ).format("YYYYMMDD")}&report_type=month`,
+            token
+          );
+        }
       }
     }
   };
@@ -443,8 +491,19 @@ const SoldOutReport = () => {
               soldout_count: (item, idx) => (
                 <td
                   onClick={() => {
-                    if (idx === 0) return;
-                    modalToggle(item.date);
+                    if (idx === 0) {
+                      modalToggle(
+                        fromDate.split("-").join(""),
+                        toDate.split("-").join(""),
+                        "전체"
+                      );
+                    } else {
+                      if (dateType === "일자별 통계") {
+                        modalToggle(item.date, item.date, item.date);
+                      } else {
+                        modalToggle(item.start_date, item.end_date, item.date);
+                      }
+                    }
                   }}
                   style={{
                     color: getDays(
@@ -452,8 +511,7 @@ const SoldOutReport = () => {
                         reg.test(item.date) ? numberToDate(item.date) : ""
                       ).day()
                     ),
-                    cursor:
-                      idx > 0 && dateType === "일자별 통계" ? "pointer" : "",
+                    cursor: "pointer",
                     background: idx === 0 ? "#e4e4e4" : "",
                   }}
                 >
@@ -688,7 +746,7 @@ const SoldOutReport = () => {
           />
         </CCardBody>
       </CCard>
-      {modal && dateType === "일자별 통계" ? (
+      {modal ? (
         <CModal show={modal} onClose={modalToggleClear}>
           <CModalHeader>{numberToDate(date)} 품절 상품</CModalHeader>
           <CModalBody style={{ overflowY: "scroll", maxHeight: "600px" }}>
