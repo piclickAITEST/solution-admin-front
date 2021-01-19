@@ -266,6 +266,7 @@ function SoldOutDetail({ match, location }) {
           });
       } else if (csStatus === "R") {
         if (paymentMethod === "cash") {
+          if (bankAccount === "" || bankUserName === "") return;
           const refundData = {
             action_code: csStatus,
             mall_id: mallID,
@@ -274,8 +275,11 @@ function SoldOutDetail({ match, location }) {
             status_message: "success",
             idx: index,
             modifier_id: mallID,
+            bank_code_std: bankCode,
+            account_num: bankAccount,
+            bank_user_name: bankUserName,
           };
-          if (bankAccount === "" || bankUserName === "") return;
+
           // 환불 상태변화, 로그 API 전송
           axios({
             method: "post",
