@@ -47,16 +47,7 @@ const TheHeader = () => {
   };
 
   const getUsername = async () => {
-    const res = await axios.get("https://sadmin.piclick.kr/users/", {
-      headers: {
-        Authorization: `JWT ${sessionStorage.getItem("userToken")}`,
-      },
-    });
-    if (res.data.name === undefined) {
-      setUserName("");
-    } else {
-      setUserName(res.data.brand_name);
-    }
+    setUserName(sessionStorage.getItem("userName"));
   };
 
   useEffect(() => {

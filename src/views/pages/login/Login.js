@@ -47,7 +47,7 @@ const Login = () => {
     })
       .then((res) => {
         sessionStorage.setItem("userToken", res.data.access_token);
-        sessionStorage.setItem("userName", id);
+        sessionStorage.setItem("userName", res.data.user.brand_name);
         axios({
           method: "post",
           url: "https://sadmin.piclick.kr/log/soldout/login",
