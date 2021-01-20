@@ -39,7 +39,7 @@ const Login = () => {
   const loginSubmit = (event) => {
     axios({
       method: "post",
-      url: "https://sadmin.piclick.kr/auth",
+      url: "https://sadmin.piclick.kr/login",
       data: {
         username: id,
         password: password,
